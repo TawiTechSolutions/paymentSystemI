@@ -30,7 +30,7 @@ const Register = () => {
       window.alert("Password length should be more than 6");
     } else {
       axios
-        .post("http://localhost:5000/api/users", {
+        .post("http://localhost:5000/users/register", {
           name: name,
           email: email,
           password: password,

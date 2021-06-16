@@ -3,11 +3,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import axios from "axios";
 import React, { useState } from "react";
 
-const ForgotPassword = ({
-  match: {
-    params: { token },
-  },
-}) => {
+const ForgotPassword = () => {
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -21,7 +17,7 @@ const ForgotPassword = ({
 
   const findAndSendMail = () => {
     axios
-      .put(`http://localhost:5000/api/forgotPassword/${Email}`)
+      .put(`http://localhost:5000/users/forgotPassword/${Email}`)
       .then((res) => res.data)
       .then((data) => {
         if (data.status === 400) {

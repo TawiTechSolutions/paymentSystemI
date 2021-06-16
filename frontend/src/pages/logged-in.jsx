@@ -12,11 +12,11 @@ const LoggedIn = () => {
   const mailResetLink = () => {
     if (token) {
       axios
-        .put(
-          `http://localhost:5000/api/mailResetPassword/${localStorage.getItem(
-            "token"
-          )}`
-        )
+        .put(`http://localhost:5000/users/mailResetPassword`, {
+          headers: {
+            token: token,
+          },
+        })
         .then((res) => {
           window.alert(res.data.message);
         })
@@ -31,11 +31,11 @@ const LoggedIn = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get(
-          `http://localhost:5000/api/single_user/${localStorage.getItem(
-            "token"
-          )}`
-        )
+        .get(`http://localhost:5000/users/single_user`, {
+          headers: {
+            token: token,
+          },
+        })
         .then((res) => {
           setUsername(res.data.name);
         })

@@ -24,9 +24,17 @@ const ResetPassword = ({
       window.alert("Password should be more than 6");
     } else {
       axios
-        .put(`http://localhost:5000/api/changePassword/${token}`, {
-          password: password,
-        })
+        .put(
+          `http://localhost:5000/users/changePassword`,
+          {
+            password: password,
+          },
+          {
+            headers: {
+              token: token,
+            },
+          }
+        )
         .then((res) => res.data)
         .then((data) => {
           if (data.status === 400) {

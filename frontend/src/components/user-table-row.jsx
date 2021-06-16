@@ -41,15 +41,9 @@ const UserRow = ({ user, token }) => {
         };
 
         axios
-          .put(
-            `http://localhost:5000/api/updateRole/${token}/${id}`,
-            updated_user,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          )
+          .put(`http://localhost:5000/users/updateRole/${id}`, updated_user, {
+            headers: { token: token, "Content-Type": "application/json" },
+          })
           .then((res) => {
             window.alert(res.data.message);
           })
@@ -75,8 +69,9 @@ const UserRow = ({ user, token }) => {
       };
 
       axios
-        .put(`http://localhost:5000/api/update/${token}/${id}`, updated_user, {
+        .put(`http://localhost:5000/users/update/${id}`, updated_user, {
           headers: {
+            token: token,
             "Content-Type": "application/json",
           },
         })
@@ -93,7 +88,11 @@ const UserRow = ({ user, token }) => {
     let result = window.confirm("Want to delete?");
     if (result) {
       axios
-        .delete(`http://localhost:5000/api/users/${token}/${id}`)
+        .delete(`http://localhost:5000/users/${id}`, {
+          headers: {
+            token: token,
+          },
+        })
         .then((res) => {
           window.alert(res.data.message);
           window.location.reload();

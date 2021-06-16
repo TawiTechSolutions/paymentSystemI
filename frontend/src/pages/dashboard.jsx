@@ -9,6 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
 import UserRow from "../components/user-table-row";
 import { Container, Typography } from "@material-ui/core";
+import UploadUsers from "../components/upload_csv";
 
 const axios = require("axios");
 
@@ -20,11 +21,11 @@ const Dashboard = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get(
-          `http://localhost:5000/api/single_user/${localStorage.getItem(
-            "token"
-          )}`
-        )
+        .get(`http://localhost:5000/users/single_user`, {
+          headers: {
+            token: token,
+          },
+        })
         .then((res) => {
           setUsername(res.data.name);
         })
@@ -33,9 +34,11 @@ const Dashboard = () => {
         });
 
       axios
-        .get(
-          `http://localhost:5000/api/all_users/${localStorage.getItem("token")}`
-        )
+        .get(`http://localhost:5000/users/all_users`, {
+          headers: {
+            token: token,
+          },
+        })
         .then(function (response) {
           setUsers(response.data);
         })
@@ -50,6 +53,7 @@ const Dashboard = () => {
   return (
     <BrowserRouter>
       <NavBar username={userName} />
+      <UploadUsers token={token} />
       <Typography
         style={{ marginTop: "5px" }}
         variant="h5"

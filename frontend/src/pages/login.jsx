@@ -26,13 +26,14 @@ const Login = () => {
 
   const postLogin = () => {
     axios
-      .post("http://localhost:5000/api/login", {
+      .post("http://localhost:5000/users/login", {
         email: email,
         password: password,
       })
       .then((res) => res.data)
       .then((data) => {
         if (data.status === 400) {
+          console.log(data);
           window.alert(data.message);
         } else {
           localStorage.setItem("token", data.token);
