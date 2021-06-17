@@ -41,7 +41,7 @@ const Unapproved = () => {
               <HomeIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Fleet Managment System
+              Payment Management Service
             </Typography>
             <div>
               <Button

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-var JWTAuthMiddleware = function(req, res, next) {
+const JWTAuthMiddleware = function(req, res, next) {
     console.log(
         "\n-----[JWT MiddleWare] JWT Middleware " +
         req.url +
@@ -10,7 +10,8 @@ var JWTAuthMiddleware = function(req, res, next) {
     if (
         req.url == "/users/login" ||
         req.url == "/users/register" ||
-        req.url == "/forgotPassword/:email"
+        req.url == "/users/forgotPassword/:email" ||
+        req.url == "/users/verifyUser/:token"
     ) {
         next();
     } else {
@@ -36,7 +37,7 @@ var JWTAuthMiddleware = function(req, res, next) {
     }
 };
 
-var GenerateJWT = function(data) {
+const GenerateJWT = function(data) {
     var user = { userData: data };
     payload = user;
     token = jwt.sign(payload, process.env.TOKEN_SECRET, {

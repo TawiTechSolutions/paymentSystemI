@@ -99,7 +99,11 @@ route.post("/login", async(req, res) => {
         return res.send({ status: 400, message: "No such email/password" });
 
     //create and give tokenes
-    const token = JWT.GenerateJWT({ _id: user._id, email: user.email });
+    const token = JWT.GenerateJWT({
+        _id: user._id,
+        email: user.email,
+        isAdmin: user.isAdmin,
+    });
 
     try {
         if (user.verified) {
@@ -123,38 +127,21 @@ route.post("/login", async(req, res) => {
 route.get("/all_users", (req, res) => {
     token = req.headers.token;
     if (token) {
-        const id = JWT.getUserData(token)._id;
-        if (id) {
+        const requestingUser = JWT.getUserData(token);
+        if (requestingUser.isAdmin) {
             userDB
-                .findById(id)
-                .then((data) => {
-                    if (!data) {
-                        res
-                            .status(404)
-                            .send({ message: "didnt find the user with id" + id });
-                    } else {
-                        if (data.isAdmin) {
-                            userDB
-                                .find()
-                                .then((user) => {
-                                    console.log(user);
-                                    res.send(user);
-                                })
-                                .catch((err) => {
-                                    res.status(500).send({
-                                        message: err.message || "some error while getting from db",
-                                    });
-                                });
-                        }
-                    }
+                .find()
+                .then((user) => {
+                    console.log(user);
+                    res.send(user);
                 })
                 .catch((err) => {
-                    res
-                        .status(500)
-                        .send({ message: err + "err retrieving user with id" + id });
+                    res.status(500).send({
+                        message: err.message || "some error while getting from db",
+                    });
                 });
         } else {
-            res.send({ status: 400, message: "invalid token" });
+            res.send({ status: 400, message: "Classified action. Not admin" });
         }
     } else {
         res.send({ status: 400, message: "no token" });
@@ -165,7 +152,8 @@ route.get("/all_users", (req, res) => {
 route.get("/single_user", (req, res) => {
     const token = req.headers.token;
     if (token) {
-        const id = JWT.getUserData(token)._id;
+        const requestingUser = JWT.getUserData(token);
+        const id = requestingUser._id;
         userDB
             .findById(id)
             .then((data) => {
@@ -194,58 +182,41 @@ route.delete("/:id", (req, res) => {
         });
     }
     const token = req.headers.token;
-
-    const admin_id = JWT.getUserData(token)._id;
     const id = req.params.id;
+    const requestingUser = JWT.getUserData(token);
 
-    if (admin_id) {
+    if (requestingUser.isAdmin) {
         userDB
-            .findById(admin_id)
+            .findById(id)
             .then((data) => {
                 if (!data) {
-                    res.status(404).send({ message: "didnt find the user with id" + id });
+                    res.send({
+                        status: 400,
+                        message: "didnt find the user with id" + id,
+                    });
                 } else {
-                    if (data.isAdmin) {
-                        //code here that only amdin can do
+                    if (!data.isAdmin) {
+                        //update user
                         userDB
-                            .findById(id)
+                            .findByIdAndDelete(id)
                             .then((data) => {
                                 if (!data) {
                                     res.send({
                                         status: 400,
-                                        message: "didnt find the user with id" + id,
+                                        message: `cannot delete with ${id}.maybe not found`,
                                     });
                                 } else {
-                                    if (!data.isAdmin) {
-                                        //update user
-                                        userDB
-                                            .findByIdAndDelete(id)
-                                            .then((data) => {
-                                                if (!data) {
-                                                    res.send({
-                                                        status: 400,
-                                                        message: `cannot delete with ${id}.maybe not found`,
-                                                    });
-                                                } else {
-                                                    res.send({
-                                                        status: 200,
-                                                        message: "deldeted succesfully",
-                                                    });
-                                                }
-                                            })
-                                            .catch((err) => {
-                                                res.status(500).send({ message: "error in deleting" });
-                                            });
-                                    } else {
-                                        res.send({ status: 400, message: "cannot delete a admin" });
-                                    }
+                                    res.send({
+                                        status: 200,
+                                        message: "deleted succesfully",
+                                    });
                                 }
                             })
                             .catch((err) => {
-                                res
-                                    .status(500)
-                                    .send({ message: err + "err retrieving user with id" + id });
+                                res.status(500).send({ message: "error in deleting" });
                             });
+                    } else {
+                        res.send({ status: 400, message: "cannot delete a admin" });
                     }
                 }
             })
@@ -255,7 +226,7 @@ route.delete("/:id", (req, res) => {
                     .send({ message: err + "err retrieving user with id" + id });
             });
     } else {
-        res.send({ status: 400, message: "invalid token" });
+        res.send({ status: 400, message: "Classified action. Not admin" });
     }
 });
 
@@ -266,54 +237,36 @@ route.put("/updateRole/:id", (req, res) => {
     }
 
     const token = req.headers.token;
-    const admin_id = JWT.getUserData(token)._id;
     const id = req.params.id;
+    const requestingUser = JWT.getUserData(token);
 
-    if (admin_id) {
+    if (requestingUser.isAdmin) {
         userDB
-            .findById(admin_id)
+            .findById(id)
             .then((data) => {
                 if (!data) {
                     res.status(404).send({ message: "didnt find the user with id" + id });
                 } else {
-                    if (data.isAdmin) {
-                        //code here that only amdin can do
+                    if (!data.isAdmin) {
+                        //update user
                         userDB
-                            .findById(id)
+                            .findByIdAndUpdate(id, req.body, {
+                                useFindAndModify: false,
+                            })
                             .then((data) => {
                                 if (!data) {
-                                    res
-                                        .status(404)
-                                        .send({ message: "didnt find the user with id" + id });
+                                    res.status(400).send({
+                                        message: `cannot update with ${id}.maybe not found`,
+                                    });
                                 } else {
-                                    if (!data.isAdmin) {
-                                        //update user
-                                        userDB
-                                            .findByIdAndUpdate(id, req.body, {
-                                                useFindAndModify: false,
-                                            })
-                                            .then((data) => {
-                                                if (!data) {
-                                                    res.status(400).send({
-                                                        message: `cannot update with ${id}.maybe not found`,
-                                                    });
-                                                } else {
-                                                    res.send({ message: "Made admin" });
-                                                }
-                                            })
-                                            .catch((err) => {
-                                                res.status(500).send({ message: "error in updating" });
-                                            });
-                                    } else {
-                                        res.send({ message: "an admin cannot be made into user" });
-                                    }
+                                    res.send({ message: "Made admin" });
                                 }
                             })
                             .catch((err) => {
-                                res
-                                    .status(500)
-                                    .send({ message: err + "err retrieving user with id" + id });
+                                res.status(500).send({ message: "error in updating" });
                             });
+                    } else {
+                        res.send({ message: "an admin cannot be made into user" });
                     }
                 }
             })
@@ -325,47 +278,31 @@ route.put("/updateRole/:id", (req, res) => {
     } else {
         res.send({ status: 400, message: "invalid token" });
     }
-
-    //check if admin
 });
+
 //update user
 route.put("/update/:id", (req, res) => {
     if (!req.body) {
         return res.status(400).send({ message: "Data to update can not be empty" });
     }
     const token = req.headers.token;
-    const admin_id = JWT.getUserData(token)._id;
     const id = req.params.id;
-    if (admin_id) {
+
+    const requestingUser = JWT.getUserData(token);
+    if (requestingUser.isAdmin) {
         userDB
-            .findById(admin_id)
+            .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
             .then((data) => {
                 if (!data) {
-                    res.status(404).send({ message: "didnt find the user with id" + id });
+                    res.status(400).send({
+                        message: `cannot update with ${id}.maybe not found`,
+                    });
                 } else {
-                    if (data.isAdmin) {
-                        //code here that only amdin can do
-                        userDB
-                            .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-                            .then((data) => {
-                                if (!data) {
-                                    res.status(400).send({
-                                        message: `cannot update with ${id}.maybe not found`,
-                                    });
-                                } else {
-                                    res.send({ message: "User approved" });
-                                }
-                            })
-                            .catch((err) => {
-                                res.status(500).send({ message: "error in updating" });
-                            });
-                    }
+                    res.send({ message: "User approved" });
                 }
             })
             .catch((err) => {
-                res
-                    .status(500)
-                    .send({ message: err + "err retrieving user with id" + id });
+                res.status(500).send({ message: "error in updating" });
             });
     } else {
         res.send({ status: 400, message: "invalid token" });
@@ -505,7 +442,7 @@ route.put("/changePassword", async(req, res) => {
 
 //verify user (link send to mail(to be clicked))
 route.put("/verifyUser/:token", async(req, res) => {
-    const token = req.headers.token;
+    const token = req.params.token;
 
     if (token) {
         const id = JWT.getUserData(token)._id;
