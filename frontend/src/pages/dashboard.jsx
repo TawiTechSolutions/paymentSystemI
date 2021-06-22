@@ -10,6 +10,7 @@ import Box from "@material-ui/core/Box";
 import UserRow from "../components/user-table-row";
 import { Container, Typography } from "@material-ui/core";
 import UploadUsers from "../components/upload_csv";
+import UploadReciptData from "../components/upload_recipts";
 
 const axios = require("axios");
 
@@ -54,6 +55,8 @@ const Dashboard = () => {
     <BrowserRouter>
       <NavBar username={userName} />
       <UploadUsers token={token} />
+      <UploadReciptData token={token} />
+
       <Typography
         style={{ marginTop: "5px" }}
         variant="h5"

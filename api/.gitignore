@@ -7,6 +7,8 @@
 
 # testing
 /coverage
+local_temp_storage
+
 
 # production
 /build

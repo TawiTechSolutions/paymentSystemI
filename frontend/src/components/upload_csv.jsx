@@ -114,7 +114,7 @@ function UploadUsers({ token }) {
   return (
     <div>
       <input type="file" accept=".csv,.xlsx,.xls" onChange={handleFileUpload} />
-      <button onClick={sendUploadedFile}>Upload</button>
+      <button onClick={sendUploadedFile}>Upload Users Data</button>
       {percentage > 0 ? (
         <LinearProgress variant="determinate" value={percentage} />
       ) : (
