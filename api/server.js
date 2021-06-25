@@ -37,6 +37,7 @@ app.use(
     "/storage",
     express.static(path.resolve(__dirname, "local_temp_storage"))
 );
+app.use("/public", express.static(path.resolve(__dirname, "public")));
 
 app.use(function(err, req, res, next) {
     // set locals, only providing error in development

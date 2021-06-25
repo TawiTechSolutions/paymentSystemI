@@ -33,6 +33,7 @@
         "express": "^4.17.1",
         "fastest-validator": "^1.11.0",
         "html-pdf": "^3.0.1",
+        "html-pdf-node": "^1.0.7",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.12.7",
         "morgan": "^1.10.0",

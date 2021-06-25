@@ -27,3 +27,5 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+api/Utilities/invoiceGenerator/invoice-thin-borders.html
+api/Utilities/public/PDFs/ConfrimationInvoice/AAK-AS-202105-6691287339-02.pdf
