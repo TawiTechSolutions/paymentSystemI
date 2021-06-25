@@ -46,7 +46,7 @@ const Register = () => {
               window.location.reload();
             }
           } else {
-            window.alert("Some error occured. check console");
+            window.alert("Some error occured. check console.");
             console.log(res.data);
           }
         })
