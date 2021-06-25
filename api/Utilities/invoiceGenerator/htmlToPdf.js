@@ -21,7 +21,7 @@ const generateConfirmationInvoicePDF = (clientData, firmData) => {
                     firmData: firmData,
                 });
                 console.log("making invoice for", clientData.invoice_num);
-                const result = await htmlTpPdf(
+                const result = await htmlToPdf(
                     html,
                     "public/PDFs/ConfrimationInvoice/" + clientData.invoice_num + ".pdf"
                 );
@@ -31,7 +31,7 @@ const generateConfirmationInvoicePDF = (clientData, firmData) => {
     });
 };
 
-const htmlTpPdf = (html, pdfPath) => {
+const htmlToPdf = (html, pdfPath) => {
     return new Promise(async(resolve) => {
         var options = {
             format: "A4",

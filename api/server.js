@@ -7,8 +7,11 @@ const connectDB = require("./database/connection");
 const UserRoutes = require("./routes/UserRoutes");
 const ReceiptRoutes = require("./routes/ReceiptsRoutes");
 const JWT = require("./Utilities/JWT_Auth");
+const startAutoMailing = require("./Utilities/autoMailRecipts");
 
 const app = express();
+//wait for time to mail
+startAutoMailing.wait();
 
 app.use(
     cors({
