@@ -13,6 +13,8 @@ const app = express();
 //wait for time to mail
 startAutoMailing.wait();
 
+app.use(express.static(path.join(__dirname, "build")));
+
 app.use(
     cors({
         credentials: true,
@@ -52,9 +54,11 @@ app.use(function(err, req, res, next) {
     res.status(500).send({ message: "error" });
 });
 
+app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 //use verification
 app.use("/", JWT.JWTAuthMiddleware);
-
 //load router
 app.use("/users", UserRoutes);
 app.use("/receipts", ReceiptRoutes);

@@ -11,7 +11,7 @@ local_temp_storage
 
 
 # production
-/build
+#/build
 
 # misc
 .DS_Store

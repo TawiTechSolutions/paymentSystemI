@@ -39,7 +39,7 @@ const checkDate = (date, recurring, frequency) => {
     return false;
 };
 
-const mailReceipts = () => {
+const mailReceipts = async() => {
     const sheets = parseExcel("../local_temp_storage/receipt_data/receipt.xlsx");
     for (let i = 0; i < sheets.cust_data.length; i++) {
         if (
