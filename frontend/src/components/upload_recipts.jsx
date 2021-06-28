@@ -1,10 +1,28 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import * as XLSX from "xlsx";
 
 function UploadReciptData({ token }) {
   const [file, setFile] = useState(null);
   const [percentage, setPercentage] = useState(0);
+
+  const parseExcel = (fileData) => {
+    const workbook = XLSX.read(fileData, {
+      type: "binary",
+      cellDates: true,
+      cellNF: false,
+      cellText: false,
+    });
+    let data = {};
+    workbook.SheetNames.forEach(function (sheetName) {
+      const XL_row_object = XLSX.utils.sheet_to_row_object_array(
+        workbook.Sheets[sheetName]
+      );
+      data[sheetName] = XL_row_object;
+    });
+    return data;
+  };
 
   const axiosPostRequest = (receipt_data) => {
     const options = {
@@ -39,9 +57,16 @@ function UploadReciptData({ token }) {
 
   // handle file upload
   const sendUploadedFile = () => {
-    const data = new FormData();
-    data.append("file", file);
-    axiosPostRequest(data);
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      /* get binary string */
+      const bstr = evt.target.result;
+
+      console.log(parseExcel(bstr));
+      axiosPostRequest(parseExcel(file));
+    };
+    reader.readAsBinaryString(file);
+    //
   };
 
   const handleFileUpload = (e) => {

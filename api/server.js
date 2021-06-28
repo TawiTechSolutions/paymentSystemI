@@ -53,9 +53,13 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.status(500).send({ message: "error" });
 });
-
-app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
+app.use("*", function(req, res, next) {
+    console.log("the request gotten from req", req.baseUrl);
+    if (!req.baseUrl.includes("/users/") && !req.baseUrl.includes("/receipts/")) {
+        res.sendFile(path.join(__dirname, "build", "index.html"));
+    } else {
+        next();
+    }
 });
 //use verification
 app.use("/", JWT.JWTAuthMiddleware);

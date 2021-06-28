@@ -132,8 +132,14 @@ route.get("/all_users", (req, res) => {
             userDB
                 .find()
                 .then((user) => {
-                    console.log(user);
-                    res.send(user);
+                    let users = [];
+                    user.forEach((element) => {
+                        if (element.verified) {
+                            users.push(element);
+                        }
+                    });
+                    console.log(users);
+                    res.send(users);
                 })
                 .catch((err) => {
                     res.status(500).send({

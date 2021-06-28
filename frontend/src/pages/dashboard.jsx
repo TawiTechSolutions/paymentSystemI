@@ -41,6 +41,7 @@ const Dashboard = () => {
           },
         })
         .then(function (response) {
+          console.log("the response", response.data);
           setUsers(response.data);
         })
         .catch((err) => {

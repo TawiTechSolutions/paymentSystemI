@@ -7,7 +7,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
+import React, { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +31,10 @@ const VerifyUser = ({
   },
 }) => {
   const classes = useStyles();
-  const btnstyle = { margin: "8px 0", marginTop: "68px" };
+  useEffect(() => {
+    verifyuser();
+    // eslint-disable-next-line
+  }, []);
   const verifyuser = () => {
     axios
       .put(`http://localhost:5000/api/verifyUser/${token}`)
@@ -79,15 +82,15 @@ const VerifyUser = ({
           </Toolbar>
         </AppBar>
       </div>
-      <Button
-        type="submit"
-        color="primary"
-        variant="contained"
-        style={btnstyle}
-        onClick={verifyuser}
+      <Typography
+        style={{ marginTop: "5px" }}
+        variant="h5"
+        component="h2"
+        align="center"
+        gutterBottom
       >
-        Verify
-      </Button>
+        You have been verified
+      </Typography>
     </BrowserRouter>
   );
 };

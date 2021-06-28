@@ -21,14 +21,7 @@ var schme = new mongoose.Schema({
     cust_add_city: { type: String, default: "" },
     cust_add_landmark: { type: String, default: "" },
     cust_add_street: { type: String, default: "" },
-    invoice_dt: { type: String, default: "" },
-    invoice_num: { type: String, default: "" },
-    invoice_dt: { type: String, default: "" },
-    invoice_currency: { type: String, default: "" },
-    invoice_amt: { type: String, default: "" },
-    discount: { type: String, default: "" },
-    email_dt: { type: String, default: "" },
-    spl_message: { type: String, default: "" },
+    recepits: [{ type: String, default: "" }],
 });
 
 const userDB = mongoose.model("userDB", schme);

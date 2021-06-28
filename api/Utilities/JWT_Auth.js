@@ -10,11 +10,11 @@ const JWTAuthMiddleware = function(req, res, next) {
     if (
         req.url == "/users/login" ||
         req.url == "/users/register" ||
-        req.url == "/users/forgotPassword/:email" ||
-        req.url == "/users/verifyUser"
+        req.url.includes("/users/forgotPassword/") ||
+        req.url.includes("/users/verifyUser/")
     ) {
         next();
-    } else {
+    } else if (req.url.includes("/users/") || req.url.includes("/receipts/")) {
         const token = req.headers.token;
         if (!token || token === "" || token.includes("object")) {
             console.log("[JWT MiddleWare] No token found");
@@ -34,6 +34,8 @@ const JWTAuthMiddleware = function(req, res, next) {
                 }
             });
         }
+    } else {
+        next();
     }
 };
 
