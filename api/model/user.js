@@ -21,7 +21,7 @@ var schme = new mongoose.Schema({
     cust_add_city: { type: String, default: "" },
     cust_add_landmark: { type: String, default: "" },
     cust_add_street: { type: String, default: "" },
-    recepits: [{ type: String, default: "" }],
+    recepits: [{ type: String }],
 });
 
 const userDB = mongoose.model("userDB", schme);

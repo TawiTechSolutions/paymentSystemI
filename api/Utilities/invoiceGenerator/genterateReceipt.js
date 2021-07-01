@@ -32,7 +32,7 @@ const generateConfirmationInvoicePDF = (clientData, firmData) => {
                     firmData: firmData,
                 });
                 console.log("making invoice for", clientData.invoice_num);
-                htmlToPdf(html)
+                await htmlToPdf(html)
                     .then((result) => {
                         resolve(result);
                     })

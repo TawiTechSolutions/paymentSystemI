@@ -1,21 +1,7 @@
 const XLSX = require("xlsx");
-const generateInvoice = require("./invoiceGenerator/genterateReceipt");
 const nodemailer = require("nodemailer");
-
-const wait = () => {
-    var now = new Date();
-    var waitFor =
-        new Date(now.getFullYear(), now.getMonth(), now.getDate(), 07, 00, 0, 0) -
-        now;
-    if (waitFor < 0) {
-        waitFor += 86400000;
-    }
-    console.log("waiting to mail for (mili seconds)", waitFor);
-    setTimeout(function() {
-        mailReceipts();
-        wait();
-    }, waitFor);
-};
+const userDB = require("../model/user");
+const receiptDB = require("../model/receipts_data");
 
 const checkDate = (date, recurring, frequency) => {
     let days = frequency == "Monthly" ? 30 : 7;
@@ -40,64 +26,65 @@ const checkDate = (date, recurring, frequency) => {
 };
 
 const mailReceipts = async() => {
-    const sheets = parseExcel("../local_temp_storage/receipt_data/receipt.xlsx");
-    for (let i = 0; i < sheets.cust_data.length; i++) {
-        if (
-            checkDate(
-                new Date(sheets.cust_data[i].email_dt).toDateString(),
-                sheets.cust_data[i].recurring,
-                sheets.cust_data[i].Frequency
-            )
-        ) {
-            generateInvoice.generateConfirmationInvoicePDF(
-                sheets.cust_data[i],
-                sheets.solutions_owner_data[0]
-            );
-            //mail it
-            let transporter = nodemailer.createTransport({
-                service: "gmail",
-                auth: {
-                    user: "usingfornodemailer@gmail.com",
-                    pass: "nodemailer@1",
-                },
-            });
-            let mailOptions = {
-                from: "usingfornodemailer@gmail.com", // sender address
-                to: sheets.cust_data[i].cust_email, // list of receivers
-                subject: "Invoice", // Subject line
-                text: `please check the attached invoice`, // plain text body
-                attachments: [{
-                    path: "public/PDFs/ConfrimationInvoice/" +
-                        sheets.cust_data[i].invoice_num +
-                        ".pdf",
-                }, ],
-            };
-            await transporter.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log(info);
-                }
-            });
-        }
-    }
+    userDB.find().then(async(users) => {
+        users.forEach((user) => {
+            if (user.recepits.length > 0) {
+                user.recepits.forEach(async(recepit_id) => {
+                    let recepit = await receiptDB.findById(recepit_id);
+                    if (
+                        checkDate(
+                            new Date(recepit.email_dt).toDateString(),
+                            recepit.recurring,
+                            recepit.Frequency
+                        )
+                    ) {
+                        //mail it
+                        let transporter = nodemailer.createTransport({
+                            service: "gmail",
+                            auth: {
+                                user: "usingfornodemailer@gmail.com",
+                                pass: "nodemailer@1",
+                            },
+                        });
+                        let mailOptions = {
+                            from: "usingfornodemailer@gmail.com", // sender address
+                            to: user.email, // list of receivers
+                            subject: "Invoice", // Subject line
+                            text: `please check the attached invoice`, // plain text body
+                            attachments: [{
+                                filename: "Invoice.pdf",
+                                path: recepit.receipt_url,
+                            }, ],
+                        };
+                        await transporter.sendMail(mailOptions, (err, info) => {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log(info);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
 };
 
-const parseExcel = (filePath) => {
-    const workbook = XLSX.readFile(filePath, {
-        type: "binary",
-        cellDates: true,
-        cellNF: false,
-        cellText: false,
-    });
-    let data = {};
-    workbook.SheetNames.forEach(function(sheetName) {
-        const XL_row_object = XLSX.utils.sheet_to_row_object_array(
-            workbook.Sheets[sheetName]
-        );
-        data[sheetName] = XL_row_object;
-    });
-    return data;
-};
+// const parseExcel = (filePath) => {
+//     const workbook = XLSX.readFile(filePath, {
+//         type: "binary",
+//         cellDates: true,
+//         cellNF: false,
+//         cellText: false,
+//     });
+//     let data = {};
+//     workbook.SheetNames.forEach(function(sheetName) {
+//         const XL_row_object = XLSX.utils.sheet_to_row_object_array(
+//             workbook.Sheets[sheetName]
+//         );
+//         data[sheetName] = XL_row_object;
+//     });
+//     return data;
+// };
 
-module.exports = { wait };
+module.exports = { mailReceipts };

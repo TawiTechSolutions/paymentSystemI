@@ -298,7 +298,9 @@
                         font-family: Arial;
                         font-size: 12px;
                       ">
-                                        <%= clientData.invoice_amt%>
+                                        <%=
+                      clientData.invoice_amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g,
+                      ",")%>
                                     </td>
                                 </tr>
                                 <tr class="nested_table_row">
@@ -316,7 +318,9 @@
                         font-size: 12px;
                         color: red;
                       ">
-                                        <%= clientData.invoice_amt * clientData.discount %>
+                                        <%= (clientData.invoice_amt *
+                      clientData.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
+                      ",") %>
                                     </td>
                                 </tr>
                                 <tr class="nested_table_row">
@@ -333,8 +337,9 @@
                         font-family: Arial;
                         font-size: 12px;
                       ">
-                                        <%= clientData.invoice_amt - clientData.invoice_amt *
-                      clientData.discount%>
+                                        <%= (clientData.invoice_amt - (clientData.invoice_amt *
+                      clientData.discount)).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
+                      ",")%>
                                     </td>
                                 </tr>
                                 <tr class="nested_table_row" style="font-family: Arial, Helvetica, sans-serif">
@@ -352,7 +357,9 @@
                         font-size: 12px;
                         color: red;
                       ">
-                                        <%= clientData.invoice_amt * clientData.TDS%>
+                                        <%= (clientData.invoice_amt *
+                      clientData.TDS).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
+                      ",")%>
                                     </td>
                                 </tr>
                                 <tr class="nested_table_row">
@@ -369,8 +376,9 @@
                         font-family: Arial;
                         font-size: 12px;
                       ">
-                                        <%= clientData.invoice_amt - clientData.invoice_amt *
-                      clientData.TDS%>
+                                        <%= (clientData.invoice_amt - (clientData.invoice_amt *
+                      clientData.TDS)).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
+                      ",")%>
                                     </td>
                                 </tr>
                                 <tr class="nested_table_row">
@@ -386,7 +394,9 @@
                         font-family: Arial;
                         font-size: 12px;
                       ">
-                                        <%= clientData.invoice_amt * clientData.GST%>
+                                        <%= (clientData.invoice_amt *
+                      clientData.GST).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
+                      ",")%>
                                     </td>
                                 </tr>
                             </table>
@@ -514,7 +524,9 @@
                         font-size: 16px;
                         padding-right: 4px;
                       ">
-                                        <%= clientData.final_bal_due%>
+                                        <%=
+                      (clientData.final_bal_due).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
+                      ",")%>
                                     </td>
                                 </tr>
                             </table>

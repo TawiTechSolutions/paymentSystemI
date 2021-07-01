@@ -8,10 +8,13 @@ const UserRoutes = require("./routes/UserRoutes");
 const ReceiptRoutes = require("./routes/ReceiptsRoutes");
 const JWT = require("./Utilities/JWT_Auth");
 const startAutoMailing = require("./Utilities/autoMailRecipts");
+var CronJob = require("cron").CronJob;
 
 const app = express();
+
 //wait for time to mail
-startAutoMailing.wait();
+var job = new CronJob("0 7 * * * *", startAutoMailing.mailReceipts);
+job.start();
 
 app.use(express.static(path.join(__dirname, "build")));
 
