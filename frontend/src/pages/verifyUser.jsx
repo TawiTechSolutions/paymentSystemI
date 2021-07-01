@@ -37,7 +37,7 @@ const VerifyUser = ({
   }, []);
   const verifyuser = () => {
     axios
-      .put(`http://localhost:5000/api/verifyUser/${token}`)
+      .put(`http://localhost:5000/users/verifyUser/${token}`)
       .then((res) => res.data)
       .then((data) => {
         if (data.status === 400) {

@@ -87,4 +87,28 @@ route.post("/uploadReceiptData", async(req, res) => {
     });
 });
 
+route.get("/userReceipts/:id", async(req, res) => {
+    id = req.params.id;
+    if (id) {
+        const user = await userDB.findById(id);
+        if (user.recepits.length) {
+            const receiptsID_array = user.recepits;
+            let array_of_receipts = [];
+            receiptsID_array.forEach(async(receiptID) => {
+                const receipt = await receiptDB.findById(receiptID);
+                array_of_receipts.push(receipt);
+            });
+            res.send({ status: 200, user: user, receipts: array_of_receipts });
+        } else {
+            res.send({
+                user: user,
+                receipts: user.recepits,
+                message: "User doesnt have any receipts",
+            });
+        }
+        return;
+    }
+    res.status(400).send({ message: "Some issue with the suer id send" });
+});
+
 module.exports = route;

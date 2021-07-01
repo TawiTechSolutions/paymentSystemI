@@ -11,6 +11,7 @@ import UserRow from "../components/user-table-row";
 import { Container, Typography } from "@material-ui/core";
 import UploadUsers from "../components/upload_csv";
 import UploadReciptData from "../components/upload_recipts";
+import UserReceipts from "../components/user-receipts";
 
 const axios = require("axios");
 
@@ -18,6 +19,8 @@ const Dashboard = () => {
   const token = localStorage.getItem("token");
   const [users, setUsers] = useState([]);
   const [userName, setUsername] = useState("");
+  const [onDashboard, setOnDashboard] = useState(true);
+  const [fetchReciptsOf, setFetchReciptsOf] = useState(null);
 
   useEffect(() => {
     if (token) {
@@ -31,6 +34,7 @@ const Dashboard = () => {
           setUsername(res.data.name);
         })
         .catch((err) => {
+          window.alert("some error occured check console");
           console.log(err);
         });
 
@@ -52,59 +56,82 @@ const Dashboard = () => {
     }
   }, [token]);
 
+  const getReceipts = (userId) => {
+    setFetchReciptsOf(userId);
+    setOnDashboard(false);
+  };
+  const toggleView = () => {
+    setOnDashboard(true);
+  };
+
   return (
     <BrowserRouter>
       <NavBar username={userName} />
-      <UploadUsers token={token} />
-      <UploadReciptData token={token} />
+      {onDashboard ? (
+        <div>
+          <UploadUsers token={token} />
+          <UploadReciptData token={token} />
 
-      <Typography
-        style={{ marginTop: "5px" }}
-        variant="h5"
-        component="h2"
-        align="center"
-        gutterBottom
-      >
-        Admin Dashboard
-      </Typography>
-      <Container>
-        <Box
-          style={{
-            overflow: "auto",
-            margin: "7px",
-            marginTop: 0,
-            border: "1.5px solid rgb(243, 243, 243)",
-            borderBottom: 0,
-          }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <b>User Name</b>
-                </TableCell>
-                <TableCell>
-                  <b>Email</b>
-                </TableCell>
-                <TableCell>
-                  <b>Approval</b>
-                </TableCell>
-                <TableCell>
-                  <b>Role</b>
-                </TableCell>
-                <TableCell>
-                  <b>Actions</b>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user) => (
-                <UserRow token={token} key={user._id} user={user} />
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </Container>
+          <Typography
+            style={{ marginTop: "5px" }}
+            variant="h5"
+            component="h2"
+            align="center"
+            gutterBottom
+          >
+            Admin Dashboard
+          </Typography>
+          <Container>
+            <Box
+              style={{
+                overflow: "auto",
+                margin: "7px",
+                marginTop: 0,
+                border: "1.5px solid rgb(243, 243, 243)",
+                borderBottom: 0,
+              }}
+            >
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <b>User Name</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Email</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Approval</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>Role</b>
+                    </TableCell>
+                    <TableCell style={{ textAlign: "center" }}>
+                      <b>Actions</b>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {users.map((user) => (
+                    <UserRow
+                      token={token}
+                      key={user._id}
+                      user={user}
+                      getReceipts={getReceipts}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Container>
+        </div>
+      ) : (
+        <UserReceipts
+          userID={fetchReciptsOf}
+          token={token}
+          toggleView={toggleView}
+        />
+      )}
     </BrowserRouter>
   );
 };

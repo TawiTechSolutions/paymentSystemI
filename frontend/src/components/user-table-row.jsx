@@ -8,6 +8,7 @@ import Select from "@material-ui/core/Select";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
+import AssignmentIcon from "@material-ui/icons/Assignment";
 
 const axios = require("axios");
 
@@ -20,7 +21,7 @@ const useStyles = makeStyles({
   },
 });
 
-const UserRow = ({ user, token }) => {
+const UserRow = ({ user, token, getReceipts }) => {
   const classes = useStyles();
 
   const [admin_role, setAdmin_role] = useState(user.isAdmin);
@@ -103,6 +104,10 @@ const UserRow = ({ user, token }) => {
     }
   };
 
+  const switchToReceipts = () => {
+    getReceipts(user._id);
+  };
+
   return (
     <TableRow>
       <TableCell style={{ padding: "0 16px" }}>{user.name}</TableCell>
@@ -138,6 +143,13 @@ const UserRow = ({ user, token }) => {
         </FormControl>
       </TableCell>
       <TableCell style={{ padding: "0 16px" }}>
+        <IconButton
+          onClick={switchToReceipts}
+          aria-label="update"
+          className={classes.margin}
+        >
+          <AssignmentIcon />
+        </IconButton>
         <IconButton
           onClick={() => {
             deleteUser(user._id);
