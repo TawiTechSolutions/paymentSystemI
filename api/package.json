@@ -26,6 +26,7 @@
         "axios": "^0.21.1",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
+        "cloudinary": "^1.26.1",
         "cros": "^1.0.1",
         "csv": "^5.5.0",
         "dotenv": "^9.0.0",
@@ -41,6 +42,7 @@
         "nodemailer": "^6.6.1",
         "nodemon": "^2.0.7",
         "randomstring": "^1.2.1",
+        "streamifier": "^0.1.1",
         "xlsx": "^0.17.0"
     }
 }

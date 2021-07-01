@@ -1,5 +1,5 @@
 const XLSX = require("xlsx");
-const generateInvoice = require("./invoiceGenerator/htmlToPdf");
+const generateInvoice = require("./invoiceGenerator/genterateReceipt");
 const nodemailer = require("nodemailer");
 
 const wait = () => {

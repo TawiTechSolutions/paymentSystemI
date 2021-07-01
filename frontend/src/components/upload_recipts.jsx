@@ -62,8 +62,7 @@ function UploadReciptData({ token }) {
       /* get binary string */
       const bstr = evt.target.result;
 
-      console.log(parseExcel(bstr));
-      axiosPostRequest(parseExcel(file));
+      axiosPostRequest(parseExcel(bstr));
     };
     reader.readAsBinaryString(file);
     //
