@@ -32,35 +32,46 @@ route.post("/uploadReceiptData", async(req, res) => {
         //loop thorught the rows and make recepit
         cust_data.forEach(async(element) => {
             try {
-                await generateReceipt
-                    .generateConfirmationInvoicePDF(element, frim_data)
-                    .then(async(cloudinary_details) => {
-                        console.log("result of generateing recipt", cloudinary_details);
-                        const recepit = new receiptDB({
-                            invoice_detials: element,
-                            receipt_url: cloudinary_details.secure_url,
+                const receipt_exists = await receiptDB.findOne({
+                    invoice_num: element.invoice_num,
+                });
+                if (receipt_exists) {
+                    console.log(
+                        "a invoice with same number is present in db",
+                        element.invoice_num
+                    );
+                } else {
+                    await generateReceipt
+                        .generateConfirmationInvoicePDF(element, frim_data)
+                        .then(async(cloudinary_details) => {
+                            console.log("result of generateing recipt", cloudinary_details);
+                            const recepit = new receiptDB({
+                                invoice_detials: element,
+                                invoice_num: element.invoice_num,
+                                receipt_url: cloudinary_details.secure_url,
+                            });
+                            console.log("saving invoice no.", element.invoice_num, "to db");
+                            const result = await recepit.save();
+                            //add recepit to user db
+                            const user_found = await userDB.findOneAndUpdate({
+                                email: element.cust_email,
+                            }, { $push: { recepits: result._id } });
+                            if (user_found)
+                                console.log(
+                                    "user found and added recepit to the user",
+                                    user_found
+                                );
+                            else
+                                console.log(
+                                    "user with email id",
+                                    element.cust_email,
+                                    "not found"
+                                );
+                        })
+                        .catch((err) => {
+                            console.log(err);
                         });
-                        console.log("saving invoice no.", element.invoice_num, "to db");
-                        const result = await recepit.save();
-                        //add recepit to user db
-                        const user_found = await userDB.findOneAndUpdate({
-                            email: element.cust_email,
-                        }, { $push: { recepits: result._id } });
-                        if (user_found)
-                            console.log(
-                                "user found and added recepit to the user",
-                                user_found
-                            );
-                        else
-                            console.log(
-                                "user with email id",
-                                element.cust_email,
-                                "not found"
-                            );
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
+                }
             } catch (err) {
                 console.log("err" + err);
             }

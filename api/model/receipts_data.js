@@ -26,6 +26,7 @@ var schme = new mongoose.Schema({
         type: invoice_detials,
         require: true,
     },
+    invoice_num: { type: String, require: true, unique: true },
     receipt_url: { type: String, default: "" },
 });
 

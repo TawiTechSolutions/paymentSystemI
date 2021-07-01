@@ -22,9 +22,13 @@ const generateConfirmationInvoicePDF = (clientData, firmData) => {
                 }
                 const ejs_string = file;
                 let template = ejs.compile(ejs_string);
+                let clientData_M = clientData;
+                clientData_M.invoice_dt = new Date(
+                    clientData.invoice_dt
+                ).toDateString();
 
                 let html = template({
-                    clientData: clientData,
+                    clientData: clientData_M,
                     firmData: firmData,
                 });
                 console.log("making invoice for", clientData.invoice_num);
