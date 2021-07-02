@@ -69,9 +69,6 @@ const Dashboard = () => {
       <NavBar username={userName} />
       {onDashboard ? (
         <div>
-          <UploadUsers token={token} />
-          <UploadReciptData token={token} />
-
           <Typography
             style={{ marginTop: "5px" }}
             variant="h5"
@@ -124,6 +121,8 @@ const Dashboard = () => {
               </Table>
             </Box>
           </Container>
+          <UploadUsers token={token} />
+          <UploadReciptData token={token} />
         </div>
       ) : (
         <UserReceipts

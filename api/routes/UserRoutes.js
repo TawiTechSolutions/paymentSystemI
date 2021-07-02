@@ -524,17 +524,17 @@ route.post("/uploadUsers", async(req, res) => {
                 };
                 await transporter.sendMail(mailOptions, (err, info) => {
                     if (err) {
-                        res.status(500).send({ status: 500, message: err });
+                        console.log(err);
                         return;
                     }
                 });
             })
             .catch((err) => {
-                res.status(500).send(err.message || "some error while sending to db");
+                console.log(err);
                 return;
             });
     });
-    res.send({ message: "sucessfully send" });
+    res.send({ message: "received data" });
 });
 
 module.exports = route;

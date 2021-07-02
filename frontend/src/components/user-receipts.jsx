@@ -20,6 +20,11 @@ const UserReceipts = ({ userID, token, toggleView }) => {
     getReceipts();
     // eslint-disable-next-line
   }, []);
+  useEffect(() => {
+    console.log(user);
+    console.log("receipt", receipts);
+    // eslint-disable-next-line
+  }, [user, receipts]);
   const getReceipts = () => {
     axios
       .get(`http://localhost:5000/receipts/userReceipts/${userID}`, {

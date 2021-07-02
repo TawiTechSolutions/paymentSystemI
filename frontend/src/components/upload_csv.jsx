@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import axios from "axios";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Button from "@material-ui/core/Button";
+import CustomTable from "./Custom-Table";
 
 function UploadUsers({ token }) {
   const [column_names, setColumn_names] = useState([]);
   const [data, setData] = useState([]);
-  const [file, setFile] = useState(null);
+  const [fileSelected, setFileSelected] = useState(false);
+  const [fileCorrect, setCorrect] = useState(false);
   const [percentage, setPercentage] = useState(0);
 
   // process CSV data
@@ -50,10 +53,10 @@ function UploadUsers({ token }) {
 
     setData(list);
     setColumn_names(columns);
-    axiosPostRequest(columns, list);
+    setFileSelected(true);
   };
 
-  const axiosPostRequest = (column, users) => {
+  const axiosPostRequest = () => {
     const options = {
       headers: {
         token: token,
@@ -70,8 +73,8 @@ function UploadUsers({ token }) {
       .post(
         `http://localhost:5000/users/uploadUsers`,
         {
-          columns: column,
-          users_data: users,
+          columns: column_names,
+          users_data: data,
         },
         options
       )
@@ -81,11 +84,12 @@ function UploadUsers({ token }) {
           setPercentage(0);
         }, 1000);
         window.alert(res.data.message);
+        console.log(res.data.message);
       });
   };
 
   // handle file upload
-  const sendUploadedFile = () => {
+  const sendUploadedFile = (file) => {
     const reader = new FileReader();
     reader.onload = (evt) => {
       /* Parse data */
@@ -102,7 +106,7 @@ function UploadUsers({ token }) {
   };
 
   const handleFileUpload = (e) => {
-    setFile(e.target.files[0]);
+    sendUploadedFile(e.target.files[0]);
   };
 
   useEffect(() => {
@@ -111,12 +115,69 @@ function UploadUsers({ token }) {
     console.log("percentage", percentage);
   }, [data, column_names, percentage]);
 
+  useEffect(() => {
+    if (fileSelected) {
+      if (column_names.length && data.length) {
+        for (let j = 0; j < column_names.length; j++) {
+          if (column_names[j].name) {
+            for (let i = 0; i < data.length; i++) {
+              if (!data[i][column_names[j].name]) {
+                setCorrect(false);
+                window.alert("Missing Data in csv file. Fix it to send file");
+                return;
+              }
+            }
+          }
+        }
+        setCorrect(true);
+      }
+    }
+  }, [fileSelected, column_names, data]);
+
   return (
     <div>
-      <input type="file" accept=".csv,.xlsx,.xls" onChange={handleFileUpload} />
-      <button onClick={sendUploadedFile}>Upload Users Data</button>
-      {percentage > 0 ? (
-        <LinearProgress variant="determinate" value={percentage} />
+      <Button
+        variant="contained"
+        color="primary"
+        component="label"
+        style={{ marginLeft: "30px" }}
+      >
+        <input
+          type="file"
+          accept=".csv,.xlsx,.xls"
+          onChange={handleFileUpload}
+          hidden
+        />
+        Upload Users Data
+      </Button>
+      {fileSelected ? (
+        <div>
+          <CustomTable users={data} coloum_names={column_names} />
+          {fileCorrect ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={axiosPostRequest}
+              style={{ marginLeft: "30px" }}
+            >
+              Send Users Data
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              disabled
+              style={{ marginLeft: "30px", marginTop: "10px" }}
+            >
+              Send Users Data
+            </Button>
+          )}
+
+          {percentage > 0 ? (
+            <LinearProgress variant="determinate" value={percentage} />
+          ) : (
+            ""
+          )}
+        </div>
       ) : (
         ""
       )}

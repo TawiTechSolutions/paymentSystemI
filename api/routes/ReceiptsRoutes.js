@@ -94,10 +94,10 @@ route.get("/userReceipts/:id", async(req, res) => {
         if (user.recepits.length) {
             const receiptsID_array = user.recepits;
             let array_of_receipts = [];
-            receiptsID_array.forEach(async(receiptID) => {
-                const receipt = await receiptDB.findById(receiptID);
+            for (let i = 0; i < receiptsID_array.length; i++) {
+                const receipt = await receiptDB.findById(receiptsID_array[i]);
                 array_of_receipts.push(receipt);
-            });
+            }
             res.send({ status: 200, user: user, receipts: array_of_receipts });
         } else {
             res.send({
