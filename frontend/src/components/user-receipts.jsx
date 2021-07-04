@@ -27,7 +27,7 @@ const UserReceipts = ({ userID, token, toggleView }) => {
   }, [user, receipts]);
   const getReceipts = () => {
     axios
-      .get(`http://localhost:5000/receipts/userReceipts/${userID}`, {
+      .get(`http://localhost:5000/invoices/userReceipts/${userID}`, {
         headers: {
           token: token,
         },

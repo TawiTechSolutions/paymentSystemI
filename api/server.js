@@ -5,7 +5,7 @@ const path = require("path");
 const cors = require("cors");
 const connectDB = require("./database/connection");
 const UserRoutes = require("./routes/UserRoutes");
-const ReceiptRoutes = require("./routes/ReceiptsRoutes");
+const invoiceRoutes = require("./routes/invoiceRoutes");
 const JWT = require("./Utilities/JWT_Auth");
 const startAutoMailing = require("./Utilities/autoMailRecipts");
 var CronJob = require("cron").CronJob;
@@ -58,7 +58,7 @@ app.use(function(err, req, res, next) {
 });
 app.use("*", function(req, res, next) {
     console.log("the request gotten from req", req.baseUrl);
-    if (!req.baseUrl.includes("/users/") && !req.baseUrl.includes("/receipts/")) {
+    if (!req.baseUrl.includes("/users/") && !req.baseUrl.includes("/invoices/")) {
         res.sendFile(path.join(__dirname, "build", "index.html"));
     } else {
         next();
@@ -68,7 +68,7 @@ app.use("*", function(req, res, next) {
 app.use("/", JWT.JWTAuthMiddleware);
 //load router
 app.use("/users", UserRoutes);
-app.use("/receipts", ReceiptRoutes);
+app.use("/invoices", invoiceRoutes);
 
 app.listen(PORT, () => {
     console.log(`server started on http://localhost:${PORT}`);

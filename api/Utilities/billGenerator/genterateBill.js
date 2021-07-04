@@ -13,7 +13,7 @@ cloudinary.config({
 const generateConfirmationInvoicePDF = (clientData, firmData) => {
     return new Promise((resolve, reject) => {
         fs.readFile(
-            "Utilities/invoiceGenerator/invoice.ejs",
+            "Utilities/billGenerator/bill.ejs",
             "utf8",
             async(err, file) => {
                 if (err) {
@@ -31,7 +31,7 @@ const generateConfirmationInvoicePDF = (clientData, firmData) => {
                     clientData: clientData_M,
                     firmData: firmData,
                 });
-                console.log("making invoice for", clientData.invoice_num);
+                console.log("making bill for", clientData.invoice_num);
                 await htmlToPdf(html)
                     .then((result) => {
                         resolve(result);

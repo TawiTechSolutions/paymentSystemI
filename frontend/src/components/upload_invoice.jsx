@@ -6,7 +6,7 @@ import Button from "@material-ui/core/Button";
 import CustomTable from "./Custom-Table";
 import { Typography } from "@material-ui/core";
 
-// function UploadReciptData({ token }) {
+// function UploadInvoiceData({ token }) {
 //   const [file, setFile] = useState(null);
 //   const [percentage, setPercentage] = useState(0);
 
@@ -77,10 +77,10 @@ import { Typography } from "@material-ui/core";
 //           onChange={handleFileUpload}
 //           hidden
 //         />
-//         Upload Recipts Data
+//         Upload Invoices Data
 //       </Button>
 //       <Button variant="contained" color="primary" onClick={sendUploadedFile}>
-//         Send Recipts Data
+//         Send Invoices Data
 //       </Button>
 //       {percentage > 0 ? (
 //         <LinearProgress variant="determinate" value={percentage} />
@@ -91,9 +91,9 @@ import { Typography } from "@material-ui/core";
 //   );
 // }
 
-// export default UploadReciptData;
+// export default UploadInvoiceData;
 
-function UploadReciptData({ token }) {
+function UploadInvoiceData({ token }) {
   const [data_user, setData_user] = useState([]);
   const [data_SO, setData_SO] = useState([]);
   const [data_to_be_send, setData_to_be_send] = useState({});
@@ -138,7 +138,7 @@ function UploadReciptData({ token }) {
     };
     axios
       .post(
-        `http://localhost:5000/receipts/uploadReceiptData`,
+        `http://localhost:5000/invoices/uploadInvoicesData`,
 
         data_to_be_send,
         options
@@ -223,7 +223,7 @@ function UploadReciptData({ token }) {
           onChange={handleFileUpload}
           hidden
         />
-        Upload Recipts Data
+        Upload Invoices Data
       </Button>
       {fileSelected ? (
         <div>
@@ -255,7 +255,7 @@ function UploadReciptData({ token }) {
               onClick={axiosPostRequest}
               style={{ marginLeft: "30px" }}
             >
-              Send Recipts Data
+              Send Invoices Data
             </Button>
           ) : (
             <Button
@@ -263,7 +263,7 @@ function UploadReciptData({ token }) {
               disabled
               style={{ marginLeft: "30px", marginTop: "10px" }}
             >
-              Send Recipts Data
+              Send Invoices Data
             </Button>
           )}
 
@@ -280,4 +280,4 @@ function UploadReciptData({ token }) {
   );
 }
 
-export default UploadReciptData;
+export default UploadInvoiceData;

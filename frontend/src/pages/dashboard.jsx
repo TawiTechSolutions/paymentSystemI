@@ -10,7 +10,7 @@ import Box from "@material-ui/core/Box";
 import UserRow from "../components/user-table-row";
 import { Container, Typography } from "@material-ui/core";
 import UploadUsers from "../components/upload_csv";
-import UploadReciptData from "../components/upload_recipts";
+import UploadInvoiceData from "../components/upload_invoice";
 import UserReceipts from "../components/user-receipts";
 
 const axios = require("axios");
@@ -122,7 +122,7 @@ const Dashboard = () => {
             </Box>
           </Container>
           <UploadUsers token={token} />
-          <UploadReciptData token={token} />
+          <UploadInvoiceData token={token} />
         </div>
       ) : (
         <UserReceipts
