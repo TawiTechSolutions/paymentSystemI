@@ -10,7 +10,7 @@ cloudinary.config({
     api_secret: "d7QnLYuJ0BfYA-WuAwrxrrO2hLk",
 });
 
-const generateConfirmationInvoicePDF = (clientData, firmData) => {
+const generateBillPDF = (clientData, firmData) => {
     return new Promise((resolve, reject) => {
         fs.readFile(
             "Utilities/billGenerator/bill.ejs",
@@ -74,5 +74,5 @@ const htmlToPdf = (html) => {
 };
 
 module.exports = {
-    generateConfirmationInvoicePDF,
+    generateBillPDF,
 };

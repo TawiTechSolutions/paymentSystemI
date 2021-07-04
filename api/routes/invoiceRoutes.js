@@ -5,6 +5,7 @@ const receiptDB = require("../model/receipt");
 const billDB = require("../model/bill");
 const userDB = require("../model/user");
 const generateReceipt = require("../Utilities/receiptGenerator/genterateReceipt");
+const generateBill = require("../Utilities/billGenerator/genterateBill");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
@@ -42,12 +43,12 @@ route.post("/uploadInvoicesData", async(req, res) => {
                 });
                 if (receipt_exists) {
                     console.log(
-                        "a invoice with same number is present in db",
+                        "a receipt with same number is present in db",
                         element.invoice_num
                     );
                 } else {
                     await generateReceipt
-                        .generateConfirmationInvoicePDF(element, frim_data)
+                        .generateReceiptPDF(element, frim_data)
                         .then(async(cloudinary_details) => {
                             console.log("result of generateing recipt", cloudinary_details);
                             const recepit = new receiptDB({
@@ -55,7 +56,7 @@ route.post("/uploadInvoicesData", async(req, res) => {
                                 invoice_num: element.invoice_num,
                                 receipt_url: cloudinary_details.secure_url,
                             });
-                            console.log("saving invoice no.", element.invoice_num, "to db");
+                            console.log("saving receipt no.", element.invoice_num, "to db");
                             const result = await recepit.save();
                             //add recepit to user db
                             const user_found = await userDB.findOneAndUpdate({
@@ -74,7 +75,10 @@ route.post("/uploadInvoicesData", async(req, res) => {
                                 );
                                 ///adding new user
                                 await addUserIfAbsent(element);
-                                console.log("added user wiht email", element.cust_email);
+                                console.log("added user with email", element.cust_email);
+                                await userDB.findOneAndUpdate({
+                                    email: element.cust_email,
+                                }, { $push: { recepits: result._id } });
                             }
                         })
                         .catch((err) => {
@@ -92,30 +96,27 @@ route.post("/uploadInvoicesData", async(req, res) => {
                     });
                     if (bill_exists) {
                         console.log(
-                            "a invoice with same number is present in db",
+                            "a bill with same number is present in db",
                             element.invoice_num
                         );
                     } else {
-                        await generateReceipt
-                            .generateConfirmationInvoicePDF(element, frim_data)
+                        await generateBill
+                            .generateBillPDF(element, frim_data)
                             .then(async(cloudinary_details) => {
-                                console.log("result of generateing recipt", cloudinary_details);
-                                const recepit = new receiptDB({
+                                console.log("result of generateing bill", cloudinary_details);
+                                const bill = new billDB({
                                     invoice_detials: element,
                                     invoice_num: element.invoice_num,
-                                    receipt_url: cloudinary_details.secure_url,
+                                    bill_url: cloudinary_details.secure_url,
                                 });
-                                console.log("saving invoice no.", element.invoice_num, "to db");
-                                const result = await recepit.save();
-                                //add recepit to user db
+                                console.log("saving bill no.", element.invoice_num, "to db");
+                                const result = await bill.save();
+                                //add bill to user db
                                 const user_found = await userDB.findOneAndUpdate({
                                     email: element.cust_email,
-                                }, { $push: { recepits: result._id } });
+                                }, { $push: { bills: result._id } });
                                 if (user_found)
-                                    console.log(
-                                        "user found and added recepit to the user",
-                                        user_found
-                                    );
+                                    console.log("user found and added bill to the user");
                                 else {
                                     console.log(
                                         "user with email id",
@@ -124,7 +125,10 @@ route.post("/uploadInvoicesData", async(req, res) => {
                                     );
                                     ///adding new user
                                     await addUserIfAbsent(element);
-                                    console.log("added user wiht email", element.cust_email);
+                                    console.log("added user with email", element.cust_email);
+                                    await userDB.findOneAndUpdate({
+                                        email: element.cust_email,
+                                    }, { $push: { bills: result._id } });
                                 }
                             })
                             .catch((err) => {
