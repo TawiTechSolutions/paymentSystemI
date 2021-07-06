@@ -10,7 +10,98 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
 
-route.post("/uploadInvoicesData", async(req, res) => {
+route.post("/uploadBillsData", async(req, res) => {
+    if (req.body) {
+        await SO_dataDB.deleteMany({}, (err) => {
+            if (err) {
+                console.log(err);
+            }
+        });
+        let so_data = new SO_dataDB({
+            so_data: req.body.solutions_owner_data[0],
+        });
+        //save SO data to db
+        so_data
+            .save(so_data)
+            .then(async(data) => {
+                console.log("saved so_data", data);
+            })
+            .catch((err) => {
+                console.log("error in saving to db", err);
+            });
+
+        //bills data
+        const cust_data = req.body.cust_data;
+        const frim_data = req.body.solutions_owner_data[0];
+
+        //loop thorught the rows and make bill
+        cust_data.forEach(async(element) => {
+            //making Bill
+            try {
+                const Bill_exists = await billDB.findOne({
+                    invoice_num: element.invoice_num,
+                });
+                if (Bill_exists) {
+                    console.log(
+                        "a Bill with same number is present in db",
+                        element.invoice_num
+                    );
+                } else {
+                    await generateBill
+                        .generateBillPDF(element, frim_data)
+                        .then(async(cloudinary_details) => {
+                            console.log("result of generateing recipt", cloudinary_details);
+                            const bill = new billDB({
+                                invoice_detials: element,
+                                invoice_num: element.invoice_num,
+                                bill_url: cloudinary_details.secure_url,
+                            });
+                            console.log("saving Bill no.", element.invoice_num, "to db");
+                            const result = await bill.save();
+                            //add bill to user db
+                            const user_found = await userDB.findOneAndUpdate({
+                                email: element.cust_email,
+                            }, { $push: { bills: result._id } });
+                            if (user_found)
+                                console.log(
+                                    "user found and added bill to the user",
+                                    user_found
+                                );
+                            else {
+                                console.log(
+                                    "user with email id",
+                                    element.cust_email,
+                                    "not found"
+                                );
+                                //user should not be added in bills
+                                // ///adding new user
+                                // await addUserIfAbsent(element);
+                                // console.log("added user with email", element.cust_email);
+                                // await userDB.findOneAndUpdate({
+                                //     email: element.cust_email,
+                                // }, { $push: { bills: result._id } });
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                }
+            } catch (err) {
+                console.log("err" + err);
+            }
+        });
+        res.send({
+            message: "Files have been uploaded",
+        });
+        return;
+    }
+    res.send({
+        status: 400,
+        message: "some error. file not properly send / size is 0",
+    });
+});
+
+route.post("/uploadReceiptsData", async(req, res) => {
     if (req.body) {
         await SO_dataDB.deleteMany({}, (err) => {
             if (err) {
@@ -80,6 +171,31 @@ route.post("/uploadInvoicesData", async(req, res) => {
                                     email: element.cust_email,
                                 }, { $push: { recepits: result._id } });
                             }
+                            //mail the receipt
+                            let transporter = nodemailer.createTransport({
+                                service: "gmail",
+                                auth: {
+                                    user: process.env.SENDER_EMAIL,
+                                    pass: process.env.SENDER_EMAIL_PASSWORD,
+                                },
+                            });
+                            let mailOptions = {
+                                from: process.env.SENDER_EMAIL, // sender address
+                                to: to, // list of receivers
+                                subject: "Receipt", // Subject line
+                                text: `please check the attached Receipt`, // plain text body
+                                attachments: [{
+                                    filename: "Receipt.pdf",
+                                    path: cloudinary_details.secure_url,
+                                }, ],
+                            };
+                            await transporter.sendMail(mailOptions, (err, info) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log(info);
+                                }
+                            });
                         })
                         .catch((err) => {
                             console.log(err);
@@ -87,57 +203,6 @@ route.post("/uploadInvoicesData", async(req, res) => {
                 }
             } catch (err) {
                 console.log("err" + err);
-            }
-            if (element.paid == "No") {
-                //making bill
-                try {
-                    const bill_exists = await billDB.findOne({
-                        invoice_num: element.invoice_num,
-                    });
-                    if (bill_exists) {
-                        console.log(
-                            "a bill with same number is present in db",
-                            element.invoice_num
-                        );
-                    } else {
-                        await generateBill
-                            .generateBillPDF(element, frim_data)
-                            .then(async(cloudinary_details) => {
-                                console.log("result of generateing bill", cloudinary_details);
-                                const bill = new billDB({
-                                    invoice_detials: element,
-                                    invoice_num: element.invoice_num,
-                                    bill_url: cloudinary_details.secure_url,
-                                });
-                                console.log("saving bill no.", element.invoice_num, "to db");
-                                const result = await bill.save();
-                                //add bill to user db
-                                const user_found = await userDB.findOneAndUpdate({
-                                    email: element.cust_email,
-                                }, { $push: { bills: result._id } });
-                                if (user_found)
-                                    console.log("user found and added bill to the user");
-                                else {
-                                    console.log(
-                                        "user with email id",
-                                        element.cust_email,
-                                        "not found"
-                                    );
-                                    ///adding new user
-                                    await addUserIfAbsent(element);
-                                    console.log("added user with email", element.cust_email);
-                                    await userDB.findOneAndUpdate({
-                                        email: element.cust_email,
-                                    }, { $push: { bills: result._id } });
-                                }
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            });
-                    }
-                } catch (err) {
-                    console.log("err" + err);
-                }
             }
         });
         res.send({
@@ -175,8 +240,35 @@ route.get("/userReceipts/:id", async(req, res) => {
     res.status(400).send({ message: "Some issue with the suer id send" });
 });
 
+route.post("/confrimReceiptsUpload", async(req, res) => {
+    const cust_data = req.body.cust_data;
+    let not_found = [];
+    if (cust_data.length) {
+        for (let i = 0; i < cust_data.length; i++) {
+            //checking if user exists
+            try {
+                const found = await userDB.findOne({
+                    email: cust_data[i].cust_email,
+                });
+                if (!found) {
+                    not_found.push(cust_data[i].cust_email);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        if (not_found) {
+            res.send({ not_found: not_found, missing: true });
+        } else {
+            res.send({ missing: false });
+        }
+    } else {
+        res.send("something wrong with the data send");
+    }
+});
+
 const addUserIfAbsent = async(element) => {
-    return new Promise((resolve) => {
+    return new Promise(async(resolve) => {
         let user = element;
         const email = user.cust_email;
         const salt = await bcrypt.genSalt(10);
@@ -204,7 +296,7 @@ const addUserIfAbsent = async(element) => {
                 let mailOptions = {
                     from: "usingfornodemailer@gmail.com", // sender address
                     to: email, // list of receivers
-                    subject: "Password reset", // Subject line
+                    subject: "Account Created", // Subject line
 
                     html: `<p >your account was created. ur password is ${hashPassword}. ur email is this email</p>`, // html body
                 };

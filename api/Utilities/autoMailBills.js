@@ -1,7 +1,7 @@
 const XLSX = require("xlsx");
 const nodemailer = require("nodemailer");
 const userDB = require("../model/user");
-const receiptDB = require("../model/receipts_data");
+const billDB = require("../model/bill");
 
 const checkDate = (date, recurring, frequency) => {
     let days = frequency == "Monthly" ? 30 : 7;
@@ -28,14 +28,14 @@ const checkDate = (date, recurring, frequency) => {
 const mailReceipts = async() => {
     userDB.find().then(async(users) => {
         users.forEach((user) => {
-            if (user.recepits.length > 0) {
-                user.recepits.forEach(async(recepit_id) => {
-                    let recepit = await receiptDB.findById(recepit_id);
+            if (user.bills.length > 0) {
+                user.bills.forEach(async(bill_id) => {
+                    let bill = await billDB.findById(bill_id);
                     if (
                         checkDate(
-                            new Date(recepit.email_dt).toDateString(),
-                            recepit.recurring,
-                            recepit.Frequency
+                            new Date(bill.email_dt).toDateString(),
+                            bill.recurring,
+                            bill.Frequency
                         )
                     ) {
                         //mail it
@@ -53,7 +53,7 @@ const mailReceipts = async() => {
                             text: `please check the attached invoice`, // plain text body
                             attachments: [{
                                 filename: "Invoice.pdf",
-                                path: recepit.receipt_url,
+                                path: bill.bill_url,
                             }, ],
                         };
                         await transporter.sendMail(mailOptions, (err, info) => {

@@ -12,14 +12,10 @@ import { useEffect, useState } from "react";
 const CustomTable = ({ users }) => {
   const [coloum_names, setColoum_names] = useState([]);
 
-  const generateKey = (pre) => {
-    return `${pre}_${new Date().getTime()}`;
-  };
-
   useEffect(() => {
     let keys = [];
     for (const [key, value] of Object.entries(users[0])) {
-      keys.push({ name: key });
+      keys.push({ name: key, value: value });
     }
     setColoum_names(keys);
   }, [users]);
@@ -38,9 +34,9 @@ const CustomTable = ({ users }) => {
           <Table>
             <TableHead>
               <TableRow>
-                {coloum_names.map((element) =>
+                {coloum_names.map((element, index) =>
                   element.name ? (
-                    <TableCell key={generateKey("headcell")}>
+                    <TableCell key={index}>
                       <b>{element.name}</b>
                     </TableCell>
                   ) : (
@@ -50,9 +46,9 @@ const CustomTable = ({ users }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
+              {users.map((user, index) => (
                 <RowsInTable
-                  key={generateKey("row")}
+                  key={index}
                   user={user}
                   coloum_names={coloum_names}
                 />

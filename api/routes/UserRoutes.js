@@ -518,7 +518,7 @@ route.post("/uploadUsers", async(req, res) => {
                 let mailOptions = {
                     from: "usingfornodemailer@gmail.com", // sender address
                     to: email, // list of receivers
-                    subject: "Password reset", // Subject line
+                    subject: "Account created", // Subject line
 
                     html: `<p >your account was created. ur password is ${hashPassword}. ur email is this email</p>`, // html body
                 };

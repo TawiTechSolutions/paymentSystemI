@@ -7,7 +7,7 @@ const connectDB = require("./database/connection");
 const UserRoutes = require("./routes/UserRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const JWT = require("./Utilities/JWT_Auth");
-const startAutoMailing = require("./Utilities/autoMailRecipts");
+const startAutoMailing = require("./Utilities/autoMailBills");
 var CronJob = require("cron").CronJob;
 
 const app = express();

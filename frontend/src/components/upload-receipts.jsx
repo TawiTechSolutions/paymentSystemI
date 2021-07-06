@@ -6,7 +6,7 @@ import Button from "@material-ui/core/Button";
 import CustomTable from "./Custom-Table";
 import { Typography } from "@material-ui/core";
 
-// function UploadInvoiceData({ token }) {
+// function UploadReceiptData({ token }) {
 //   const [file, setFile] = useState(null);
 //   const [percentage, setPercentage] = useState(0);
 
@@ -77,10 +77,10 @@ import { Typography } from "@material-ui/core";
 //           onChange={handleFileUpload}
 //           hidden
 //         />
-//         Upload Invoices Data
+//         Upload Receipts Data
 //       </Button>
 //       <Button variant="contained" color="primary" onClick={sendUploadedFile}>
-//         Send Invoices Data
+//         Send Receipts Data
 //       </Button>
 //       {percentage > 0 ? (
 //         <LinearProgress variant="determinate" value={percentage} />
@@ -91,15 +91,17 @@ import { Typography } from "@material-ui/core";
 //   );
 // }
 
-// export default UploadInvoiceData;
+// export default UploadReceiptData;
 
-function UploadInvoiceData({ token }) {
+function UploadReceiptData({ token }) {
   const [data_user, setData_user] = useState([]);
   const [data_SO, setData_SO] = useState([]);
   const [data_to_be_send, setData_to_be_send] = useState({});
   const [fileSelected, setFileSelected] = useState(false);
   const [fileCorrect, setCorrect] = useState(false);
   const [percentage, setPercentage] = useState(0);
+  const [confirm_NotFound_emails, setconfirm_NotFound_emails] = useState(false);
+  const [not_found_emails, setNot_found_emails] = useState([]);
 
   // process XLSX data
   const parseExcel = (fileData) => {
@@ -138,7 +140,7 @@ function UploadInvoiceData({ token }) {
     };
     axios
       .post(
-        `http://localhost:5000/invoices/uploadInvoicesData`,
+        `http://localhost:5000/Receipts/uploadReceiptsData`,
 
         data_to_be_send,
         options
@@ -150,6 +152,39 @@ function UploadInvoiceData({ token }) {
         }, 1000);
         console.log(res);
         window.alert(res.data.message);
+      })
+      .catch((err) => console.log(err));
+  };
+  //confrim user data
+  const confirmRequest = () => {
+    const options = {
+      headers: {
+        token: token,
+      },
+      onUploadProgress: (progessEvent) => {
+        const { loaded, total } = progessEvent;
+        let precent = Math.floor((loaded * 100) / total);
+        if (precent < 100) {
+          setPercentage(precent);
+        }
+      },
+    };
+    axios
+      .post(
+        `http://localhost:5000/invoices/confrimReceiptsUpload`,
+        data_to_be_send,
+        options
+      )
+      .then((res) => {
+        setPercentage(100);
+        setTimeout(() => {
+          setPercentage(0);
+        }, 1000);
+        console.log(res.data);
+        if (res.data.missing) {
+          setNot_found_emails(res.data.not_found);
+        }
+        setconfirm_NotFound_emails(true);
       })
       .catch((err) => console.log(err));
   };
@@ -182,11 +217,13 @@ function UploadInvoiceData({ token }) {
         for (let i = 0; i < data_user.length; i++) {
           for (const [key, value] of Object.entries(data_user[i])) {
             if (!value) {
-              setCorrect(false);
-              window.alert(
-                "Missing Data in user data sheet. Fix it to send file"
-              );
-              return;
+              if (!value === 0) {
+                setCorrect(false);
+                window.alert(
+                  "Missing Data in user data sheet. Fix it to send file"
+                );
+                return;
+              }
             }
           }
         }
@@ -223,7 +260,7 @@ function UploadInvoiceData({ token }) {
           onChange={handleFileUpload}
           hidden
         />
-        Upload Invoices Data
+        Upload Receipts Data
       </Button>
       {fileSelected ? (
         <div>
@@ -252,10 +289,10 @@ function UploadInvoiceData({ token }) {
             <Button
               variant="contained"
               color="primary"
-              onClick={axiosPostRequest}
+              onClick={confirmRequest}
               style={{ marginLeft: "30px" }}
             >
-              Send Invoices Data
+              Send Receipts Data
             </Button>
           ) : (
             <Button
@@ -263,8 +300,31 @@ function UploadInvoiceData({ token }) {
               disabled
               style={{ marginLeft: "30px", marginTop: "10px" }}
             >
-              Send Invoices Data
+              Send Receipts Data
             </Button>
+          )}
+          {confirm_NotFound_emails ? (
+            <div style={{ marginLeft: "30px", marginTop: "10px" }}>
+              {not_found_emails
+                ? not_found_emails.map((item, index) => (
+                    <div>
+                      <p>
+                        <b>Users Not Found:</b>
+                      </p>
+                      <p key={index}>{item}</p>
+                    </div>
+                  ))
+                : "All emails found. Please Confrim and submit"}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={axiosPostRequest}
+              >
+                Confrim and Submit
+              </Button>
+            </div>
+          ) : (
+            false
           )}
 
           {percentage > 0 ? (
@@ -280,4 +340,4 @@ function UploadInvoiceData({ token }) {
   );
 }
 
-export default UploadInvoiceData;
+export default UploadReceiptData;
