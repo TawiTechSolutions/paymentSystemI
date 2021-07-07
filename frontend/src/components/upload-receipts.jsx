@@ -344,7 +344,7 @@ function UploadReceiptData({ token }) {
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
       >
-        <DialogTitle id="max-width-dialog-title">Optional sizes</DialogTitle>
+        <DialogTitle id="max-width-dialog-title">Receipts</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Upload the receipts details of clients
@@ -371,7 +371,7 @@ function UploadReceiptData({ token }) {
                 >
                   Users Data :
                 </Typography>
-                <CustomTable users={userDataTables} />
+                <CustomTable key={"table1"} users={userDataTables} />
                 <Typography
                   style={{ marginTop: "5px" }}
                   variant="h5"
@@ -381,7 +381,7 @@ function UploadReceiptData({ token }) {
                 >
                   Solution Onwers Data :
                 </Typography>
-                <CustomTable users={SODataTables} />
+                <CustomTable key={"table2"} users={SODataTables} />
 
                 {fileCorrect ? (
                   <Button
@@ -402,7 +402,7 @@ function UploadReceiptData({ token }) {
                         {errors_in_custData
                           ? errors_in_custData.map((item) => (
                               <p>
-                                Missing item in cloumn {item.cloumn_name} of row
+                                Missing item in cloumn {item.cloumn_name} of row{" "}
                                 {item.row}
                               </p>
                             ))
@@ -420,7 +420,7 @@ function UploadReceiptData({ token }) {
                         {errors_in_SOData
                           ? errors_in_SOData.map((item) => (
                               <p>
-                                Missing item in cloumn {item.cloumn_name} of row
+                                Missing item in cloumn {item.cloumn_name} of row{" "}
                                 {item.row}
                               </p>
                             ))
