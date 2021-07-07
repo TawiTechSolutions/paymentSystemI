@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 var invoice_detials = new mongoose.Schema({
     invoice_dt: { type: String, default: "" },
     invoice_num: { type: String, default: "" },
-    invoice_dt: { type: String, default: "" },
     invoice_currency: { type: String, default: "" },
     invoice_amt: { type: String, default: "" },
     discount: { type: String, default: "" },

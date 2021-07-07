@@ -15,7 +15,7 @@ var schme = new mongoose.Schema({
     cust_email: { type: String, default: "" },
     cust_ph_isd: { type: String, default: "" },
     cust_ph_num: { type: String, default: "" },
-    cucust_add_cntry: { type: String, default: "" },
+    cust_add_cntry: { type: String, default: "" },
     cust_add_zip: { type: String, default: "" },
     cust_add_state: { type: String, default: "" },
     cust_add_city: { type: String, default: "" },
