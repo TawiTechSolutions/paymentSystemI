@@ -5,8 +5,24 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Button from "@material-ui/core/Button";
 import CustomTable from "./custom-Table";
 import { Typography } from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 function UploadBillsData({ token }) {
+  //
+
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  //
   const [data_user, setData_user] = useState([]);
   const [data_SO, setData_SO] = useState([]);
   const [data_to_be_send, setData_to_be_send] = useState({});
@@ -155,73 +171,97 @@ function UploadBillsData({ token }) {
   }, [fileSelected, data_SO, data_user]);
 
   return (
-    <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+    <React.Fragment>
       <Button
         variant="contained"
         color="primary"
-        component="label"
-        style={{ marginLeft: "30px" }}
+        onClick={handleClickOpen}
+        style={{ marginRight: "10px" }}
       >
-        <input
-          type="file"
-          accept=".csv,.xlsx,.xls"
-          onChange={handleFileUpload}
-          hidden
-        />
-        Upload Bills Data
+        Upload bills
       </Button>
-      {fileSelected ? (
-        <div>
-          <Typography
-            style={{ marginTop: "5px" }}
-            variant="h5"
-            component="h6"
-            align="center"
-            gutterBottom
-          >
-            Users Data :
-          </Typography>
-          <CustomTable users={data_user} />
-          <Typography
-            style={{ marginTop: "5px" }}
-            variant="h5"
-            component="h6"
-            align="center"
-            gutterBottom
-          >
-            Solution Onwers Data :
-          </Typography>
-          <CustomTable users={data_SO} />
+      <Dialog
+        fullWidth={true}
+        maxWidth={"xl"}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="max-width-dialog-title"
+      >
+        <DialogTitle id="max-width-dialog-title">Optional sizes</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Upload the bill details of clients
+          </DialogContentText>
 
-          {fileCorrect ? (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={axiosPostRequest}
-              style={{ marginLeft: "30px" }}
-            >
-              Send Bills Data
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Button variant="contained" color="primary" component="label">
+              <input
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleFileUpload}
+                hidden
+              />
+              Upload Bills Data
             </Button>
-          ) : (
-            <Button
-              variant="contained"
-              disabled
-              style={{ marginLeft: "30px", marginTop: "10px" }}
-            >
-              Send Bills Data
-            </Button>
-          )}
+            {fileSelected ? (
+              <div>
+                <Typography
+                  style={{ marginTop: "5px" }}
+                  variant="h5"
+                  component="h6"
+                  align="left"
+                  gutterBottom
+                >
+                  Users Data
+                </Typography>
+                <CustomTable users={data_user} />
+                <Typography
+                  style={{ marginTop: "5px" }}
+                  variant="h5"
+                  component="h6"
+                  align="left"
+                  gutterBottom
+                >
+                  Solution Onwers Data
+                </Typography>
+                <CustomTable users={data_SO} />
 
-          {percentage > 0 ? (
-            <LinearProgress variant="determinate" value={percentage} />
-          ) : (
-            ""
-          )}
-        </div>
-      ) : (
-        ""
-      )}
-    </div>
+                {fileCorrect ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={axiosPostRequest}
+                  >
+                    Send Bills Data
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    disabled
+                    style={{ marginTop: "10px" }}
+                  >
+                    Send Bills Data
+                  </Button>
+                )}
+
+                {percentage > 0 ? (
+                  <LinearProgress variant="determinate" value={percentage} />
+                ) : (
+                  ""
+                )}
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
   );
 }
 

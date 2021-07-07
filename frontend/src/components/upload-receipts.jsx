@@ -5,104 +5,31 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Button from "@material-ui/core/Button";
 import CustomTable from "./custom-Table";
 import { Typography } from "@material-ui/core";
-
-// function UploadReceiptData({ token }) {
-//   const [file, setFile] = useState(null);
-//   const [percentage, setPercentage] = useState(0);
-
-//   const axiosPostRequest = (receipt_data) => {
-//     const options = {
-//       headers: {
-//         token: token,
-//       },
-//       onUploadProgress: (progessEvent) => {
-//         const { loaded, total } = progessEvent;
-//         let precent = Math.floor((loaded * 100) / total);
-//         if (precent < 100) {
-//           setPercentage(precent);
-//         }
-//       },
-//     };
-//     axios
-//       .post(
-//         `http://localhost:5000/receipts/uploadReceiptData`,
-
-//         receipt_data,
-//         options
-//       )
-//       .then((res) => {
-//         setPercentage(100);
-//         setTimeout(() => {
-//           setPercentage(0);
-//         }, 1000);
-//         console.log(res);
-//         window.alert(res.data.message);
-//       })
-//       .catch((err) => console.log(err));
-//   };
-
-//   // handle file upload
-//   const sendUploadedFile = () => {
-// const reader = new FileReader();
-// reader.onload = (evt) => {
-//   /* get binary string */
-//   const bstr = evt.target.result;
-
-//   axiosPostRequest(parseExcel(bstr));
-// };
-// reader.readAsBinaryString(file);
-//     //
-//   };
-
-//   const handleFileUpload = (e) => {
-//     setFile(e.target.files[0]);
-//   };
-
-//   useEffect(() => {
-//     console.log("file", file);
-//     console.log("percentage", percentage);
-//   }, [file, percentage]);
-
-//   return (
-//     <div style={{ marginTop: "15px" }}>
-//       <Button
-//         variant="contained"
-//         color="primary"
-//         component="label"
-//         style={{ marginLeft: "30px" }}
-//       >
-//         <input
-//           type="file"
-//           accept=".csv,.xlsx,.xls"
-//           onChange={handleFileUpload}
-//           hidden
-//         />
-//         Upload Receipts Data
-//       </Button>
-//       <Button variant="contained" color="primary" onClick={sendUploadedFile}>
-//         Send Receipts Data
-//       </Button>
-//       {percentage > 0 ? (
-//         <LinearProgress variant="determinate" value={percentage} />
-//       ) : (
-//         ""
-//       )}
-//     </div>
-//   );
-// }
-
-// export default UploadReceiptData;
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 function UploadReceiptData({ token }) {
   const [data_user, setData_user] = useState([]);
   const [data_SO, setData_SO] = useState([]);
+  const [open, setOpen] = React.useState(false);
   const [data_to_be_send, setData_to_be_send] = useState({});
   const [fileSelected, setFileSelected] = useState(false);
   const [fileCorrect, setCorrect] = useState(false);
   const [percentage, setPercentage] = useState(0);
-  const [confirm_NotFound_emails, setconfirm_NotFound_emails] = useState(false);
+  const [confirm_NotFound, setconfirm_NotFound] = useState(false);
   const [not_found_emails, setNot_found_emails] = useState([]);
   const [not_found_bills, setNot_found_bills] = useState([]);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // process XLSX data
   const parseExcel = (fileData) => {
@@ -186,7 +113,7 @@ function UploadReceiptData({ token }) {
           setNot_found_emails(res.data.not_found.emails);
           setNot_found_bills(res.data.not_found.bills);
         }
-        setconfirm_NotFound_emails(true);
+        setconfirm_NotFound(true);
       })
       .catch((err) => console.log(err));
   };
@@ -286,106 +213,134 @@ function UploadReceiptData({ token }) {
   }, [fileSelected, data_SO, data_user]);
 
   return (
-    <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+    <React.Fragment>
       <Button
         variant="contained"
         color="primary"
-        component="label"
-        style={{ marginLeft: "30px" }}
+        onClick={handleClickOpen}
+        style={{ marginRight: "10px" }}
       >
-        <input
-          type="file"
-          accept=".csv,.xlsx,.xls"
-          onChange={handleFileUpload}
-          hidden
-        />
-        Upload Receipts Data
+        Upload Receipts
       </Button>
-      {fileSelected ? (
-        <div>
-          <Typography
-            style={{ marginTop: "5px" }}
-            variant="h5"
-            component="h6"
-            align="center"
-            gutterBottom
-          >
-            Users Data :
-          </Typography>
-          <CustomTable users={data_user} />
-          <Typography
-            style={{ marginTop: "5px" }}
-            variant="h5"
-            component="h6"
-            align="center"
-            gutterBottom
-          >
-            Solution Onwers Data :
-          </Typography>
-          <CustomTable users={data_SO} />
+      <Dialog
+        fullWidth={true}
+        maxWidth={"xl"}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="max-width-dialog-title"
+      >
+        <DialogTitle id="max-width-dialog-title">Optional sizes</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Upload the receipts details of clients
+          </DialogContentText>
 
-          {fileCorrect ? (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={confirmRequest}
-              style={{ marginLeft: "30px" }}
-            >
-              Send Receipts Data
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Button variant="contained" color="primary" component="label">
+              <input
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleFileUpload}
+                hidden
+              />
+              Upload Receipts Data
             </Button>
-          ) : (
-            <Button
-              variant="contained"
-              disabled
-              style={{ marginLeft: "30px", marginTop: "10px" }}
-            >
-              Send Receipts Data
-            </Button>
-          )}
-          {confirm_NotFound_emails ? (
-            <div style={{ marginLeft: "30px", marginTop: "10px" }}>
-              {not_found_emails
-                ? not_found_emails.map((item, index) => (
-                    <div>
-                      <p>
-                        <b>Emails Not Found:</b>
-                      </p>
-                      <p key={index}>{item}</p>
-                    </div>
-                  ))
-                : "All emails found. Please Confrim and submit"}
-              {not_found_bills
-                ? not_found_bills.map((item, index) => (
-                    <div>
-                      <p>
-                        <b>Bills Not Found:</b>
-                      </p>
-                      <p key={index}>{item}</p>
-                    </div>
-                  ))
-                : "All bills found. Please Confrim and submit"}
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={axiosPostRequest}
-              >
-                Confrim and Submit
-              </Button>
-            </div>
-          ) : (
-            false
-          )}
+            {fileSelected ? (
+              <div>
+                <Typography
+                  style={{ marginTop: "5px" }}
+                  variant="h5"
+                  component="h6"
+                  align="center"
+                  gutterBottom
+                >
+                  Users Data :
+                </Typography>
+                <CustomTable users={data_user} />
+                <Typography
+                  style={{ marginTop: "5px" }}
+                  variant="h5"
+                  component="h6"
+                  align="center"
+                  gutterBottom
+                >
+                  Solution Onwers Data :
+                </Typography>
+                <CustomTable users={data_SO} />
 
-          {percentage > 0 ? (
-            <LinearProgress variant="determinate" value={percentage} />
-          ) : (
-            ""
-          )}
-        </div>
-      ) : (
-        ""
-      )}
-    </div>
+                {fileCorrect ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={confirmRequest}
+                  >
+                    Send Receipts Data
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    disabled
+                    style={{ marginTop: "10px" }}
+                  >
+                    Send Receipts Data
+                  </Button>
+                )}
+                {confirm_NotFound ? (
+                  <div style={{ marginTop: "10px" }}>
+                    {not_found_emails ? (
+                      <div>
+                        <p>
+                          <b>Emails Not Found:</b>
+                        </p>
+                        {not_found_emails.map((item, index) => (
+                          <p key={index}>{item}</p>
+                        ))}
+                      </div>
+                    ) : (
+                      "All emails found. Please Confrim and submit"
+                    )}
+                    {not_found_bills ? (
+                      <div>
+                        <p>
+                          <b>Bills Not Found:</b>
+                        </p>
+                        {not_found_bills.map((item, index) => (
+                          <p key={index}>{item}</p>
+                        ))}
+                      </div>
+                    ) : (
+                      "All bills found. Please Confrim and submit"
+                    )}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={axiosPostRequest}
+                    >
+                      Confrim and Submit
+                    </Button>
+                  </div>
+                ) : (
+                  false
+                )}
+
+                {percentage > 0 ? (
+                  <LinearProgress variant="determinate" value={percentage} />
+                ) : (
+                  ""
+                )}
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
   );
 }
 

@@ -1,4 +1,3 @@
-import NavBar from "../components/nav-bar";
 import { BrowserRouter } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Table from "@material-ui/core/Table";
@@ -9,9 +8,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
 import UserRow from "../components/user-table-row";
 import { Container, Typography } from "@material-ui/core";
-import UploadBillsData from "../components/upload-bills";
-import UploadReceiptsData from "../components/upload-receipts";
 import UserReceipts from "../components/user-receipts";
+import NavBarAdmin from "../components/nav-bar-admin";
 
 const axios = require("axios");
 
@@ -66,7 +64,7 @@ const Dashboard = () => {
 
   return (
     <BrowserRouter>
-      <NavBar username={userName} />
+      <NavBarAdmin username={userName} token={token} />
       {onDashboard ? (
         <div>
           <Typography
@@ -121,8 +119,6 @@ const Dashboard = () => {
               </Table>
             </Box>
           </Container>
-          <UploadBillsData token={token} />
-          <UploadReceiptsData token={token} />
         </div>
       ) : (
         <UserReceipts
