@@ -3,7 +3,7 @@ import * as XLSX from "xlsx";
 import axios from "axios";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Button from "@material-ui/core/Button";
-import CustomTable from "./Custom-Table";
+import CustomTable from "./custom-Table";
 import { Typography } from "@material-ui/core";
 
 function UploadBillsData({ token }) {
@@ -84,38 +84,69 @@ function UploadBillsData({ token }) {
   };
 
   useEffect(() => {
-    console.log("data of users", data_user);
-    console.log("data of so", data_SO);
-    console.log("data in total", data_to_be_send);
-    console.log("percentage", percentage);
-  }, [data_user, data_SO, percentage, data_to_be_send]);
+    console.log("data of users inside bills", data_user);
+    console.log("data of so inside bills", data_SO);
+    console.log("data in total inside bills", data_to_be_send);
+  }, [data_user, data_SO, data_to_be_send]);
 
   useEffect(() => {
     if (fileSelected) {
       if (data_user.length) {
+        let cloumn_name = [];
         for (let i = 0; i < data_user.length; i++) {
+          let temp_cloumn_name = [];
           for (const [key, value] of Object.entries(data_user[i])) {
-            if (!value) {
-              setCorrect(false);
-              window.alert(
-                "Missing Data in user data sheet. Fix it to send file"
-              );
-              return;
+            if (i === 0) {
+              cloumn_name.push(key);
             }
+            temp_cloumn_name.push(key);
+            if (!value) {
+              if (!value === 0) {
+                setCorrect(false);
+                window.alert(
+                  "Missing Data in user data sheet. Fix it to send file"
+                );
+                return;
+              }
+            }
+          }
+
+          if (cloumn_name.length !== temp_cloumn_name.length) {
+            setCorrect(false);
+            window.alert(
+              "Missing Data in user data sheet. Fix it to send file"
+            );
+            return;
           }
         }
         setCorrect(true);
       }
       if (data_SO.length) {
+        let cloumn_name = [];
         for (let i = 0; i < data_SO.length; i++) {
+          let temp_cloumn_name = [];
           for (const [key, value] of Object.entries(data_SO[i])) {
-            if (!value) {
-              setCorrect(false);
-              window.alert(
-                "Missing Data in SO data Sheet. Fix it to send file"
-              );
-              return;
+            if (i === 0) {
+              cloumn_name.push(key);
             }
+            temp_cloumn_name.push(key);
+            if (!value) {
+              if (!value === 0) {
+                setCorrect(false);
+                window.alert(
+                  "Missing Data in user data sheet. Fix it to send file"
+                );
+                return;
+              }
+            }
+          }
+
+          if (cloumn_name.length !== temp_cloumn_name.length) {
+            setCorrect(false);
+            window.alert(
+              "Missing Data in user data sheet. Fix it to send file"
+            );
+            return;
           }
         }
         setCorrect(true);

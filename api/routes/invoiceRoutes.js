@@ -242,22 +242,28 @@ route.get("/userReceipts/:id", async(req, res) => {
 
 route.post("/confrimReceiptsUpload", async(req, res) => {
     const cust_data = req.body.cust_data;
-    let not_found = [];
+    let not_found = { emails: [], bills: [] };
     if (cust_data.length) {
         for (let i = 0; i < cust_data.length; i++) {
             //checking if user exists
             try {
-                const found = await userDB.findOne({
+                const foundEmail = await userDB.findOne({
                     email: cust_data[i].cust_email,
                 });
-                if (!found) {
-                    not_found.push(cust_data[i].cust_email);
+                if (!foundEmail) {
+                    not_found.emails.push(cust_data[i].cust_email);
+                }
+                const foundBill = await billDB.findOne({
+                    invoice_num: cust_data[i].invoice_num,
+                });
+                if (!foundBill) {
+                    not_found.bills.push(cust_data[i].invoice_num);
                 }
             } catch (error) {
                 console.log(error);
             }
         }
-        if (not_found) {
+        if (not_found.bills !== [] || not_found.emails !== []) {
             res.send({ not_found: not_found, missing: true });
         } else {
             res.send({ missing: false });

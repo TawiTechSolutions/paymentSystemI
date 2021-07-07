@@ -3,7 +3,7 @@ import * as XLSX from "xlsx";
 import axios from "axios";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Button from "@material-ui/core/Button";
-import CustomTable from "./Custom-Table";
+import CustomTable from "./custom-Table";
 import { Typography } from "@material-ui/core";
 
 // function UploadReceiptData({ token }) {
@@ -102,6 +102,7 @@ function UploadReceiptData({ token }) {
   const [percentage, setPercentage] = useState(0);
   const [confirm_NotFound_emails, setconfirm_NotFound_emails] = useState(false);
   const [not_found_emails, setNot_found_emails] = useState([]);
+  const [not_found_bills, setNot_found_bills] = useState([]);
 
   // process XLSX data
   const parseExcel = (fileData) => {
@@ -182,7 +183,8 @@ function UploadReceiptData({ token }) {
         }, 1000);
         console.log(res.data);
         if (res.data.missing) {
-          setNot_found_emails(res.data.not_found);
+          setNot_found_emails(res.data.not_found.emails);
+          setNot_found_bills(res.data.not_found.bills);
         }
         setconfirm_NotFound_emails(true);
       })
@@ -208,14 +210,19 @@ function UploadReceiptData({ token }) {
     console.log("data of users", data_user);
     console.log("data of so", data_SO);
     console.log("data in total", data_to_be_send);
-    console.log("percentage", percentage);
-  }, [data_user, data_SO, percentage, data_to_be_send]);
+  }, [data_user, data_SO, data_to_be_send]);
 
   useEffect(() => {
     if (fileSelected) {
       if (data_user.length) {
+        let cloumn_name = [];
         for (let i = 0; i < data_user.length; i++) {
+          let temp_cloumn_name = [];
           for (const [key, value] of Object.entries(data_user[i])) {
+            if (i === 0) {
+              cloumn_name.push(key);
+            }
+            temp_cloumn_name.push(key);
             if (!value) {
               if (!value === 0) {
                 setCorrect(false);
@@ -226,19 +233,51 @@ function UploadReceiptData({ token }) {
               }
             }
           }
+          console.log(
+            "inside use effect",
+            cloumn_name.length,
+            temp_cloumn_name.length
+          );
+          if (cloumn_name.length !== temp_cloumn_name.length) {
+            setCorrect(false);
+            window.alert(
+              "Missing Data in user data sheet. Fix it to send file"
+            );
+            return;
+          }
         }
         setCorrect(true);
       }
       if (data_SO.length) {
+        let cloumn_name = [];
         for (let i = 0; i < data_SO.length; i++) {
+          let temp_cloumn_name = [];
           for (const [key, value] of Object.entries(data_SO[i])) {
-            if (!value) {
-              setCorrect(false);
-              window.alert(
-                "Missing Data in SO data Sheet. Fix it to send file"
-              );
-              return;
+            if (i === 0) {
+              cloumn_name.push(key);
             }
+            temp_cloumn_name.push(key);
+            if (!value) {
+              if (!value === 0) {
+                setCorrect(false);
+                window.alert(
+                  "Missing Data in user data sheet. Fix it to send file"
+                );
+                return;
+              }
+            }
+          }
+          console.log(
+            "inside use effect",
+            cloumn_name.length,
+            temp_cloumn_name.length
+          );
+          if (cloumn_name.length !== temp_cloumn_name.length) {
+            setCorrect(false);
+            window.alert(
+              "Missing Data in user data sheet. Fix it to send file"
+            );
+            return;
           }
         }
         setCorrect(true);
@@ -309,12 +348,22 @@ function UploadReceiptData({ token }) {
                 ? not_found_emails.map((item, index) => (
                     <div>
                       <p>
-                        <b>Users Not Found:</b>
+                        <b>Emails Not Found:</b>
                       </p>
                       <p key={index}>{item}</p>
                     </div>
                   ))
                 : "All emails found. Please Confrim and submit"}
+              {not_found_bills
+                ? not_found_bills.map((item, index) => (
+                    <div>
+                      <p>
+                        <b>Bills Not Found:</b>
+                      </p>
+                      <p key={index}>{item}</p>
+                    </div>
+                  ))
+                : "All bills found. Please Confrim and submit"}
               <Button
                 variant="contained"
                 color="primary"
