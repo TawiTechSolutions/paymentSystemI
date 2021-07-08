@@ -1,14 +1,14 @@
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
-const RowsInTable = ({ user, coloum_names }) => {
+const RowsInTable = ({ data, coloum_names, colour }) => {
   return (
-    <TableRow>
+    <TableRow style={{ backgroundColor: colour ? colour : "" }}>
       {coloum_names.map((element, index) =>
         element.name ? (
           <TableCell key={index}>
-            {user[element.name] || user[element.name] === 0
-              ? user[element.name].toString()
+            {data[element.name] || data[element.name] === 0
+              ? data[element.name].toString()
               : ""}
           </TableCell>
         ) : (

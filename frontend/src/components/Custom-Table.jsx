@@ -9,16 +9,16 @@ import { Container } from "@material-ui/core";
 import RowsInTable from "./rows-Custom-table";
 import { useEffect, useState } from "react";
 
-const CustomTable = ({ users }) => {
+const CustomTable = ({ data, errors }) => {
   const [coloum_names, setColoum_names] = useState([]);
 
   useEffect(() => {
     let keys = [];
-    for (const [key, value] of Object.entries(users[0])) {
+    for (const [key, value] of Object.entries(data[0])) {
       keys.push({ name: key, value: value });
     }
     setColoum_names(keys);
-  }, [users]);
+  }, [data]);
   return (
     <BrowserRouter>
       <Container>
@@ -46,11 +46,12 @@ const CustomTable = ({ users }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user, index) => (
+              {data.map((item, index) => (
                 <RowsInTable
                   key={index}
-                  user={user}
+                  data={item}
                   coloum_names={coloum_names}
+                  colour={errors[index] ? errors[index] : ""}
                 />
               ))}
             </TableBody>

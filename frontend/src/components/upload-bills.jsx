@@ -33,6 +33,8 @@ function UploadBillsData({ token }) {
   const [errors_in_SOData, setErrors_in_SOData] = useState([]);
   const [userDataTables, setUserDataTables] = useState([]);
   const [SODataTables, setSODataTables] = useState([]);
+  const [errorColourCustData, setErrorColourCustData] = useState({});
+  const [errorsColourSOData, setErrorsColourSOData] = useState({});
 
   // process XLSX data
   const parseExcel = (fileData) => {
@@ -293,6 +295,38 @@ function UploadBillsData({ token }) {
     setSODataTables(SOData_tables);
   }, [data_SO, data_user]);
 
+  //colour the rows
+  useEffect(() => {
+    let ColourCustData = {};
+    for (let i = 0; i < errors_in_custData.length; i++) {
+      const orangeWarning = [];
+      const redWarning = [];
+
+      if (orangeWarning.includes(errors_in_custData[i].cloumn_name)) {
+        ColourCustData[errors_in_custData[i].row] = "#FF6666";
+      }
+      if (redWarning.includes(errors_in_custData[i].cloumn_name)) {
+        ColourCustData[errors_in_custData[i].row] = "#FFB266";
+      }
+    }
+    setErrorColourCustData(ColourCustData);
+
+    //colour so data
+    let ColourSOData = {};
+    for (let i = 0; i < errors_in_SOData.length; i++) {
+      const orangeWarning = [];
+      const redWarning = [];
+
+      if (orangeWarning.includes(errors_in_SOData[i].cloumn_name)) {
+        ColourSOData[errors_in_SOData[i].row] = "#FF6666";
+      }
+      if (redWarning.includes(errors_in_SOData[i].cloumn_name)) {
+        ColourSOData[errors_in_SOData[i].row] = "#FFB266";
+      }
+    }
+    setErrorsColourSOData(ColourSOData);
+  }, [errors_in_custData, errors_in_SOData]);
+
   return (
     <React.Fragment>
       <Button
@@ -337,7 +371,11 @@ function UploadBillsData({ token }) {
                 >
                   Users Data
                 </Typography>
-                <CustomTable key={"table1"} users={userDataTables} />
+                <CustomTable
+                  key={"table1"}
+                  data={userDataTables}
+                  errors={errorColourCustData}
+                />
                 <Typography
                   style={{ marginTop: "5px" }}
                   variant="h5"
@@ -347,7 +385,11 @@ function UploadBillsData({ token }) {
                 >
                   Solution Onwers Data
                 </Typography>
-                <CustomTable key={"table2"} users={SODataTables} />
+                <CustomTable
+                  key={"table2"}
+                  data={SODataTables}
+                  errors={errorsColourSOData}
+                />
 
                 {fileCorrect ? (
                   <Button
