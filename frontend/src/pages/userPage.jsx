@@ -1,8 +1,6 @@
 import NavBarUser from "../components/nav-bar-user";
 import { BrowserRouter } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Typography } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import UserReceiptsUserPage from "../components/user-receipts-for-userPage";
 import UserBills from "../components/user-bills";
 
