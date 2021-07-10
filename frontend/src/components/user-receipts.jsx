@@ -20,26 +20,20 @@ const UserReceipts = ({ userID, token, toggleView }) => {
     getReceipts();
     // eslint-disable-next-line
   }, []);
-  useEffect(() => {
-    console.log(user);
-    console.log("receipt", receipts);
-    // eslint-disable-next-line
-  }, [user, receipts]);
+
   const getReceipts = () => {
     axios
-      .get(`http://localhost:5000/invoices/userReceipts/${userID}`, {
+      .get(`http://localhost:5000/invoices/userReceipts`, {
         headers: {
           token: token,
         },
       })
       .then((res) => res.data)
       .then((data) => {
-        //handle respose
-        console.log("data receveied", data);
         setUser(data.user);
         setReceipts(data.receipts);
-        if (data.message) {
-          window.alert(data.message);
+        if (!data.haveReceipts) {
+          window.alert("user doesnt have any receipts");
         }
       })
       .catch((err) => {
@@ -51,10 +45,10 @@ const UserReceipts = ({ userID, token, toggleView }) => {
   return (
     <BrowserRouter>
       <Typography
-        style={{ marginTop: "5px" }}
+        style={{ marginTop: "5px", marginLeft: "30px" }}
         variant="h5"
         component="h2"
-        align="center"
+        align="left"
         gutterBottom
       >
         Receipts of : {user.name}

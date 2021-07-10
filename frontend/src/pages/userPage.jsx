@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import UserReceiptsUserPage from "../components/user-receipts-for-userPage";
+import UserBills from "../components/user-bills";
 
 const axios = require("axios");
 const UserPage = () => {
   const token = localStorage.getItem("token");
   const [user, setUser] = useState({});
-  const [bills, setBills] = useState([]);
 
   useEffect(() => {
     if (token) {
@@ -21,7 +21,6 @@ const UserPage = () => {
         })
         .then((res) => {
           setUser(res.data);
-          setBills(res.data.bills);
         })
         .catch((err) => {
           console.log(err);
@@ -35,6 +34,7 @@ const UserPage = () => {
     <BrowserRouter>
       <NavBarUser username={user.name} token={token} />
       <UserReceiptsUserPage token={token} />
+      <UserBills token={token} />
     </BrowserRouter>
   );
 };

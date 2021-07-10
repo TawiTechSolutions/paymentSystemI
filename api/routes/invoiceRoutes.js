@@ -232,12 +232,17 @@ route.get("/userBills", async(req, res) => {
                         const bills = await billDB.findById(billsID_array[i]);
                         array_of_bills.push(bills);
                     }
-                    res.send({ status: 200, user: user, bills: array_of_bills });
+                    res.send({
+                        status: 200,
+                        user: user,
+                        bills: array_of_bills,
+                        haveBills: true,
+                    });
                 } else {
                     res.send({
                         user: user,
                         bills: user.bills,
-                        message: "User doesnt have any bills",
+                        haveBills: false,
                     });
                 }
                 return;
@@ -267,12 +272,17 @@ route.get("/userReceipts", async(req, res) => {
                         const receipt = await receiptDB.findById(receiptsID_array[i]);
                         array_of_receipts.push(receipt);
                     }
-                    res.send({ status: 200, user: user, receipts: array_of_receipts });
+                    res.send({
+                        status: 200,
+                        user: user,
+                        receipts: array_of_receipts,
+                        haveReceipts: true,
+                    });
                 } else {
                     res.send({
                         user: user,
                         receipts: user.recepits,
-                        message: "User doesnt have any receipts",
+                        haveReceipts: false,
                     });
                 }
                 return;

@@ -11,18 +11,14 @@ import React, { useEffect, useState } from "react";
 import BillRow from "./bill-table-row";
 
 const UserBills = ({ token }) => {
-  const [user, setUser] = useState({});
   const [Bills, setBills] = useState([]);
+  const [haveBills, setHavebills] = useState(false);
 
   useEffect(() => {
     getBills();
     // eslint-disable-next-line
   }, []);
-  useEffect(() => {
-    console.log(user);
-    console.log("receipt", Bills);
-    // eslint-disable-next-line
-  }, [user, Bills]);
+
   const getBills = () => {
     axios
       .get(`http://localhost:5000/invoices/userBills`, {
@@ -33,10 +29,9 @@ const UserBills = ({ token }) => {
       .then((res) => res.data)
       .then((data) => {
         console.log("data receveied", data);
-        setUser(data.user);
         setBills(data.bills);
-        if (data.message) {
-          window.alert(data.message);
+        if (data.haveBills) {
+          setHavebills(true);
         }
       })
       .catch((err) => {
@@ -48,42 +43,54 @@ const UserBills = ({ token }) => {
   return (
     <BrowserRouter>
       <Typography
-        style={{ marginTop: "5px" }}
+        style={{ marginTop: "5px", marginLeft: "30px" }}
         variant="h5"
         component="h2"
-        align="center"
+        align="left"
         gutterBottom
       >
         Pending Bills
       </Typography>
       <Container>
-        <Box
-          style={{
-            overflow: "auto",
-            margin: "7px",
-            marginTop: 0,
-            border: "1.5px solid rgb(243, 243, 243)",
-            borderBottom: 0,
-          }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <b>Invoice Num</b>
-                </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
-                  <b>Actions</b>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Bills.map((bill) => (
-                <BillRow key={bill._id} bill={bill} />
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
+        {haveBills ? (
+          <Box
+            style={{
+              overflow: "auto",
+              margin: "7px",
+              marginTop: 0,
+              border: "1.5px solid rgb(243, 243, 243)",
+              borderBottom: 0,
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <b>Invoice Num</b>
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    <b>Actions</b>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Bills.map((bill) => (
+                  <BillRow key={bill._id} bill={bill} />
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
+        ) : (
+          <Typography
+            style={{ marginTop: "5px", marginLeft: "15px" }}
+            variant="body1"
+            component="h2"
+            align="left"
+            gutterBottom
+          >
+            You dont have any pending bills
+          </Typography>
+        )}
       </Container>
     </BrowserRouter>
   );

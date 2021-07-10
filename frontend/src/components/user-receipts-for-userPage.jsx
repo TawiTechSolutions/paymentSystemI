@@ -13,6 +13,7 @@ import ReceiptRow from "./receipt-table-row";
 const UserReceiptsUserPage = ({ token }) => {
   const [user, setUser] = useState({});
   const [receipts, setReceipts] = useState([]);
+  const [haveReceipts, setHaveReceipts] = useState(false);
 
   useEffect(() => {
     getReceipts();
@@ -36,8 +37,8 @@ const UserReceiptsUserPage = ({ token }) => {
         console.log("data receveied", data);
         setUser(data.user);
         setReceipts(data.receipts);
-        if (data.message) {
-          window.alert(data.message);
+        if (data.haveReceipts) {
+          setHaveReceipts(true);
         }
       })
       .catch((err) => {
@@ -58,33 +59,45 @@ const UserReceiptsUserPage = ({ token }) => {
         Receipts
       </Typography>
       <Container>
-        <Box
-          style={{
-            overflow: "auto",
-            margin: "7px",
-            marginTop: 0,
-            border: "1.5px solid rgb(243, 243, 243)",
-            borderBottom: 0,
-          }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <b>Invoice Num</b>
-                </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
-                  <b>Actions</b>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {receipts.map((receipt) => (
-                <ReceiptRow key={receipt._id} receipt={receipt} />
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
+        {haveReceipts ? (
+          <Box
+            style={{
+              overflow: "auto",
+              margin: "7px",
+              marginTop: 0,
+              border: "1.5px solid rgb(243, 243, 243)",
+              borderBottom: 0,
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <b>Invoice Num</b>
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    <b>Actions</b>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {receipts.map((receipt) => (
+                  <ReceiptRow key={receipt._id} receipt={receipt} />
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
+        ) : (
+          <Typography
+            style={{ marginTop: "5px", marginLeft: "15px" }}
+            variant="body1"
+            component="h2"
+            align="left"
+            gutterBottom
+          >
+            You dont have any receipts
+          </Typography>
+        )}
       </Container>
     </BrowserRouter>
   );
