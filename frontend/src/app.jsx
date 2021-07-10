@@ -5,7 +5,7 @@ import Register from "./pages/register";
 import LoginRegister from "./pages/login-register";
 import NotFound from "./components/not-found";
 import Unapproved from "./pages/unapproved";
-import LoggedIn from "./pages/logged-in";
+import UserPage from "./pages/userPage";
 import ResetPassword from "./pages/reset-password";
 import VerifyUser from "./pages/verifyUser";
 import ForgotPassword from "./pages/forgotpassword";
@@ -19,7 +19,7 @@ const App = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/unapproved" component={Unapproved} />
-        <Route exact path="/loggedIn" component={LoggedIn} />
+        <Route exact path="/userPage" component={UserPage} />
         <Route exact path="/forgotPassword" component={ForgotPassword} />
         <Route path="/resetPassword/:token" component={ResetPassword} />
         <Route path="/verifyUser/:token" component={VerifyUser} />

@@ -42,7 +42,7 @@ const Login = () => {
           } else {
             if (data.user.approved) {
               window.location.replace(
-                `http://${window.location.host}/loggedIn`
+                `http://${window.location.host}/userPage`
               );
             } else {
               window.location.replace(

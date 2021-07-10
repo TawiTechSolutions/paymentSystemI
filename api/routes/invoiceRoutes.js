@@ -9,6 +9,7 @@ const generateBill = require("../Utilities/billGenerator/genterateBill");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
+const JWT = require("../Utilities/JWT_Auth");
 
 route.post("/uploadBillsData", async(req, res) => {
     if (req.body) {
@@ -216,28 +217,74 @@ route.post("/uploadReceiptsData", async(req, res) => {
     });
 });
 
-route.get("/userReceipts/:id", async(req, res) => {
-    id = req.params.id;
-    if (id) {
-        const user = await userDB.findById(id);
-        if (user.recepits.length) {
-            const receiptsID_array = user.recepits;
-            let array_of_receipts = [];
-            for (let i = 0; i < receiptsID_array.length; i++) {
-                const receipt = await receiptDB.findById(receiptsID_array[i]);
-                array_of_receipts.push(receipt);
+route.get("/userBills", async(req, res) => {
+    const token = req.headers.token;
+
+    if (token) {
+        const id = JWT.getUserData(token)._id;
+        try {
+            if (id) {
+                const user = await userDB.findById(id);
+                if (user.bills.length) {
+                    const billsID_array = user.bills;
+                    let array_of_bills = [];
+                    for (let i = 0; i < billsID_array.length; i++) {
+                        const bills = await billDB.findById(billsID_array[i]);
+                        array_of_bills.push(bills);
+                    }
+                    res.send({ status: 200, user: user, bills: array_of_bills });
+                } else {
+                    res.send({
+                        user: user,
+                        bills: user.bills,
+                        message: "User doesnt have any bills",
+                    });
+                }
+                return;
             }
-            res.send({ status: 200, user: user, receipts: array_of_receipts });
-        } else {
-            res.send({
-                user: user,
-                receipts: user.recepits,
-                message: "User doesnt have any receipts",
-            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).send({ message: "Error with database" });
+            return;
         }
-        return;
     }
-    res.status(400).send({ message: "Some issue with the suer id send" });
+
+    res.status(400).send({ message: "Some issue with the token send" });
+});
+
+route.get("/userReceipts", async(req, res) => {
+    const token = req.headers.token;
+
+    if (token) {
+        const id = JWT.getUserData(token)._id;
+        try {
+            if (id) {
+                const user = await userDB.findById(id);
+                if (user.recepits.length) {
+                    const receiptsID_array = user.recepits;
+                    let array_of_receipts = [];
+                    for (let i = 0; i < receiptsID_array.length; i++) {
+                        const receipt = await receiptDB.findById(receiptsID_array[i]);
+                        array_of_receipts.push(receipt);
+                    }
+                    res.send({ status: 200, user: user, receipts: array_of_receipts });
+                } else {
+                    res.send({
+                        user: user,
+                        receipts: user.recepits,
+                        message: "User doesnt have any receipts",
+                    });
+                }
+                return;
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(400).send({ message: "Error with database" });
+            return;
+        }
+    }
+
+    res.status(400).send({ message: "Some issue with the token send" });
 });
 
 route.post("/confrimReceiptsUpload", async(req, res) => {

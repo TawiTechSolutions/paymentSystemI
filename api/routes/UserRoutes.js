@@ -353,7 +353,7 @@ route.put("/forgotPassword/:email", async(req, res) => {
 });
 
 //mail password reset link
-route.put("/mailResetPassword", async(req, res) => {
+route.get("/mailResetPassword", async(req, res) => {
     const token = req.headers.token;
 
     if (token) {

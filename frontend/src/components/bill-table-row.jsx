@@ -13,26 +13,22 @@ const useStyles = makeStyles({
   },
 });
 
-const ReceiptRow = ({ receipt }) => {
+const BillRow = ({ bill }) => {
   const classes = useStyles();
-  const openReceipt = () => {
-    window.open(receipt.receipt_url);
+  const openBill = () => {
+    window.open(bill.bill_url);
   };
 
   return (
     <TableRow>
-      <TableCell style={{ padding: "0 16px" }}>{receipt.invoice_num}</TableCell>
+      <TableCell style={{ padding: "0 16px" }}>{bill.invoice_num}</TableCell>
       <TableCell style={{ padding: "0 16px", textAlign: "center" }}>
-        <Button
-          onClick={openReceipt}
-          aria-label="view"
-          className={classes.margin}
-        >
-          <AssignmentIcon style={{ marginRight: "5px" }} /> View Receipt
+        <Button onClick={openBill} aria-label="view" className={classes.margin}>
+          <AssignmentIcon style={{ marginRight: "5px" }} /> View Bill
         </Button>
       </TableCell>
     </TableRow>
   );
 };
 
-export default ReceiptRow;
+export default BillRow;
