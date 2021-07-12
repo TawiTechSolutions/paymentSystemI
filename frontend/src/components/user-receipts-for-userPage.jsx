@@ -11,7 +11,6 @@ import React, { useEffect, useState } from "react";
 import ReceiptRow from "./receipt-table-row";
 
 const UserReceiptsUserPage = ({ token }) => {
-  const [user, setUser] = useState({});
   const [receipts, setReceipts] = useState([]);
   const [haveReceipts, setHaveReceipts] = useState(false);
 
@@ -19,11 +18,7 @@ const UserReceiptsUserPage = ({ token }) => {
     getReceipts();
     // eslint-disable-next-line
   }, []);
-  useEffect(() => {
-    console.log(user);
-    console.log("receipt", receipts);
-    // eslint-disable-next-line
-  }, [user, receipts]);
+
   const getReceipts = () => {
     axios
       .get(`http://localhost:5000/invoices/userReceipts`, {
@@ -34,8 +29,6 @@ const UserReceiptsUserPage = ({ token }) => {
       .then((res) => res.data)
       .then((data) => {
         //handle respose
-        console.log("data receveied", data);
-        setUser(data.user);
         setReceipts(data.receipts);
         if (data.haveReceipts) {
           setHaveReceipts(true);

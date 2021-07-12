@@ -28,7 +28,6 @@ const UserBills = ({ token }) => {
       })
       .then((res) => res.data)
       .then((data) => {
-        console.log("data receveied", data);
         setBills(data.bills);
         if (data.haveBills) {
           setHavebills(true);

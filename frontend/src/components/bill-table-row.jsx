@@ -3,6 +3,7 @@ import TableRow from "@material-ui/core/TableRow";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import PayBill from "./payBill";
 
 const useStyles = makeStyles({
   table: {
@@ -26,6 +27,11 @@ const BillRow = ({ bill }) => {
         <Button onClick={openBill} aria-label="view" className={classes.margin}>
           <AssignmentIcon style={{ marginRight: "5px" }} /> View Bill
         </Button>
+        <PayBill
+          token={localStorage.getItem("token")}
+          id={bill._id}
+          bill={bill}
+        />
       </TableCell>
     </TableRow>
   );

@@ -28,6 +28,7 @@
         "body-parser": "^1.19.0",
         "cloudinary": "^1.26.1",
         "cros": "^1.0.1",
+        "crypto": "^1.0.1",
         "csv": "^5.5.0",
         "dotenv": "^9.0.0",
         "ejs": "^3.1.6",
@@ -42,6 +43,8 @@
         "nodemailer": "^6.6.1",
         "nodemon": "^2.0.7",
         "randomstring": "^1.2.1",
+        "razorpay": "^2.0.6",
+        "shortid": "^2.2.16",
         "streamifier": "^0.1.1",
         "xlsx": "^0.17.0"
     }

@@ -19,7 +19,7 @@ const Login = () => {
     margin: "20px auto",
   };
   const avatarStyle = { backgroundColor: "rgb(51, 70, 176)" };
-  const btnstyle = { margin: "8px 0", marginTop: "58px" };
+  const btnstyle = { margin: "8px 0", marginTop: "45px" };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,6 +37,7 @@ const Login = () => {
           window.alert(data.message);
         } else {
           localStorage.setItem("token", data.token);
+          localStorage.setItem("user", data.user);
           if (data.user.isAdmin) {
             window.location.replace(`http://${window.location.host}/dashboard`);
           } else {
@@ -103,7 +104,7 @@ const Login = () => {
           {" "}
           New here? <Link href="/register">Register</Link>
         </Typography>
-        <Typography style={{ marginTop: "5px" }}>
+        <Typography>
           {" "}
           Forgot password? <Link href="/forgotPassword">Click here</Link>
         </Typography>

@@ -4,11 +4,12 @@ const morgan = require("morgan");
 const path = require("path");
 const cors = require("cors");
 const connectDB = require("./database/connection");
-const UserRoutes = require("./routes/UserRoutes");
+const userRoutes = require("./routes/UserRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const JWT = require("./Utilities/JWT_Auth");
 const startAutoMailing = require("./Utilities/autoMailBills");
 var CronJob = require("cron").CronJob;
+const payementRoutes = require("./routes/paymentRoutes");
 
 const app = express();
 
@@ -58,7 +59,10 @@ app.use(function(err, req, res, next) {
 });
 app.use("*", function(req, res, next) {
     console.log("the request gotten from req", req.baseUrl);
-    if (!req.baseUrl.includes("/users/") && !req.baseUrl.includes("/invoices/")) {
+    if (!req.baseUrl.includes("/users/") &&
+        !req.baseUrl.includes("/invoices/") &&
+        !req.baseUrl.includes("/payment/")
+    ) {
         res.sendFile(path.join(__dirname, "build", "index.html"));
     } else {
         next();
@@ -67,8 +71,9 @@ app.use("*", function(req, res, next) {
 //use verification
 app.use("/", JWT.JWTAuthMiddleware);
 //load router
-app.use("/users", UserRoutes);
+app.use("/users", userRoutes);
 app.use("/invoices", invoiceRoutes);
+app.use("/payment", payementRoutes);
 
 app.listen(PORT, () => {
     console.log(`server started on http://localhost:${PORT}`);
