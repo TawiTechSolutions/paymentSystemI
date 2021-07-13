@@ -27,6 +27,8 @@ var schme = new mongoose.Schema({
     },
     invoice_num: { type: String, require: true, unique: true },
     bill_url: { type: String, default: "" },
+    order_id: { type: String },
+    user_id: { type: String, default: "" },
 });
 
 const Bills = mongoose.model("Bills", schme);

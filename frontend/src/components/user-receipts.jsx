@@ -23,11 +23,16 @@ const UserReceipts = ({ userID, token, toggleView }) => {
 
   const getReceipts = () => {
     axios
-      .get(`http://localhost:5000/invoices/userReceipts`, {
-        headers: {
-          token: token,
-        },
-      })
+      .get(
+        userID
+          ? `http://localhost:5000/invoices/userReceipts/${userID}`
+          : `http://localhost:5000/invoices/userReceipts/:id`,
+        {
+          headers: {
+            token: token,
+          },
+        }
+      )
       .then((res) => res.data)
       .then((data) => {
         setUser(data.user);

@@ -50,12 +50,9 @@ function PayBill({ token, id, bill }) {
           order_id: res.data.id,
           name: "Pay Bill",
           description: bill.invoice_detials.desc,
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2560px-React-icon.svg.png",
+          image: "https://i.ibb.co/7XDR2G9/Koyo-logo.jpg",
           handler: function (response) {
-            alert(response.razorpay_payment_id);
-            alert(response.razorpay_order_id);
-            alert(response.razorpay_signature);
+            alert("payment made successfully");
           },
         };
         if (user) {

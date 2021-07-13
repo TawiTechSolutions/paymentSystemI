@@ -74,7 +74,7 @@ function UploadReceiptData({ token }) {
     };
     axios
       .post(
-        `http://localhost:5000/Receipts/uploadReceiptsData`,
+        `http://localhost:5000/invoices/uploadReceiptsData`,
 
         data_to_be_send,
         options
@@ -482,7 +482,7 @@ function UploadReceiptData({ token }) {
                 )}
                 {confirm_NotFound ? (
                   <div style={{ marginTop: "10px" }}>
-                    {not_found_emails ? (
+                    {not_found_emails.length ? (
                       <div>
                         <p>
                           <b>Emails Not Found:</b>
@@ -492,9 +492,12 @@ function UploadReceiptData({ token }) {
                         ))}
                       </div>
                     ) : (
-                      "All emails found. Please Confrim and submit"
+                      <p>
+                        <b>All emails found</b>
+                      </p>
                     )}
-                    {not_found_bills ? (
+
+                    {not_found_bills.length ? (
                       <div>
                         <p>
                           <b>Bills Not Found:</b>
@@ -504,7 +507,10 @@ function UploadReceiptData({ token }) {
                         ))}
                       </div>
                     ) : (
-                      "All bills found. Please Confrim and submit"
+                      <p>
+                        {" "}
+                        <b>All bills found</b>
+                      </p>
                     )}
                     <Button
                       variant="contained"

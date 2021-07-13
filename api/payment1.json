@@ -1,0 +1,58 @@
+{
+    "entity": "event",
+    "account_id": "acc_HXURzUiW5AQWCd",
+    "event": "payment.captured",
+    "contains": [
+        "payment"
+    ],
+    "payload": {
+        "payment": {
+            "entity": {
+                "id": "pay_HYJK3fWNrxVFtP",
+                "entity": "payment",
+                "amount": 10832400,
+                "currency": "INR",
+                "status": "captured",
+                "order_id": "order_HYJJuacGNcu62m",
+                "invoice_id": null,
+                "international": false,
+                "method": "card",
+                "amount_refunded": 0,
+                "refund_status": null,
+                "captured": true,
+                "description": "Accounting charges, in particular, those coming from internal company transfers",
+                "card_id": "card_HYJK3m78SUd33i",
+                "card": {
+                    "id": "card_HYJK3m78SUd33i",
+                    "entity": "card",
+                    "name": "madhav",
+                    "last4": "3107",
+                    "network": "Visa",
+                    "type": "credit",
+                    "issuer": "HSBC",
+                    "international": false,
+                    "emi": true,
+                    "sub_type": "consumer"
+                },
+                "bank": null,
+                "wallet": null,
+                "vpa": null,
+                "email": "madhavrajeev303@gmail.com",
+                "contact": "+918156910582",
+                "notes": [],
+                "fee": 255644,
+                "tax": 38996,
+                "error_code": null,
+                "error_description": null,
+                "error_source": null,
+                "error_step": null,
+                "error_reason": null,
+                "acquirer_data": {
+                    "auth_code": "150268"
+                },
+                "created_at": 1626156485
+            }
+        }
+    },
+    "created_at": 1626156489
+}

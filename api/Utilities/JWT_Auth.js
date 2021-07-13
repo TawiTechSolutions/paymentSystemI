@@ -11,7 +11,8 @@ const JWTAuthMiddleware = function(req, res, next) {
         req.url == "/users/login" ||
         req.url == "/users/register" ||
         req.url.includes("/users/forgotPassword/") ||
-        req.url.includes("/users/verifyUser/")
+        req.url.includes("/users/verifyUser/") ||
+        req.url.includes("/payment/verification")
     ) {
         next();
     } else if (

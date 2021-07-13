@@ -70,21 +70,4 @@ const mailReceipts = async() => {
     });
 };
 
-// const parseExcel = (filePath) => {
-//     const workbook = XLSX.readFile(filePath, {
-//         type: "binary",
-//         cellDates: true,
-//         cellNF: false,
-//         cellText: false,
-//     });
-//     let data = {};
-//     workbook.SheetNames.forEach(function(sheetName) {
-//         const XL_row_object = XLSX.utils.sheet_to_row_object_array(
-//             workbook.Sheets[sheetName]
-//         );
-//         data[sheetName] = XL_row_object;
-//     });
-//     return data;
-// };
-
 module.exports = { mailReceipts };

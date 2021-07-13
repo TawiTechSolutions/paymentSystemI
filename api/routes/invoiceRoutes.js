@@ -34,7 +34,10 @@ route.post("/uploadBillsData", async(req, res) => {
         //bills data
         const cust_data = req.body.cust_data;
         const frim_data = req.body.solutions_owner_data[0];
-
+        //send res
+        res.send({
+            message: "Files have been uploaded",
+        });
         //loop thorught the rows and make bill
         for (let i = 0; i < cust_data.length; i++) {
             //making Bill
@@ -51,7 +54,7 @@ route.post("/uploadBillsData", async(req, res) => {
                     await generateBill
                         .generateBillPDF(cust_data[i], frim_data)
                         .then(async(cloudinary_details) => {
-                            console.log("result of generateing recipt", cloudinary_details);
+                            console.log("result of generateing bill", cloudinary_details);
                             const bill = new billDB({
                                 invoice_detials: cust_data[i],
                                 invoice_num: cust_data[i].invoice_num,
@@ -63,24 +66,20 @@ route.post("/uploadBillsData", async(req, res) => {
                             const user_found = await userDB.findOneAndUpdate({
                                 email: cust_data[i].cust_email,
                             }, { $push: { bills: result._id } });
-                            if (user_found)
+                            if (user_found) {
                                 console.log(
                                     "user found and added bill to the user",
                                     user_found
                                 );
-                            else {
+                                await billDB.findByIdAndUpdate(result._id, {
+                                    user_id: user_found._id,
+                                });
+                            } else {
                                 console.log(
                                     "user with email id",
                                     cust_data[i].cust_email,
                                     "not found"
                                 );
-                                //user should not be added in bills
-                                // ///adding new user
-                                // await addUserIfAbsent(element);
-                                // console.log("added user with email", element.cust_email);
-                                // await userDB.findOneAndUpdate({
-                                //     email: element.cust_email,
-                                // }, { $push: { bills: result._id } });
                             }
                         })
                         .catch((err) => {
@@ -91,9 +90,7 @@ route.post("/uploadBillsData", async(req, res) => {
                 console.log("err" + err);
             }
         }
-        res.send({
-            message: "Files have been uploaded",
-        });
+
         return;
     }
     res.send({
@@ -125,7 +122,10 @@ route.post("/uploadReceiptsData", async(req, res) => {
         //recepits data
         const cust_data = req.body.cust_data;
         const frim_data = req.body.solutions_owner_data[0];
-
+        //send respose
+        res.send({
+            message: "Files have been uploaded",
+        });
         //loop thorught the rows and make recepit
         for (let i = 0; i < cust_data.length; i++) {
             //making receipt and removing bill
@@ -144,21 +144,18 @@ route.post("/uploadReceiptsData", async(req, res) => {
                         const foundBill = await billDB.findOne({
                             invoice_num: cust_data[i].invoice_num,
                         });
-                        const foundUser = await userDB.findOne({
-                            email: cust_data[i].cust_email,
-                        });
-                        let newBillArray = foundUser.bills.filter(function(item) {
-                            return item !== foundBill._id;
-                        });
-                        const user_found = await userDB.findOneAndUpdate({
-                            email: cust_data[i].cust_email,
-                        }, { bills: newBillArray });
+                        if (foundBill) {
+                            console.log("removing bill");
+                            await userDB.findOneAndUpdate({
+                                email: cust_data[i].cust_email,
+                            }, { $pull: { bills: foundBill._id } });
+                        }
                     } catch (err) {
                         console.log("error while removing bill", err);
                     }
-                    //generate receipt
+                    //generate receipt and mail it
                     await generateReceipt
-                        .generateReceiptPDF(element, frim_data)
+                        .generateReceiptPDF(cust_data[i], frim_data)
                         .then(async(cloudinary_details) => {
                             console.log("result of generateing recipt", cloudinary_details);
                             const recepit = new receiptDB({
@@ -188,7 +185,7 @@ route.post("/uploadReceiptsData", async(req, res) => {
                                     "not found"
                                 );
                                 ///adding new user
-                                await addUserIfAbsent(element);
+                                await addUserIfAbsent(cust_data[i]);
                                 console.log("added user with email", cust_data[i].cust_email);
                                 await userDB.findOneAndUpdate({
                                     email: cust_data[i].cust_email,
@@ -204,7 +201,7 @@ route.post("/uploadReceiptsData", async(req, res) => {
                             });
                             let mailOptions = {
                                 from: process.env.SENDER_EMAIL, // sender address
-                                to: to, // list of receivers
+                                to: cust_data[i].cust_email, // list of receivers
                                 subject: "Receipt", // Subject line
                                 text: `please check the attached Receipt`, // plain text body
                                 attachments: [{
@@ -228,9 +225,7 @@ route.post("/uploadReceiptsData", async(req, res) => {
                 console.log("err" + err);
             }
         }
-        res.send({
-            message: "Files have been uploaded",
-        });
+
         return;
     }
     res.send({
@@ -285,7 +280,9 @@ route.get("/userBills", async(req, res) => {
                     let array_of_bills = [];
                     for (let i = 0; i < billsID_array.length; i++) {
                         const bills = await billDB.findById(billsID_array[i]);
-                        array_of_bills.push(bills);
+                        if (bills) {
+                            array_of_bills.push(bills);
+                        }
                     }
                     res.send({
                         status: 200,
@@ -312,11 +309,13 @@ route.get("/userBills", async(req, res) => {
     res.status(400).send({ message: "Some issue with the token send" });
 });
 
-route.get("/userReceipts", async(req, res) => {
+route.get("/userReceipts/:id", async(req, res) => {
     const token = req.headers.token;
-
+    let id = JWT.getUserData(token)._id;
+    if (req.params.id !== ":id") {
+        id = req.params.id;
+    }
     if (token) {
-        const id = JWT.getUserData(token)._id;
         try {
             if (id) {
                 const user = await userDB.findById(id);
@@ -325,7 +324,9 @@ route.get("/userReceipts", async(req, res) => {
                     let array_of_receipts = [];
                     for (let i = 0; i < receiptsID_array.length; i++) {
                         const receipt = await receiptDB.findById(receiptsID_array[i]);
-                        array_of_receipts.push(receipt);
+                        if (receipt) {
+                            array_of_receipts.push(receipt);
+                        }
                     }
                     res.send({
                         status: 200,

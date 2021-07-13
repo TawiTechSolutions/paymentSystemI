@@ -31,7 +31,7 @@ const generateBillPDF = (clientData, firmData) => {
                     clientData: clientData_M,
                     firmData: firmData,
                 });
-                console.log("making bill for", clientData.invoice_num);
+                console.log("making bill for", clientData.cust_email);
                 await htmlToPdf(html)
                     .then((result) => {
                         resolve(result);

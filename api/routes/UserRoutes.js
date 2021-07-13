@@ -56,7 +56,7 @@ route.post("/register", async(req, res) => {
             let mailOptions = {
                 from: "usingfornodemailer@gmail.com", // sender address
                 to: data.email, // list of receivers
-                subject: "Password reset", // Subject line
+                subject: "Verify email", // Subject line
                 text: `Click to verify- 
                     ${process.env.HOST}/verifyUser/${token}`, // plain text body
                 html: `<a href="${process.env.HOST}/verifyUser/${token}" >Click here to verify</a>`, // html body

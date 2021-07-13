@@ -21,7 +21,7 @@ const UserReceiptsUserPage = ({ token }) => {
 
   const getReceipts = () => {
     axios
-      .get(`http://localhost:5000/invoices/userReceipts`, {
+      .get(`http://localhost:5000/invoices/userReceipts/:id`, {
         headers: {
           token: token,
         },
