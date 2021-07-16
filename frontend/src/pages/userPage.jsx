@@ -1,8 +1,8 @@
-import NavBarUser from "../components/nav-bar-user";
+import NavBarUser from "../components/nav-bar/nav-bar-user";
 import { BrowserRouter } from "react-router-dom";
 import { useEffect, useState } from "react";
-import UserReceiptsUserPage from "../components/user-receipts-for-userPage";
 import UserBills from "../components/user-bills";
+import UserReceiptsUserPage from "../components/user-receipts-for-userPage";
 
 const axios = require("axios");
 const UserPage = () => {
@@ -31,8 +31,8 @@ const UserPage = () => {
   return (
     <BrowserRouter>
       <NavBarUser username={user.name} token={token} />
-      <UserReceiptsUserPage token={token} />
       <UserBills token={token} />
+      <UserReceiptsUserPage token={token} />
     </BrowserRouter>
   );
 };

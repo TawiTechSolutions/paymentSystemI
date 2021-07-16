@@ -43,12 +43,12 @@ const UserBills = ({ token }) => {
     <BrowserRouter>
       <Typography
         style={{ marginTop: "5px", marginLeft: "30px" }}
-        variant="h5"
+        variant="h6"
         component="h2"
         align="left"
         gutterBottom
       >
-        Pending Bills
+        <b>Pending Invoices</b>
       </Typography>
       <Container>
         {haveBills ? (

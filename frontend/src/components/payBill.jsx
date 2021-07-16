@@ -52,7 +52,7 @@ function PayBill({ token, id, bill }) {
           description: bill.invoice_detials.desc,
           image: "https://i.ibb.co/7XDR2G9/Koyo-logo.jpg",
           handler: function (response) {
-            alert("payment made successfully");
+            alert("Payment made successfully. Check mail for receipt");
           },
         };
         if (user) {

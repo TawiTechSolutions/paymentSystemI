@@ -28,6 +28,7 @@ function UploadReceiptData({ token }) {
   const [errors_in_SOData, setErrors_in_SOData] = useState([]);
   const [errorColourCustData, setErrorColourCustData] = useState({});
   const [errorsColourSOData, setErrorsColourSOData] = useState({});
+  const scrollRef = React.useRef(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -361,6 +362,12 @@ function UploadReceiptData({ token }) {
     setErrorsColourSOData(ColourSOData);
   }, [errors_in_custData, errors_in_SOData]);
 
+  //scrol to the confrim info
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behaviour: "smooth" });
+    }
+  }, [confirm_NotFound]);
   return (
     <React.Fragment>
       <Button
@@ -378,12 +385,25 @@ function UploadReceiptData({ token }) {
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
       >
-        <DialogTitle id="max-width-dialog-title">Receipts</DialogTitle>
+        <DialogTitle id="max-width-dialog-title">
+          Receipts
+          <Button
+            onClick={handleClose}
+            color="primary"
+            style={{ float: "right" }}
+          >
+            Close
+          </Button>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Upload the receipts details of clients
+            Enter the receipt data here ONLY against invoices for which payment
+            was received outside this system such as cash, a paper-based check,
+            etc.
+            <br /> The fields below show an abstraction of your data. Please
+            check that it is correct before clicking on "Send Data" which will
+            store your file tables in the database.
           </DialogContentText>
-
           <div style={{ marginTop: "10px", marginBottom: "10px" }}>
             <Button variant="contained" color="primary" component="label">
               <input
@@ -392,9 +412,9 @@ function UploadReceiptData({ token }) {
                 onChange={handleFileUpload}
                 hidden
               />
-              Upload Receipts Data
+              Upload File
             </Button>
-            {fileSelected ? (
+            {fileSelected && (
               <div>
                 <Typography
                   style={{ marginTop: "5px" }}
@@ -426,16 +446,10 @@ function UploadReceiptData({ token }) {
                 />
 
                 {fileCorrect ? (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={confirmRequest}
-                  >
-                    Send Receipts Data
-                  </Button>
+                  false
                 ) : (
                   <div>
-                    {errors_in_custData ? (
+                    {errors_in_custData && (
                       <React.Fragment>
                         <p>
                           <b>Errors Found in cust_data sheet:</b>
@@ -450,10 +464,8 @@ function UploadReceiptData({ token }) {
                             ))
                           : "No errors"}
                       </React.Fragment>
-                    ) : (
-                      false
                     )}
-                    {errors_in_SOData ? (
+                    {errors_in_SOData && (
                       <React.Fragment>
                         <p>
                           <b>Errors Found in SO_data sheet:</b>
@@ -468,20 +480,11 @@ function UploadReceiptData({ token }) {
                             ))
                           : "No errors"}
                       </React.Fragment>
-                    ) : (
-                      false
                     )}
-                    <Button
-                      variant="contained"
-                      disabled
-                      style={{ marginTop: "10px" }}
-                    >
-                      Send Receipts Data
-                    </Button>
                   </div>
                 )}
-                {confirm_NotFound ? (
-                  <div style={{ marginTop: "10px" }}>
+                {confirm_NotFound && (
+                  <div ref={scrollRef} style={{ marginTop: "10px" }}>
                     {not_found_emails.length ? (
                       <div>
                         <p>
@@ -512,33 +515,39 @@ function UploadReceiptData({ token }) {
                         <b>All bills found</b>
                       </p>
                     )}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={axiosPostRequest}
-                    >
-                      Confrim and Submit
-                    </Button>
                   </div>
-                ) : (
-                  false
                 )}
 
-                {percentage > 0 ? (
+                {percentage > 0 && (
                   <LinearProgress variant="determinate" value={percentage} />
-                ) : (
-                  ""
                 )}
               </div>
-            ) : (
-              ""
             )}
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
+          {fileSelected && (
+            <React.Fragment>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={confirmRequest}
+                disabled={fileCorrect ? false : true}
+                style={{ display: confirm_NotFound ? "none" : "block" }}
+              >
+                Send Receipts Data
+              </Button>
+              {confirm_NotFound && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={axiosPostRequest}
+                >
+                  Confrim and Submit
+                </Button>
+              )}
+            </React.Fragment>
+          )}
         </DialogActions>
       </Dialog>
     </React.Fragment>

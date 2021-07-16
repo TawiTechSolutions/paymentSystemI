@@ -11,6 +11,7 @@ var invoice_detials = new mongoose.Schema({
     TDS: { type: String, default: "" },
     GST: { type: String, default: "" },
     final_bal_due: { type: String, default: "" },
+    due_date: { type: String, default: "" },
     recurring: { type: String, default: "" },
     Frequency: { type: String, default: "" },
     paid: { type: String, default: "" },
@@ -27,6 +28,7 @@ var schme = new mongoose.Schema({
     },
     invoice_num: { type: String, require: true, unique: true },
     receipt_url: { type: String, default: "" },
+    bill_url: { type: String, default: "" },
 });
 
 const Recepits = mongoose.model("recepits", schme);

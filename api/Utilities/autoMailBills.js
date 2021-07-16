@@ -31,38 +31,40 @@ const mailReceipts = async() => {
             if (user.bills.length > 0) {
                 user.bills.forEach(async(bill_id) => {
                     let bill = await billDB.findById(bill_id);
-                    if (
-                        checkDate(
-                            new Date(bill.email_dt).toDateString(),
-                            bill.recurring,
-                            bill.Frequency
-                        )
-                    ) {
-                        //mail it
-                        let transporter = nodemailer.createTransport({
-                            service: "gmail",
-                            auth: {
-                                user: "usingfornodemailer@gmail.com",
-                                pass: "nodemailer@1",
-                            },
-                        });
-                        let mailOptions = {
-                            from: "usingfornodemailer@gmail.com", // sender address
-                            to: user.email, // list of receivers
-                            subject: "Invoice", // Subject line
-                            text: `please check the attached invoice`, // plain text body
-                            attachments: [{
-                                filename: "Invoice.pdf",
-                                path: bill.bill_url,
-                            }, ],
-                        };
-                        await transporter.sendMail(mailOptions, (err, info) => {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                console.log(info);
-                            }
-                        });
+                    if (bill) {
+                        if (
+                            checkDate(
+                                new Date(bill.invoice_detials.email_dt).toDateString(),
+                                bill.invoice_detials.recurring,
+                                bill.invoice_detials.Frequency
+                            )
+                        ) {
+                            //mail it
+                            let transporter = nodemailer.createTransport({
+                                service: "gmail",
+                                auth: {
+                                    user: "usingfornodemailer@gmail.com",
+                                    pass: "nodemailer@1",
+                                },
+                            });
+                            let mailOptions = {
+                                from: "usingfornodemailer@gmail.com", // sender address
+                                to: user.email, // list of receivers
+                                subject: "Invoice", // Subject line
+                                text: `please check the attached invoice`, // plain text body
+                                attachments: [{
+                                    filename: "Invoice.pdf",
+                                    path: bill.bill_url,
+                                }, ],
+                            };
+                            await transporter.sendMail(mailOptions, (err, info) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log(info);
+                                }
+                            });
+                        }
                     }
                 });
             }

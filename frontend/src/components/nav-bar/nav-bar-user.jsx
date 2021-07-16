@@ -8,8 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import UploadBillsData from "./upload-bills";
-import UploadReceiptsData from "./upload-receipts";
+import ResetPassword from "../reset-password";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NavBarAdmin({ username, token }) {
+export default function NavBarUser({ username, token }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -56,8 +55,7 @@ export default function NavBarAdmin({ username, token }) {
             Payment management service
           </Typography>
           <div>
-            <UploadBillsData token={token} />
-            <UploadReceiptsData token={token} />
+            <ResetPassword token={token} />
             <Button
               className={classes.button_menu}
               aria-controls="simple-menu"

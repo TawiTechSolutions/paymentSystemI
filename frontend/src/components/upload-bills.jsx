@@ -335,7 +335,7 @@ function UploadBillsData({ token }) {
         onClick={handleClickOpen}
         style={{ marginRight: "10px" }}
       >
-        Upload bills
+        Upload Invoices
       </Button>
       <Dialog
         fullWidth={true}
@@ -344,21 +344,38 @@ function UploadBillsData({ token }) {
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
       >
-        <DialogTitle id="max-width-dialog-title">Bills</DialogTitle>
+        <DialogTitle id="max-width-dialog-title">
+          Invoice{" "}
+          <Button
+            onClick={handleClose}
+            color="primary"
+            style={{ float: "right" }}
+          >
+            Close
+          </Button>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Upload the bill details of clients
+            Upload the file which contains the invoice data of clients
+            <br /> The fields below show an abstraction of your data. Please
+            check that it is correct before clicking on "Send Data" which will
+            store your file tables in the database.
           </DialogContentText>
 
           <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Button variant="contained" color="primary" component="label">
+            <Button
+              variant="contained"
+              color="primary"
+              component="label"
+              title="the files that contain your bill, receipt and your firm's data"
+            >
               <input
                 type="file"
                 accept=".csv,.xlsx,.xls"
                 onChange={handleFileUpload}
                 hidden
               />
-              Upload Bills Data
+              Upload File
             </Button>
             {fileSelected ? (
               <div>
@@ -382,6 +399,7 @@ function UploadBillsData({ token }) {
                   component="h6"
                   align="left"
                   gutterBottom
+                  title="The files you have uploaded will now be sent to the database."
                 >
                   Solution Onwers Data
                 </Typography>
@@ -392,13 +410,7 @@ function UploadBillsData({ token }) {
                 />
 
                 {fileCorrect ? (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={axiosPostRequest}
-                  >
-                    Send Bills Data
-                  </Button>
+                  false
                 ) : (
                   <div>
                     {errors_in_custData ? (
@@ -437,13 +449,6 @@ function UploadBillsData({ token }) {
                     ) : (
                       false
                     )}
-                    <Button
-                      variant="contained"
-                      disabled
-                      style={{ marginTop: "10px" }}
-                    >
-                      Send Bills Data
-                    </Button>
                   </div>
                 )}
 
@@ -459,9 +464,16 @@ function UploadBillsData({ token }) {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
+          {fileSelected && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={axiosPostRequest}
+              disabled={fileCorrect ? false : true}
+            >
+              Send Invoices Data
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </React.Fragment>

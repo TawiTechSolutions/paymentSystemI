@@ -80,6 +80,15 @@ route.post("/uploadBillsData", async(req, res) => {
                                     cust_data[i].cust_email,
                                     "not found"
                                 );
+                                ///adding new user
+                                await addUserIfAbsent(cust_data[i]);
+                                console.log("added user with email", cust_data[i].cust_email);
+                                const new_user = await userDB.findOneAndUpdate({
+                                    email: cust_data[i].cust_email,
+                                }, { $push: { recepits: result._id } });
+                                await billDB.findByIdAndUpdate(result._id, {
+                                    user_id: new_user._id,
+                                });
                             }
                         })
                         .catch((err) => {
@@ -145,7 +154,7 @@ route.post("/uploadReceiptsData", async(req, res) => {
                             invoice_num: cust_data[i].invoice_num,
                         });
                         if (foundBill) {
-                            console.log("removing bill");
+                            console.log("removing bill from user");
                             await userDB.findOneAndUpdate({
                                 email: cust_data[i].cust_email,
                             }, { $pull: { bills: foundBill._id } });
@@ -162,6 +171,7 @@ route.post("/uploadReceiptsData", async(req, res) => {
                                 invoice_detials: cust_data[i],
                                 invoice_num: cust_data[i].invoice_num,
                                 receipt_url: cloudinary_details.secure_url,
+                                bill_url: foundBill ? foundBill.bill_url : "",
                             });
                             console.log(
                                 "saving receipt no.",

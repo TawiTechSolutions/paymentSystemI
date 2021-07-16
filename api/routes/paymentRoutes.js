@@ -6,6 +6,8 @@ const crypto = require("crypto");
 const billDB = require("../model/bill");
 const SO_dataDB = require("../model/solution_owner");
 const userDB = require("../model/user");
+const receiptDB = require("../model/receipt");
+const nodemailer = require("nodemailer");
 
 const razorpay = new Razorpay({
     key_id: "rzp_test_iyc6McBDRDGLBz",
@@ -13,6 +15,7 @@ const razorpay = new Razorpay({
 });
 
 route.post("/verification", async(req, res) => {
+    res.send({ status: "ok" });
     // do a validation
     const secret = process.env.RAZORPAY_VERIFICATION_SECRET;
 
@@ -24,88 +27,88 @@ route.post("/verification", async(req, res) => {
 
     if (digest === req.headers["x-razorpay-signature"]) {
         console.log("payment has been made and captured");
-        // process it
-        require("fs").writeFileSync(
-            "payment1.json",
-            JSON.stringify(req.body, null, 4)
-        );
+
         //delete bill
         const bill_details = await billDB.findOneAndDelete({
             order_id: req.body.payload.payment.entity.order_id,
         });
         //mail receipt
-        const SO_details = await SO_dataDB.find();
-        console.log("inside verfification", SO_details[0]);
-
-        const user = await userDB.findById(bill_details.user_id);
-
-        let cust_data = {...user, ...bill_details.invoice_detials };
-
-        console.log("cust_data", cust_data);
-
-        // await generateReceipt
-        //     .generateReceiptPDF(cust_data[i], SO_details[0])
-        //     .then(async(cloudinary_details) => {
-        //         console.log("result of generateing recipt", cloudinary_details);
-        //         const recepit = new receiptDB({
-        //             invoice_detials: cust_data[i],
-        //             invoice_num: cust_data[i].invoice_num,
-        //             receipt_url: cloudinary_details.secure_url,
-        //         });
-        //         console.log("saving receipt no.", cust_data[i].invoice_num, "to db");
-        //         const result = await recepit.save();
-        //         //add recepit to user db
-        //         const user_found = await userDB.findOneAndUpdate({
-        //             email: cust_data[i].cust_email,
-        //         }, { $push: { recepits: result._id } });
-        //         if (user_found)
-        //             console.log("user found and added recepit to the user", user_found);
-        //         else {
-        //             console.log(
-        //                 "user with email id",
-        //                 cust_data[i].cust_email,
-        //                 "not found"
-        //             );
-        //             ///adding new user
-        //             await addUserIfAbsent(cust_data[i]);
-        //             console.log("added user with email", cust_data[i].cust_email);
-        //             await userDB.findOneAndUpdate({
-        //                 email: cust_data[i].cust_email,
-        //             }, { $push: { recepits: result._id } });
-        //         }
-        //         //mail the receipt
-        //         let transporter = nodemailer.createTransport({
-        //             service: "gmail",
-        //             auth: {
-        //                 user: process.env.SENDER_EMAIL,
-        //                 pass: process.env.SENDER_EMAIL_PASSWORD,
-        //             },
-        //         });
-        //         let mailOptions = {
-        //             from: process.env.SENDER_EMAIL, // sender address
-        //             to: cust_data[i].cust_email, // list of receivers
-        //             subject: "Receipt", // Subject line
-        //             text: `please check the attached Receipt`, // plain text body
-        //             attachments: [{
-        //                 filename: "Receipt.pdf",
-        //                 path: cloudinary_details.secure_url,
-        //             }, ],
-        //         };
-        //         await transporter.sendMail(mailOptions, (err, info) => {
-        //             if (err) {
-        //                 console.log(err);
-        //             } else {
-        //                 console.log(info);
-        //             }
-        //         });
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
+        if (bill_details) {
+            const user = await userDB.findByIdAndUpdate(bill_details.user_id, {
+                $pull: { bills: bill_details._id },
+            });
+            let cust_data = {
+                ...JSON.parse(JSON.stringify(user)),
+                ...JSON.parse(JSON.stringify(bill_details)).invoice_detials,
+            };
+            const SO_details = await SO_dataDB.find();
+            try {
+                generateReceipt
+                    .generateReceiptPDF(cust_data, SO_details[0].so_data)
+                    .then(async(cloudinary_details) => {
+                        console.log("result of generateing recipt", cloudinary_details);
+                        const recepit = new receiptDB({
+                            invoice_detials: cust_data,
+                            invoice_num: cust_data.invoice_num,
+                            receipt_url: cloudinary_details.secure_url,
+                        });
+                        console.log("saving receipt no.", cust_data.invoice_num, "to db");
+                        const result = await recepit.save();
+                        //add recepit to user db
+                        const user_found = await userDB.findOneAndUpdate({
+                            email: cust_data.email,
+                        }, { $push: { recepits: result._id } });
+                        if (user_found)
+                            console.log(
+                                "user found and added recepit to the user",
+                                user_found
+                            );
+                        else {
+                            console.log("user with email id", cust_data.email, "not found");
+                        }
+                        //mail the receipt
+                        try {
+                            let transporter = nodemailer.createTransport({
+                                service: "gmail",
+                                auth: {
+                                    user: process.env.SENDER_EMAIL,
+                                    pass: process.env.SENDER_EMAIL_PASSWORD,
+                                },
+                            });
+                            let mailOptions = {
+                                from: process.env.SENDER_EMAIL, // sender address
+                                to: cust_data.email, // list of receivers
+                                subject: "Receipt", // Subject line
+                                text: `please check the attached Receipt`, // plain text body
+                                attachments: [{
+                                    filename: "Receipt.pdf",
+                                    path: cloudinary_details.secure_url,
+                                }, ],
+                            };
+                            await transporter.sendMail(mailOptions, (err, info) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log(info);
+                                }
+                            });
+                        } catch (error) {
+                            console.log(
+                                "error when mailing receipt after bill payment",
+                                error
+                            );
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            } catch (error) {
+                console.log("error when making or mailing receipt", error);
+            }
+        }
     } else {
         // pass it
     }
-    res.send({ status: "ok" });
 });
 
 route.get("/razorpay/:id", async(req, res) => {
