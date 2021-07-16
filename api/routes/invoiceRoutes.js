@@ -167,6 +167,9 @@ route.post("/uploadReceiptsData", async(req, res) => {
                         .generateReceiptPDF(cust_data[i], frim_data)
                         .then(async(cloudinary_details) => {
                             console.log("result of generateing recipt", cloudinary_details);
+                            const foundBill = await billDB.findOne({
+                                invoice_num: cust_data[i].invoice_num,
+                            });
                             const recepit = new receiptDB({
                                 invoice_detials: cust_data[i],
                                 invoice_num: cust_data[i].invoice_num,

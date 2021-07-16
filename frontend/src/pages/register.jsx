@@ -14,45 +14,49 @@ import React, { useState } from "react";
 const Register = () => {
   const paperStyle = {
     padding: 20,
-    height: "70vh",
     width: 280,
     margin: "20px auto",
   };
-  const avatarStyle = { backgroundColor: "blue" };
+  const avatarStyle = { backgroundColor: "rgb(63, 81, 181)" };
   const btnstyle = { margin: "8px 0", marginTop: "50px" };
 
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [confrimPassword, setConfrimPassword] = useState("");
   const [email, setEmail] = useState("");
 
   const postRegister = () => {
     if (password.length < 6) {
       window.alert("Password length should be more than 6");
     } else {
-      axios
-        .post("http://localhost:5000/users/register", {
-          name: name,
-          email: email,
-          password: password,
-        })
-        .then((res) => {
-          if (res.data.status === 200) {
-            window.alert("Registered sucessfully");
-            window.alert(res.data.message);
-            window.location.replace(`http://${window.location.host}/login`);
-          } else if (res.data.status === 400) {
-            if (res.data.message) {
+      if (confrimPassword === password) {
+        axios
+          .post("http://localhost:5000/users/register", {
+            name: name,
+            email: email,
+            password: password,
+          })
+          .then((res) => {
+            if (res.data.status === 200) {
+              window.alert("Registered sucessfully");
               window.alert(res.data.message);
-              window.location.reload();
+              window.location.replace(`http://${window.location.host}/login`);
+            } else if (res.data.status === 400) {
+              if (res.data.message) {
+                window.alert(res.data.message);
+                window.location.reload();
+              }
+            } else {
+              window.alert("Some error occured. check console.");
+              console.log(res.data);
             }
-          } else {
-            window.alert("Some error occured. check console.");
-            console.log(res.data);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        window.alert("Passwords don't match");
+      }
     }
   };
 
@@ -96,6 +100,17 @@ const Register = () => {
             value={password}
             onChange={(event) => {
               setPassword(event.target.value);
+            }}
+          />
+          <TextField
+            label="Confrim password"
+            placeholder="Re-enter password"
+            type="password"
+            fullWidth
+            required
+            value={confrimPassword}
+            onChange={(event) => {
+              setConfrimPassword(event.target.value);
             }}
           />
           <Button

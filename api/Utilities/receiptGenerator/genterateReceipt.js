@@ -10,6 +10,22 @@ cloudinary.config({
     api_secret: "d7QnLYuJ0BfYA-WuAwrxrrO2hLk",
 });
 
+const addCommas = (e) => {
+    let l,
+        t,
+        n = (e = e.toString()).indexOf(".");
+    if (
+        (n >= 0 ? ((l = e.slice(0, n)), (t = e.slice(n))) : ((l = e), (t = "")),
+            l.length > 3)
+    ) {
+        let e = l.slice(0, l.length - 3) + "," + l.slice(l.length - 3);
+        for (let l = 2; e.length - 4 - l > 0; l += 3)
+            e = e.slice(0, e.length - 4 - l) + "," + e.slice(e.length - 4 - l);
+        return e + t;
+    }
+    return e;
+};
+
 const generateReceiptPDF = (clientData, firmData) => {
     return new Promise((resolve, reject) => {
         fs.readFile(
@@ -30,6 +46,7 @@ const generateReceiptPDF = (clientData, firmData) => {
                 let html = template({
                     clientData: clientData_M,
                     firmData: firmData,
+                    addCommas: addCommas,
                 });
                 console.log("making receipt for", clientData.invoice_num);
                 await htmlToPdf(html)
@@ -49,6 +66,7 @@ const htmlToPdf = (html) => {
     return new Promise(async(resolve, reject) => {
         const options = {
             format: "A4",
+            timeout: "100000",
         };
         pdf.create(html, options).toStream(function(err, stream) {
             if (err) {

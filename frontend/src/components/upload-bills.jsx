@@ -12,17 +12,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 function UploadBillsData({ token }) {
-  //
-
   const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  //
   const [data_user, setData_user] = useState([]);
   const [data_SO, setData_SO] = useState([]);
   const [data_to_be_send, setData_to_be_send] = useState({});
@@ -35,6 +25,14 @@ function UploadBillsData({ token }) {
   const [SODataTables, setSODataTables] = useState([]);
   const [errorColourCustData, setErrorColourCustData] = useState({});
   const [errorsColourSOData, setErrorsColourSOData] = useState({});
+
+  //handle viewing
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // process XLSX data
   const parseExcel = (fileData) => {
@@ -104,12 +102,6 @@ function UploadBillsData({ token }) {
   const handleFileUpload = (e) => {
     sendUploadedFile(e.target.files[0]);
   };
-
-  useEffect(() => {
-    console.log("data of users inside bills", data_user);
-    console.log("data of so inside bills", data_SO);
-    console.log("data in total inside bills", data_to_be_send);
-  }, [data_user, data_SO, data_to_be_send]);
 
   //check data in file
   useEffect(() => {
@@ -401,7 +393,7 @@ function UploadBillsData({ token }) {
                   gutterBottom
                   title="The files you have uploaded will now be sent to the database."
                 >
-                  Solution Onwers Data
+                  Solution Owners Data
                 </Typography>
                 <CustomTable
                   key={"table2"}

@@ -437,7 +437,7 @@ function UploadReceiptData({ token }) {
                   align="center"
                   gutterBottom
                 >
-                  Solution Onwers Data :
+                  Solution Owners Data :
                 </Typography>
                 <CustomTable
                   key={"table2"}

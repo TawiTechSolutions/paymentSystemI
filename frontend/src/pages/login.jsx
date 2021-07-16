@@ -14,11 +14,10 @@ import React, { useState } from "react";
 const Login = () => {
   const paperStyle = {
     padding: 20,
-    height: "70vh",
     width: 280,
     margin: "20px auto",
   };
-  const avatarStyle = { backgroundColor: "rgb(51, 70, 176)" };
+  const avatarStyle = { backgroundColor: "rgb(63, 81, 181)" };
   const btnstyle = { margin: "8px 0", marginTop: "45px" };
 
   const [email, setEmail] = useState("");

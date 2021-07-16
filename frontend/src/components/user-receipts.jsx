@@ -1,16 +1,10 @@
 import { BrowserRouter } from "react-router-dom";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Box from "@material-ui/core/Box";
-import { Container, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import ReceiptRow from "./receipt-table-row";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Button from "@material-ui/core/Button";
+import KeyboardBackspaceRoundedIcon from "@material-ui/icons/KeyboardBackspaceRounded";
+import InvoicesTable from "./invoices-table";
 
 const UserReceipts = ({ userID, token, toggleView }) => {
   const [user, setUser] = useState({});
@@ -51,45 +45,24 @@ const UserReceipts = ({ userID, token, toggleView }) => {
     <BrowserRouter>
       <Typography
         style={{ marginTop: "5px", marginLeft: "30px" }}
-        variant="h5"
+        variant="h6"
         component="h2"
         align="left"
         gutterBottom
       >
-        Receipts of : {user.name}
+        <b>Paid Invoices of :</b> {user.name}
       </Typography>
-      <Container>
-        <Box
-          style={{
-            overflow: "auto",
-            margin: "7px",
-            marginTop: 0,
-            border: "1.5px solid rgb(243, 243, 243)",
-            borderBottom: 0,
-          }}
+      <InvoicesTable rows_data={receipts} inAdmin={true} />
+      <Typography align="center">
+        <Button
+          onClick={toggleView}
+          variant="contained"
+          color="primary"
+          style={{ marginRight: "10px" }}
         >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <b>Invoice Num</b>
-                </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
-                  <b>Actions</b>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {receipts.map((receipt) => (
-                <ReceiptRow key={receipt._id} receipt={receipt} />
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </Container>
-      <Button onClick={toggleView} aria-label="back">
-        <ArrowBackIcon /> Back
-      </Button>
+          <KeyboardBackspaceRoundedIcon style={{ fontSize: "30px" }} />
+        </Button>
+      </Typography>
     </BrowserRouter>
   );
 };

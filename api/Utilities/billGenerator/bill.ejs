@@ -189,9 +189,11 @@
               >
                 Address:
               </p>
-              <%=firmData.so_firm_add_street %>, <%=firmData.so_firm_add_city%>,
-              <%=firmData.so_firm_add_state %>, <%=firmData.so_firm_add_cntry
-              %>, <%=firmData.so_firm_add_zip %>
+              <%=firmData.so_firm_add_street?firmData.so_firm_add_street+",":""
+              %> <%=firmData.so_firm_add_city?firmData.so_firm_add_city+",":""
+              %> <%=firmData.so_firm_add_state?firmData.so_firm_add_state+",":""
+              %> <%=firmData.so_firm_add_cntry?firmData.so_firm_add_cntry+",":""
+              %> <%=firmData.so_firm_add_zip?firmData.so_firm_add_zip+",":"" %>
             </address>
                 </div>
                 <div style="text-align: right">
@@ -199,7 +201,7 @@
                         <%=firmData.so_firm_ph_num%>
                 </div>
             </div>
-            <div class="frim_details" style="margin-top: 20px; font-size: 13px">
+            <div class="client_details" style="margin-top: 20px; font-size: 13px">
                 <div>
                     <p style="
                 font-weight: 900;
@@ -208,28 +210,31 @@
                 font-size: 13px;
                 font-weight: 900;
               ">
-                        BILL TO
+                        RECEIPT FOR
                     </p>
                 </div>
                 <div style="margin-top: 12px">
                     <p style="font-weight: 900; display: inline">Name:</p>
-                    <%=firmData.so_keyman %>
+                    <%=clientData.cust_keyman %>
                 </div>
                 <div>
                     <p style="font-weight: 900; display: inline">ID:</p>
-                    cant find
+                    <%=clientData.cust_id %>
                 </div>
                 <div>
                     <p style="font-weight: 900; display: inline">FIRM:</p>
-                    cant find
+                    <%=clientData.cust_firm %>
                 </div>
                 <div>
                     <p style="font-weight: 900; display: inline">Address:</p>
-                    <%=firmData.so_firm_add_street %>,
-                        <%=firmData.so_firm_add_city%>,
-                            <%=firmData.so_firm_add_state %>,
-                                <%=firmData.so_firm_add_cntry %>,
-                                    <%=firmData.so_firm_add_zip %>
+                    <%= clientData.cust_add_street? clientData.cust_add_street+ ",":""%>
+                        <%= clientData.cust_add_city? clientData.cust_add_city+ ",":""%>
+                            <%=
+            clientData.cust_add_state? clientData.cust_add_state+ ",":""%>
+                                <%=
+            clientData.cust_add_cntry? clientData.cust_add_cntry+ ",":""%>
+                                    <%=
+            clientData.cust_add_zip? clientData.cust_add_zip:""%>
                 </div>
             </div>
             <div class="tableholder" style="margin-top: 15px">
@@ -298,9 +303,7 @@
                         font-family: Arial;
                         font-size: 12px;
                       ">
-                                        <%=
-                      clientData.invoice_amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g,
-                      ",")%>
+                                        <%= addCommas(clientData.invoice_amt) %>
                                     </td>
                                 </tr>
                                 <tr class="nested_table_row">
@@ -318,9 +321,8 @@
                         font-size: 12px;
                         color: red;
                       ">
-                                        <%= (clientData.invoice_amt *
-                      clientData.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
-                      ",") %>
+                                        <%= addCommas(clientData.invoice_amt *
+                      clientData.discount) %>
                                     </td>
                                 </tr>
                                 <tr class="nested_table_row">
@@ -337,9 +339,8 @@
                         font-family: Arial;
                         font-size: 12px;
                       ">
-                                        <%= (clientData.invoice_amt - (clientData.invoice_amt *
-                      clientData.discount)).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
-                      ",")%>
+                                        <%= addCommas(clientData.invoice_amt -
+                      (clientData.invoice_amt * clientData.discount))%>
                                     </td>
                                 </tr>
                                 <tr class="nested_table_row" style="font-family: Arial, Helvetica, sans-serif">
@@ -357,9 +358,7 @@
                         font-size: 12px;
                         color: red;
                       ">
-                                        <%= (clientData.invoice_amt *
-                      clientData.TDS).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
-                      ",")%>
+                                        <%= addCommas(clientData.invoice_amt * clientData.TDS)%>
                                     </td>
                                 </tr>
                                 <tr class="nested_table_row">
@@ -376,9 +375,8 @@
                         font-family: Arial;
                         font-size: 12px;
                       ">
-                                        <%= (clientData.invoice_amt - (clientData.invoice_amt *
-                      clientData.TDS)).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
-                      ",")%>
+                                        <%= addCommas(clientData.invoice_amt -
+                      (clientData.invoice_amt * clientData.TDS))%>
                                     </td>
                                 </tr>
                                 <tr class="nested_table_row">
@@ -394,9 +392,7 @@
                         font-family: Arial;
                         font-size: 12px;
                       ">
-                                        <%= (clientData.invoice_amt *
-                      clientData.GST).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
-                      ",")%>
+                                        <%= addCommas(clientData.invoice_amt * clientData.GST)%>
                                     </td>
                                 </tr>
                             </table>
@@ -524,9 +520,7 @@
                         font-size: 16px;
                         padding-right: 4px;
                       ">
-                                        <%=
-                      (clientData.final_bal_due).toString().replace(/\B(?=(\d{3})+(?!\d))/g,
-                      ",")%>
+                                        <%= addCommas(clientData.final_bal_due)%>
                                     </td>
                                 </tr>
                             </table>

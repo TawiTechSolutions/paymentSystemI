@@ -11,6 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
 import { Typography } from "@material-ui/core";
+import { useEffect } from "react";
 
 function createData(
   invoice,
@@ -65,7 +66,37 @@ const headCells = [
   { id: "receipt", numeric: true, disablePadding: false, label: "Receipt" },
 ];
 
+//addd commas
+const addCommas = (e) => {
+  let l,
+    t,
+    n = (e = e.toString()).indexOf(".");
+  if (
+    (n >= 0 ? ((l = e.slice(0, n)), (t = e.slice(n))) : ((l = e), (t = "")),
+    l.length > 3)
+  ) {
+    let e = l.slice(0, l.length - 3) + "," + l.slice(l.length - 3);
+    for (let l = 2; e.length - 4 - l > 0; l += 3)
+      e = e.slice(0, e.length - 4 - l) + "," + e.slice(e.length - 4 - l);
+    return e + t;
+  }
+  return e;
+};
+
 //sorting functions
+
+//for dates
+function compareDates(a, b, orderBy) {
+  const date2 = new Date(b[orderBy]).getTime();
+  const date1 = new Date(a[orderBy]).getTime();
+  if (date2 < date1) {
+    return -1;
+  }
+  if (date2 > date1) {
+    return 1;
+  }
+  return 0;
+}
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -78,6 +109,11 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
+  if (orderBy === "invoice_date" || orderBy === "due_date") {
+    return order === "desc"
+      ? (a, b) => compareDates(a, b, orderBy)
+      : (a, b) => -compareDates(a, b, orderBy);
+  }
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -93,15 +129,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function EnhancedTableHead(props) {
-  const {
-    classes,
-
-    order,
-    orderBy,
-
-    onRequestSort,
-  } = props;
+function EnhancedTableHead({ classes, order, orderBy, onRequestSort }) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -109,11 +137,10 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {headCells.map((headCell) => (
+        {headCells.map((headCell, ind) => (
           <TableCell
-            key={headCell.id}
+            key={headCell.id + ind}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
             style={{ paddingLeft: "10px" }}
           >
@@ -163,10 +190,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InvoicesTable({ rows_data }) {
+export default function InvoicesTable({ rows_data, inAdmin }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("due_date");
+  const [orderBy, setOrderBy] = React.useState("invoice_date");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
@@ -175,14 +202,18 @@ export default function InvoicesTable({ rows_data }) {
     setRows(
       rows_data.map((receipt) => {
         return createData(
-          <a style={{ textDecoration: "none" }} href={receipt.bill_url}>
-            {receipt.invoice_num}
-          </a>,
+          receipt.bill_url ? (
+            <a style={{ textDecoration: "none" }} href={receipt.bill_url}>
+              {receipt.invoice_num}
+            </a>
+          ) : (
+            <p style={{ textDecoration: "none" }}>{receipt.invoice_num}</p>
+          ),
           receipt.invoice_detials.invoice_dt,
-          receipt.invoice_detials.invoice_currency,
-          receipt.invoice_detials.final_bal_due,
+          addCommas(receipt.invoice_detials.invoice_currency),
+          addCommas(receipt.invoice_detials.final_bal_due),
           receipt.invoice_detials.due_date,
-          receipt.invoice_detials.final_bal_due,
+          addCommas(receipt.invoice_detials.final_bal_due),
           <a style={{ textDecoration: "none" }} href={receipt.receipt_url}>
             {"R_" + receipt.invoice_num}
           </a>
@@ -206,17 +237,32 @@ export default function InvoicesTable({ rows_data }) {
     setPage(0);
   };
 
+  useEffect(
+    () =>
+      console.log(
+        stableSort(rows, getComparator(order, orderBy)).slice(
+          page * rowsPerPage,
+          page * rowsPerPage + rowsPerPage
+        )
+      ),
+    [rows, orderBy, page, rowsPerPage, order]
+  );
+
   return (
     <div style={{ margin: "10px", marginInline: "30px" }}>
-      <Typography
-        style={{ marginTop: "5px" }}
-        variant="h6"
-        component="h6"
-        align="left"
-        gutterBottom
-      >
-        <b> Paid Invoices</b>
-      </Typography>
+      {!inAdmin ? (
+        <Typography
+          style={{ marginTop: "5px" }}
+          variant="h6"
+          component="h6"
+          align="left"
+          gutterBottom
+        >
+          <b> Paid Invoices</b>
+        </Typography>
+      ) : (
+        ""
+      )}
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
@@ -238,7 +284,7 @@ export default function InvoicesTable({ rows_data }) {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow hover tabIndex={-1} key={row.invoice}>
+                    <TableRow hover tabIndex={-1} key={index}>
                       <TableCell
                         component="th"
                         id={labelId}
