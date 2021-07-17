@@ -6,8 +6,7 @@ const crypto = require("crypto");
 const billDB = require("../model/bill");
 const SO_dataDB = require("../model/solution_owner");
 const userDB = require("../model/user");
-const receiptDB = require("../model/receipt");
-const nodemailer = require("nodemailer");
+const mailHelper = require("../Utilities/emails/emailHelper");
 
 const razorpay = new Razorpay({
     key_id: "rzp_test_iyc6McBDRDGLBz",
@@ -68,30 +67,12 @@ route.post("/verification", async(req, res) => {
                         }
                         //mail the receipt
                         try {
-                            let transporter = nodemailer.createTransport({
-                                service: "gmail",
-                                auth: {
-                                    user: process.env.SENDER_EMAIL,
-                                    pass: process.env.SENDER_EMAIL_PASSWORD,
+                            mailHelper.sendReceipt({
+                                    ...cust_data,
+                                    ...JSON.parse(JSON.stringify(SO_details[0].so_data)),
                                 },
-                            });
-                            let mailOptions = {
-                                from: process.env.SENDER_EMAIL, // sender address
-                                to: cust_data.email, // list of receivers
-                                subject: "Receipt", // Subject line
-                                text: `please check the attached Receipt`, // plain text body
-                                attachments: [{
-                                    filename: "Receipt.pdf",
-                                    path: cloudinary_details.secure_url,
-                                }, ],
-                            };
-                            await transporter.sendMail(mailOptions, (err, info) => {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    console.log(info);
-                                }
-                            });
+                                cloudinary_details.secure_url
+                            );
                         } catch (error) {
                             console.log(
                                 "error when mailing receipt after bill payment",
@@ -132,16 +113,23 @@ route.get("/razorpay/:id", async(req, res) => {
             const response = await razorpay.orders.create(options);
             console.log(response);
             try {
-                await billDB.findByIdAndUpdate(id, { order_id: response.id });
+                const updatedBill = await billDB.findByIdAndUpdate(id, {
+                    order_id: response.id,
+                });
+                if (updatedBill) {
+                    res.send({
+                        id: response.id,
+                        currency: response.currency,
+                        amount: response.amount,
+                    });
+                } else {
+                    res.status(400).send({
+                        message: "error updating the database",
+                    });
+                }
             } catch (err) {
                 console.log("error in updating bill with order no", err);
             }
-
-            res.send({
-                id: response.id,
-                currency: response.currency,
-                amount: response.amount,
-            });
         } catch (error) {
             console.log(error);
         }

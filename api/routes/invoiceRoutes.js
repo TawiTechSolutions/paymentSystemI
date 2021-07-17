@@ -10,6 +10,7 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
 const JWT = require("../Utilities/JWT_Auth");
+const mailHelper = require("../Utilities/emails/emailHelper");
 
 route.post("/uploadBillsData", async(req, res) => {
     if (req.body) {
@@ -205,30 +206,9 @@ route.post("/uploadReceiptsData", async(req, res) => {
                                 }, { $push: { recepits: result._id } });
                             }
                             //mail the receipt
-                            let transporter = nodemailer.createTransport({
-                                service: "gmail",
-                                auth: {
-                                    user: process.env.SENDER_EMAIL,
-                                    pass: process.env.SENDER_EMAIL_PASSWORD,
-                                },
-                            });
-                            let mailOptions = {
-                                from: process.env.SENDER_EMAIL, // sender address
-                                to: cust_data[i].cust_email, // list of receivers
-                                subject: "Receipt", // Subject line
-                                text: `please check the attached Receipt`, // plain text body
-                                attachments: [{
-                                    filename: "Receipt.pdf",
-                                    path: cloudinary_details.secure_url,
-                                }, ],
-                            };
-                            await transporter.sendMail(mailOptions, (err, info) => {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    console.log(info);
-                                }
-                            });
+                            mailHelper.sendReceipt({...cust_data[i], ...frim_data },
+                                cloudinary_details.secure_url
+                            );
                         })
                         .catch((err) => {
                             console.log(err);

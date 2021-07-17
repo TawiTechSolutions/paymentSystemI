@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        {{invoice_currency}}{{invoice_amt}}, invoice #: {{invoice_num}}
+    </title>
+</head>
+
+<body>
+    Dear {{cust_firm}},<br /> Your payment for {{invoice_currency}}{{invoice_amt}} against invoice #: {{invoice_num}} was received on {{payment_date}}.<br /> Please find attached the payment receipt. You may also view it by logging into your account by
+    <a href="{{host_url}}">clicking here</a>.<br /> Thank you for the continued oppportunity to be of service to your business.
+    <br /> Sincerely, <br /> {{so_firm}} <br /> {{so_firm_add_street}} <br /> {{so_firm_add_city}}, {{so_firm_add_state}}, {{so_firm_add_cntry}}<br /> {{so_firm_add_zip}} <br /> {{so_firm_email}}, ,{{so_firm_ph_isd}} {{so_firm_ph_num}}
+</body>
+
+</html>

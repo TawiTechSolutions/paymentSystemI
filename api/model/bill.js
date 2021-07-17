@@ -18,6 +18,10 @@ var invoice_detials = new mongoose.Schema({
     shown_in_system: { type: String, default: "" },
     payment_date: { type: String, default: "" },
     payment_amt: { type: String, default: "" },
+    due_date: { type: String, default: "" },
+    reminder_1: { type: String, default: "" },
+    reminder_2: { type: String, default: "" },
+    email_time: { type: String, default: "" },
 });
 
 var schme = new mongoose.Schema({

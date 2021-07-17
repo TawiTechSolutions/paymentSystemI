@@ -7,14 +7,17 @@ const connectDB = require("./database/connection");
 const userRoutes = require("./routes/UserRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const JWT = require("./Utilities/JWT_Auth");
-const startAutoMailing = require("./Utilities/autoMailBills");
-var CronJob = require("cron").CronJob;
+const startAutoMailing = require("./Utilities/emails/autoMailBills");
+const CronJob = require("cron").CronJob;
 const payementRoutes = require("./routes/paymentRoutes");
 
 const app = express();
 
 //wait for time to mail
-var job = new CronJob("0 7 * * * *", startAutoMailing.mailReceipts);
+const job = new CronJob("0 0 * * * *", startAutoMailing.mailInvoice, {
+    scheduled: false,
+    timezone: "Asia/Mumbai",
+});
 job.start();
 
 app.use(express.static(path.join(__dirname, "build")));
