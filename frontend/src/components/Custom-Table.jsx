@@ -31,7 +31,7 @@ const CustomTable = ({ data, errors }) => {
             borderBottom: 0,
           }}
         >
-          <Table>
+          <Table size={"small"}>
             <TableHead>
               <TableRow>
                 {coloum_names.map((element, index) =>

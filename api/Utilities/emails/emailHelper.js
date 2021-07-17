@@ -4,6 +4,7 @@ const fs = require("fs");
 
 const mailWithAttachment = async(
     to,
+    bcc,
     subject,
     html,
     filename,
@@ -19,7 +20,9 @@ const mailWithAttachment = async(
     let mailOptions = {
         from: process.env.SENDER_EMAIL, // sender address
         to: to, // list of receivers
+        bcc: bcc,
         subject: subject, // Subject line
+
         html: html, // plain text body
         attachments: [{
             filename: filename,
@@ -36,7 +39,7 @@ const mailWithAttachment = async(
 };
 
 //send a receipt email
-const sendReceipt = (data, receipt_url) => {
+const sendReceipt = (data, receipt_url, bcc) => {
     const source = fs
         .readFileSync("Utilities/emails/emailTemplates/receipt.html", "utf-8")
         .toString();
@@ -44,6 +47,7 @@ const sendReceipt = (data, receipt_url) => {
     const htmlToSend = template(data);
     mailWithAttachment(
         data.email,
+        bcc,
         `${data.invoice_currency}${data.invoice_amt}, invoice #: ${invoice_num}`,
         htmlToSend,
         "Receipt.pdf",
@@ -51,7 +55,7 @@ const sendReceipt = (data, receipt_url) => {
     );
 };
 
-const sendInvoice = (data, invoice_url) => {
+const sendInvoice = (data, invoice_url, bcc) => {
     const source = fs
         .readFileSync("Utilities/emails/emailTemplates/invoice.html", "utf-8")
         .toString();
@@ -59,6 +63,7 @@ const sendInvoice = (data, invoice_url) => {
     const htmlToSend = template(data);
     mailWithAttachment(
         data.email,
+        bcc,
         `Payment link for ${data.cust_firm} for invoice #:${data.invoice_num}`,
         htmlToSend,
         "Invoice.pdf",
@@ -66,7 +71,7 @@ const sendInvoice = (data, invoice_url) => {
     );
 };
 
-const sendPaymentReminder = (data, invoice_url) => {
+const sendPaymentReminder = (data, invoice_url, bcc) => {
     const source = fs
         .readFileSync(
             "Utilities/emails/emailTemplates/paymentReminder.html",
@@ -77,6 +82,7 @@ const sendPaymentReminder = (data, invoice_url) => {
     const htmlToSend = template(data);
     mailWithAttachment(
         data.email,
+        bcc,
         `Payment link for ${data.cust_firm} for invoice #:${data.invoice_num}`,
         htmlToSend,
         "Invoice.pdf",

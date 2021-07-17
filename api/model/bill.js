@@ -30,6 +30,7 @@ var schme = new mongoose.Schema({
         require: true,
     },
     invoice_num: { type: String, require: true, unique: true },
+    invoice_paid: { type: Boolean, default: false },
     bill_url: { type: String, default: "" },
     order_id: { type: String },
     user_id: { type: String, default: "" },

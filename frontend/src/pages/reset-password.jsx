@@ -57,7 +57,7 @@ const ResetPassword = ({
           <Avatar style={avatarStyle}>
             <LockOutlinedIcon style={{ backgroundColor: "rgb(51, 70, 176)" }} />
           </Avatar>
-          <h2 style={{ marginTop: "20px" }}>Login</h2>
+          <h2 style={{ marginTop: "20px" }}>Reset Password</h2>
         </Grid>
         <TextField
           label="New Password"

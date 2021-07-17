@@ -14,8 +14,8 @@ const payementRoutes = require("./routes/paymentRoutes");
 const app = express();
 
 //wait for time to mail
-const job = new CronJob("0 0 * * * *", startAutoMailing.mailInvoice, {
-    scheduled: false,
+const job = new CronJob("0 1 * * *", startAutoMailing.mailInvoice, {
+    scheduled: true,
     timezone: "Asia/Mumbai",
 });
 job.start();

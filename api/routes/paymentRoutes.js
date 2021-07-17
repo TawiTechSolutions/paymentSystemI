@@ -27,10 +27,10 @@ route.post("/verification", async(req, res) => {
     if (digest === req.headers["x-razorpay-signature"]) {
         console.log("payment has been made and captured");
 
-        //delete bill
-        const bill_details = await billDB.findOneAndDelete({
+        //find bill
+        const bill_details = await billDB.findOneAndUpdate({
             order_id: req.body.payload.payment.entity.order_id,
-        });
+        }, { invoice_paid: true });
         //mail receipt
         if (bill_details) {
             const user = await userDB.findByIdAndUpdate(bill_details.user_id, {
@@ -71,7 +71,8 @@ route.post("/verification", async(req, res) => {
                                     ...cust_data,
                                     ...JSON.parse(JSON.stringify(SO_details[0].so_data)),
                                 },
-                                cloudinary_details.secure_url
+                                cloudinary_details.secure_url,
+                                SO_details[0].so_data.so_email
                             );
                         } catch (error) {
                             console.log(
@@ -95,13 +96,15 @@ route.post("/verification", async(req, res) => {
 route.get("/razorpay/:id", async(req, res) => {
     const id = req.params.id;
     const payment_capture = 1;
-    const currency = "INR";
 
     const bill_details = await billDB.findById(id);
 
-    console.log("bill data", bill_details);
-
     if (bill_details) {
+        const currency =
+            bill_details.invoice_detials.invoice_currency === "₹" ?
+            "INR" :
+            bill_details.invoice_detials.invoice_currency;
+
         const options = {
             amount: bill_details.invoice_detials.final_bal_due * 100,
             currency,

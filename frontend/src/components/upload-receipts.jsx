@@ -28,6 +28,7 @@ function UploadReceiptData({ token }) {
   const [errors_in_SOData, setErrors_in_SOData] = useState([]);
   const [errorColourCustData, setErrorColourCustData] = useState({});
   const [errorsColourSOData, setErrorsColourSOData] = useState({});
+  const [bigError, setBigError] = useState(false);
   const scrollRef = React.useRef(null);
 
   const handleClickOpen = () => {
@@ -73,22 +74,28 @@ function UploadReceiptData({ token }) {
         }
       },
     };
-    axios
-      .post(
-        `http://localhost:5000/invoices/uploadReceiptsData`,
+    if (bigError) {
+      window.alert(
+        "There is some error in the file uploaded. Please fix it to upload the file"
+      );
+    } else {
+      axios
+        .post(
+          `http://localhost:5000/invoices/uploadReceiptsData`,
 
-        data_to_be_send,
-        options
-      )
-      .then((res) => {
-        setPercentage(100);
-        setTimeout(() => {
-          setPercentage(0);
-        }, 1000);
-        console.log(res);
-        window.alert(res.data.message);
-      })
-      .catch((err) => console.log(err));
+          data_to_be_send,
+          options
+        )
+        .then((res) => {
+          setPercentage(100);
+          setTimeout(() => {
+            setPercentage(0);
+          }, 1000);
+          console.log(res);
+          window.alert(res.data.message);
+        })
+        .catch((err) => console.log(err));
+    }
   };
   //confrim user data
   const confirmRequest = () => {
@@ -176,14 +183,18 @@ function UploadReceiptData({ token }) {
           "desc",
           "TDS",
           "GST",
+          "due_date",
+          "reminder_1",
+          "reminder_2",
           "final_bal_due",
           "recurring",
           "Frequency",
+          "email_dt",
           "paid",
-          "payment_method",
-          "shown_in_system",
-          "payment_date",
-          "payment_amt",
+          "nonSystem_payment_method",
+          "Shown_in_System_Fag",
+          "nonSystem_payment_date",
+          "nonSystem_payment_amt",
         ];
         for (let i = 0; i < data_user.length; i++) {
           let temp_cloumn_name = [];
@@ -232,7 +243,6 @@ function UploadReceiptData({ token }) {
           "so_add_zip",
           "so_add_state",
           "so_add_city",
-          "so_add_landmark",
           "so_add_street",
           "so_firm",
           "so_firm_email",
@@ -246,7 +256,7 @@ function UploadReceiptData({ token }) {
           "so_firm_add_zip",
           "so_firm_add_state",
           "so_firm_add_city",
-          "so_firm_add_landmark",
+
           "so_firm_add_street",
         ];
         for (let i = 0; i < data_SO.length; i++) {
@@ -296,14 +306,24 @@ function UploadReceiptData({ token }) {
       let one_user = {};
       for (const [key, value] of Object.entries(data_user[i])) {
         if (
-          key === "cust_id" ||
+          key === "invoice_dt" ||
           key === "cust_tax_id" ||
           key === "cust_keyman" ||
           key === "cust_email" ||
           key === "cust_firm" ||
-          key === "invoice_num"
+          key === "invoice_num" ||
+          key === "invoice_currency" ||
+          key === "email_dt" ||
+          key === "final_bal_due"
         ) {
-          one_user[key] = value;
+          if (key === "final_bal_due") {
+            one_user[key] = Math.round(value * 100) / 100;
+          } else if (key === "email_dt" || key === "invoice_dt") {
+            const date = new Date(value);
+            one_user[key] = date.toDateString();
+          } else {
+            one_user[key] = value;
+          }
         }
       }
       userData_tables.push(one_user);
@@ -335,12 +355,23 @@ function UploadReceiptData({ token }) {
     let ColourCustData = {};
     for (let i = 0; i < errors_in_custData.length; i++) {
       const orangeWarning = [];
-      const redWarning = [];
+      const redWarning = [
+        "invoice_dt",
+        "cust_tax_id",
+        "cust_keyman",
+        "cust_email",
+        "cust_firm",
+        "invoice_num",
+        "invoice_currency",
+        "email_dt",
+        "final_bal_due",
+      ];
 
       if (orangeWarning.includes(errors_in_custData[i].cloumn_name)) {
         ColourCustData[errors_in_custData[i].row] = "#FF6666";
       }
       if (redWarning.includes(errors_in_custData[i].cloumn_name)) {
+        setBigError(true);
         ColourCustData[errors_in_custData[i].row] = "#FFB266";
       }
     }
@@ -350,12 +381,18 @@ function UploadReceiptData({ token }) {
     let ColourSOData = {};
     for (let i = 0; i < errors_in_SOData.length; i++) {
       const orangeWarning = [];
-      const redWarning = [];
+      const redWarning = [
+        "so_firm_acc_name",
+        "so_firm_acc_num",
+        "so_firm_ifsc",
+        "so_firm_swift",
+      ];
 
       if (orangeWarning.includes(errors_in_SOData[i].cloumn_name)) {
         ColourSOData[errors_in_SOData[i].row] = "#FF6666";
       }
       if (redWarning.includes(errors_in_SOData[i].cloumn_name)) {
+        setBigError(true);
         ColourSOData[errors_in_SOData[i].row] = "#FFB266";
       }
     }
@@ -455,7 +492,7 @@ function UploadReceiptData({ token }) {
                           <b>Errors Found in cust_data sheet:</b>
                         </p>
 
-                        {errors_in_custData
+                        {errors_in_custData.length
                           ? errors_in_custData.map((item) => (
                               <p>
                                 Missing item in cloumn {item.cloumn_name} of row{" "}
@@ -471,7 +508,7 @@ function UploadReceiptData({ token }) {
                           <b>Errors Found in SO_data sheet:</b>
                         </p>
 
-                        {errors_in_SOData
+                        {errors_in_SOData.length
                           ? errors_in_SOData.map((item) => (
                               <p>
                                 Missing item in cloumn {item.cloumn_name} of row{" "}

@@ -101,7 +101,10 @@ const Dashboard = () => {
                       <b>Role</b>
                     </TableCell>
                     <TableCell style={{ textAlign: "center" }}>
-                      <b>Actions</b>
+                      <b>Payments</b>
+                    </TableCell>
+                    <TableCell style={{ textAlign: "center" }}>
+                      <b>Delete User</b>
                     </TableCell>
                   </TableRow>
                 </TableHead>

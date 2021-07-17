@@ -142,7 +142,7 @@ const UserRow = ({ user, token, getReceipts }) => {
           </Select>
         </FormControl>
       </TableCell>
-      <TableCell style={{ padding: "0 16px" }}>
+      <TableCell style={{ padding: "0 16px", textAlign: "center" }}>
         <IconButton
           onClick={switchToReceipts}
           aria-label="update"
@@ -150,6 +150,8 @@ const UserRow = ({ user, token, getReceipts }) => {
         >
           <AssignmentIcon />
         </IconButton>
+      </TableCell>
+      <TableCell style={{ padding: "0 16px", textAlign: "center" }}>
         <IconButton
           onClick={() => {
             deleteUser(user._id);

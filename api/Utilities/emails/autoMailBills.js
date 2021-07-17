@@ -3,6 +3,7 @@ const userDB = require("../../model/user");
 const billDB = require("../../model/bill");
 const mailHelper = require("./emailHelper");
 const CronJob = require("cron").CronJob;
+const SO_dataDB = require("../../model/solution_owner");
 
 const checkDate = (date, r1, r2) => {
     let email_date0 = new Date(date);
@@ -26,6 +27,8 @@ const checkDate = (date, r1, r2) => {
 };
 
 const mailInvoice = async() => {
+    const SO_details = await SO_dataDB.find();
+
     userDB.find().then(async(users) => {
         users.forEach((user) => {
             if (user.bills.length > 0) {
@@ -73,7 +76,8 @@ const mailInvoice = async() => {
                                         ...JSON.parse(JSON.stringify(user)),
                                         ...JSON.parse(JSON.stringify(bill.invoice_detials)),
                                     },
-                                    bill.bill_url
+                                    bill.bill_url,
+                                    SO_details[0].so_data.so_email
                                 ), {
                                     scheduled: false,
                                     timezone: "Asia/Mumbai",

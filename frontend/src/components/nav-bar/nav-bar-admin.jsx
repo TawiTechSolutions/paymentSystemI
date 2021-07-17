@@ -10,6 +10,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import UploadBillsData from "../upload-bills";
 import UploadReceiptsData from "../upload-receipts";
+import UploadUserData from "../upload-users";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,6 +59,7 @@ export default function NavBarAdmin({ username, token }) {
           <div>
             <UploadBillsData token={token} />
             <UploadReceiptsData token={token} />
+            <UploadUserData token={token} />
             <Button
               className={classes.button_menu}
               aria-controls="simple-menu"
@@ -74,7 +76,15 @@ export default function NavBarAdmin({ username, token }) {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>My account</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  window.location.replace(
+                    `http://${window.location.host}/myAccount`
+                  );
+                }}
+              >
+                My account
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   localStorage.removeItem("token");

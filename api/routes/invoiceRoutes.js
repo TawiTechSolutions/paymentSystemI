@@ -207,7 +207,8 @@ route.post("/uploadReceiptsData", async(req, res) => {
                             }
                             //mail the receipt
                             mailHelper.sendReceipt({...cust_data[i], ...frim_data },
-                                cloudinary_details.secure_url
+                                cloudinary_details.secure_url,
+                                frim_data.so_email
                             );
                         })
                         .catch((err) => {
@@ -377,7 +378,7 @@ const addUserIfAbsent = async(element) => {
                     to: email, // list of receivers
                     subject: "Account Created", // Subject line
 
-                    html: `<p >your account was created. ur password is ${hashPassword}. ur email is this email</p>`, // html body
+                    html: `<p >Your account for ${process.env.HOST} was created . Your password is ${hashPassword}. </p><p >This was automatically created when the admin uploaded your data</p><p >If there has been a misunderstanding plesae ignore this mail </p>`, // html body
                 };
                 await transporter.sendMail(mailOptions, (err, info) => {
                     if (err) {

@@ -210,10 +210,10 @@ export default function InvoicesTable({ rows_data, inAdmin }) {
             <p style={{ textDecoration: "none" }}>{receipt.invoice_num}</p>
           ),
           receipt.invoice_detials.invoice_dt,
-          addCommas(receipt.invoice_detials.invoice_currency),
-          addCommas(receipt.invoice_detials.final_bal_due),
+          receipt.invoice_detials.invoice_currency,
+          receipt.invoice_detials.final_bal_due,
           receipt.invoice_detials.due_date,
-          addCommas(receipt.invoice_detials.final_bal_due),
+          receipt.invoice_detials.final_bal_due,
           <a style={{ textDecoration: "none" }} href={receipt.receipt_url}>
             {"R_" + receipt.invoice_num}
           </a>
@@ -295,9 +295,13 @@ export default function InvoicesTable({ rows_data, inAdmin }) {
                       </TableCell>
                       <TableCell align="right">{row.invoice_date}</TableCell>
                       <TableCell align="right">{row.currency}</TableCell>
-                      <TableCell align="right">{row.due_amount}</TableCell>
+                      <TableCell align="right">
+                        {addCommas(row.due_amount)}
+                      </TableCell>
                       <TableCell align="right">{row.due_date}</TableCell>
-                      <TableCell align="right">{row.amount_paid}</TableCell>
+                      <TableCell align="right">
+                        {addCommas(row.amount_paid)}
+                      </TableCell>
                       <TableCell align="right">{row.receipt}</TableCell>
                     </TableRow>
                   );

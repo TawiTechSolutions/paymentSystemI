@@ -125,7 +125,8 @@ route.post("/login", async(req, res) => {
 
 //to get all users
 route.get("/all_users", (req, res) => {
-    token = req.headers.token;
+    console.log("sending all users data");
+    const token = req.headers.token;
     if (token) {
         const requestingUser = JWT.getUserData(token);
         if (requestingUser.isAdmin) {
@@ -138,7 +139,7 @@ route.get("/all_users", (req, res) => {
                             users.push(element);
                         }
                     });
-                    console.log(users);
+
                     res.send(users);
                 })
                 .catch((err) => {
@@ -288,31 +289,30 @@ route.put("/updateRole/:id", (req, res) => {
 
 //update user
 route.put("/update/:id", (req, res) => {
-    if (!req.body) {
-        return res.status(400).send({ message: "Data to update can not be empty" });
-    }
-    const token = req.headers.token;
-    const id = req.params.id;
-
-    const requestingUser = JWT.getUserData(token);
-    if (requestingUser.isAdmin) {
-        userDB
-            .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-            .then((data) => {
-                if (!data) {
-                    res.status(400).send({
-                        message: `cannot update with ${id}.maybe not found`,
-                    });
-                } else {
-                    res.send({ message: "User approved" });
-                }
-            })
-            .catch((err) => {
-                res.status(500).send({ message: "error in updating" });
-            });
-    } else {
-        res.send({ status: 400, message: "invalid token" });
-    }
+    // if (!req.body) {
+    //     return res.status(400).send({ message: "Data to update can not be empty" });
+    // }
+    // const token = req.headers.token;
+    // const id = req.params.id;
+    // const requestingUser = JWT.getUserData(token);
+    // if (requestingUser.isAdmin) {
+    //     userDB
+    //         .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+    //         .then((data) => {
+    //             if (!data) {
+    //                 res.status(400).send({
+    //                     message: `cannot update with ${id}.maybe not found`,
+    //                 });
+    //             } else {
+    //                 res.send({ message: "User approved" });
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             res.status(500).send({ message: "error in updating" });
+    //         });
+    // } else {
+    //     res.send({ status: 400, message: "invalid token" });
+    // }
 });
 
 //forgot password mail
@@ -366,7 +366,6 @@ route.get("/mailResetPassword", async(req, res) => {
                 if (!data) {
                     res.status(404).send({ message: "didnt find the user with id" + id });
                 } else {
-                    console.log("data given by findbyid in .eresest password", data);
                     let transporter = nodemailer.createTransport({
                         service: "gmail",
                         auth: {
@@ -488,53 +487,61 @@ route.put("/verifyUser/:token", async(req, res) => {
 
 //upload users
 route.post("/uploadUsers", async(req, res) => {
-    let users = req.body.users_data;
-    users.forEach(async(item, index, array) => {
-        let user = item;
-        const email = user.cust_email;
-        const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(randomstring.generate(), salt);
-        user.password = hashPassword;
-        user.email = email;
-        user.name = user.cust_keyman;
-        user.verified = true;
-        user.approved = true;
+    const token = req.headers.token;
+    if (token) {
+        const requestingUser = JWT.getUserData(token);
+        if (requestingUser.isAdmin) {
+            let users = req.body.cust_data;
+            users.forEach(async(item, index, array) => {
+                let user = item;
+                const email = user.cust_email;
+                const salt = await bcrypt.genSalt(10);
+                const hashPassword = await bcrypt.hash(randomstring.generate(), salt);
+                user.password = hashPassword;
+                user.email = email;
+                user.name = user.cust_keyman;
+                user.verified = true;
+                user.approved = true;
 
-        user = new userDB(user);
+                user = new userDB(user);
 
-        //save user to db
+                //save user to db
 
-        user
-            .save(user)
-            .then(async(data) => {
-                console.log("saved user =", data);
-                let transporter = nodemailer.createTransport({
-                    service: "gmail",
-                    auth: {
-                        user: "usingfornodemailer@gmail.com",
-                        pass: "nodemailer@1",
-                    },
-                });
-                let mailOptions = {
-                    from: "usingfornodemailer@gmail.com", // sender address
-                    to: email, // list of receivers
-                    subject: "Account created", // Subject line
+                user
+                    .save(user)
+                    .then(async(data) => {
+                        let transporter = nodemailer.createTransport({
+                            service: "gmail",
+                            auth: {
+                                user: "usingfornodemailer@gmail.com",
+                                pass: "nodemailer@1",
+                            },
+                        });
+                        let mailOptions = {
+                            from: "usingfornodemailer@gmail.com", // sender address
+                            to: email, // list of receivers
+                            subject: "Account Created", // Subject line
 
-                    html: `<p >your account was created. ur password is ${hashPassword}. ur email is this email</p>`, // html body
-                };
-                await transporter.sendMail(mailOptions, (err, info) => {
-                    if (err) {
+                            html: `<p >Your account for ${process.env.HOST} was created . Your password is ${hashPassword}. </p><p >This was automatically created when the admin uploaded your data</p><p >If there has been a misunderstanding plesae ignore this mail </p>`, // html body
+                        };
+                        await transporter.sendMail(mailOptions, (err, info) => {
+                            if (err) {
+                                console.log(err);
+
+                                return;
+                            }
+                            if (info) {}
+                        });
+                    })
+                    .catch((err) => {
                         console.log(err);
+
                         return;
-                    }
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-                return;
+                    });
             });
-    });
-    res.send({ message: "received data" });
+            res.send({ message: "Users data added to database" });
+        }
+    }
 });
 
 module.exports = route;
