@@ -6,24 +6,23 @@ import Button from "@material-ui/core/Button";
 import KeyboardBackspaceRoundedIcon from "@material-ui/icons/KeyboardBackspaceRounded";
 import InvoicesTable from "./invoices-table";
 import UnpaidInvoice from "./unpaid-invoice";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
 
-const UserReceipts = ({ userID, token, toggleView }) => {
+const UserReceiptsInvoices = ({ userID, token, toggleView }) => {
   const [user, setUser] = useState({});
   const [receipts, setReceipts] = useState([]);
   const [bills, setBills] = useState([]);
   const [haveBills, setHavebills] = useState(false);
   const [haveReceipts, setHaveReceipts] = useState(false);
-  const [receiptYTD, setReceiptYTD] = useState(0);
-  const [billYTD, setBillYTD] = useState(0);
-  const [currency, setCurrency] = useState("INR");
+  const [receiptYTD, setReceiptYTD] = useState({});
+  const [billYTD, setBillYTD] = useState({});
+  const [currenciesBill, setCurrenciesBill] = useState([]);
+  const [currenciesReceipt, setCurrenciesReceipt] = useState([]);
 
   useEffect(() => {
     getReceipts();
     getBills();
-
+    getReceiptsYTD();
+    getBillsYTD();
     // eslint-disable-next-line
   }, []);
 
@@ -31,8 +30,8 @@ const UserReceipts = ({ userID, token, toggleView }) => {
     axios
       .get(
         userID
-          ? `http://localhost:5000/invoices/userReceipts/${userID}`
-          : `http://localhost:5000/invoices/userReceipts/:id`,
+          ? `http://${window.location.host}/invoices/userReceipts/${userID}`
+          : `http://${window.location.host}/invoices/userReceipts/:id`,
         {
           headers: {
             token: token,
@@ -53,35 +52,12 @@ const UserReceipts = ({ userID, token, toggleView }) => {
       });
   };
 
-  const getReceiptsYTD = () => {
-    axios
-      .get(
-        userID
-          ? `http://localhost:5000/invoices/userReceiptsYTD/${userID}/${currency}`
-          : `http://localhost:5000/invoices/userReceiptsYTD/:id/${currency}`,
-        {
-          headers: {
-            token: token,
-          },
-        }
-      )
-      .then((res) => res.data)
-      .then((data) => {
-        setUser(data.user);
-        setReceiptYTD(data.total);
-      })
-      .catch((err) => {
-        window.alert("some error occured check console");
-        console.log(err);
-      });
-  };
-
   const getBills = () => {
     axios
       .get(
         userID
-          ? `http://localhost:5000/invoices/userBills/${userID}`
-          : `http://localhost:5000/invoices/userBills/:id`,
+          ? `http://${window.location.host}/invoices/userBills/${userID}`
+          : `http://${window.location.host}/invoices/userBills/:id`,
         {
           headers: {
             token: token,
@@ -100,13 +76,12 @@ const UserReceipts = ({ userID, token, toggleView }) => {
         console.log(err);
       });
   };
-
-  const getBillsYTD = () => {
+  const getReceiptsYTD = () => {
     axios
       .get(
         userID
-          ? `http://localhost:5000/invoices/userBillsYTD/${userID}/${currency}`
-          : `http://localhost:5000/invoices/userBillsYTD/:id/${currency}`,
+          ? `http://${window.location.host}/invoices/userReceiptsYTD/${userID}`
+          : `http://${window.location.host}/invoices/userReceiptsYTD/:id`,
         {
           headers: {
             token: token,
@@ -115,7 +90,35 @@ const UserReceipts = ({ userID, token, toggleView }) => {
       )
       .then((res) => res.data)
       .then((data) => {
-        setBillYTD(data.total);
+        if (data.user) setUser(data.user);
+        if (data.total) setReceiptYTD(data.total);
+        if (data.currencies) setCurrenciesReceipt(data.currencies);
+        if (data.message) window.alert(data.message);
+      })
+      .catch((err) => {
+        window.alert("some error occured check console");
+        console.log(err);
+      });
+  };
+
+  const getBillsYTD = () => {
+    axios
+      .get(
+        userID
+          ? `http://${window.location.host}/invoices/userBillsYTD/${userID}`
+          : `http://${window.location.host}/invoices/userBillsYTD/:id`,
+        {
+          headers: {
+            token: token,
+          },
+        }
+      )
+      .then((res) => res.data)
+      .then((data) => {
+        if (data.user) setUser(data.user);
+        if (data.total) setBillYTD(data.total);
+        if (data.currencies) setCurrenciesBill(data.currencies);
+        if (data.message) window.alert(data.message);
       })
       .catch((err) => {
         window.alert("some error occured check console");
@@ -125,21 +128,6 @@ const UserReceipts = ({ userID, token, toggleView }) => {
 
   return (
     <BrowserRouter>
-      <InputLabel id="demo-simple-select-label">Currency</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={currency}
-        onChange={(e) => {
-          setCurrency(e.target.value);
-        }}
-      >
-        <MenuItem value={"INR"}>INR</MenuItem>
-        <MenuItem value={"EUR"}>EUR</MenuItem>
-        <MenuItem value={"USD"}>USD</MenuItem>
-        <MenuItem value={"GBP"}>GBP</MenuItem>
-        <MenuItem value={"AED"}>AED</MenuItem>
-      </Select>
       <Typography
         style={{ marginTop: "5px", marginLeft: "30px" }}
         variant="body1"
@@ -147,7 +135,20 @@ const UserReceipts = ({ userID, token, toggleView }) => {
         align="left"
         gutterBottom
       >
-        <b>Invoice Total:</b> {billYTD}
+        <b>Invoice Total:</b>{" "}
+        {currenciesBill.length
+          ? currenciesBill.map((item) => (
+              <Typography
+                style={{ marginTop: "5px", marginLeft: "30px" }}
+                variant="body1"
+                component="h2"
+                align="left"
+                gutterBottom
+              >
+                {item} : {item + " " + billYTD[item].toFixed(2)}
+              </Typography>
+            ))
+          : 0}
       </Typography>
       <Typography
         style={{ marginTop: "5px", marginLeft: "30px" }}
@@ -156,7 +157,20 @@ const UserReceipts = ({ userID, token, toggleView }) => {
         align="left"
         gutterBottom
       >
-        <b>YTD Total Paid:</b> {Math.round(receiptYTD * 100) / 100}
+        <b>YTD Total Paid:</b>{" "}
+        {currenciesReceipt.length
+          ? currenciesReceipt.map((item) => (
+              <Typography
+                style={{ marginTop: "5px", marginLeft: "30px" }}
+                variant="body1"
+                component="h2"
+                align="left"
+                gutterBottom
+              >
+                {item} : {item + " " + receiptYTD[item].toFixed(2)}
+              </Typography>
+            ))
+          : 0}
       </Typography>
       <Typography
         style={{ marginTop: "5px", marginLeft: "30px" }}
@@ -165,11 +179,11 @@ const UserReceipts = ({ userID, token, toggleView }) => {
         align="left"
         gutterBottom
       >
-        <b>Pending Invoices:</b> {user.name}
+        <b>Pending Invoices </b> {userID && " of :" + user.name}
       </Typography>
 
       {haveBills ? (
-        <UnpaidInvoice rows_data={bills} />
+        <UnpaidInvoice token={token} rows_data={bills} />
       ) : (
         <Typography
           style={{ marginTop: "5px", marginLeft: "30px" }}
@@ -178,7 +192,7 @@ const UserReceipts = ({ userID, token, toggleView }) => {
           align="left"
           gutterBottom
         >
-          User has no pending bills
+          {userID ? "User" : "You"} has no pending bills
         </Typography>
       )}
 
@@ -189,7 +203,7 @@ const UserReceipts = ({ userID, token, toggleView }) => {
         align="left"
         gutterBottom
       >
-        <b>Paid Invoices of :</b> {user.name}
+        <b>Paid Invoices</b> {userID && " of :" + user.name}
       </Typography>
       {haveReceipts ? (
         <InvoicesTable rows_data={receipts} inAdmin={true} />
@@ -205,18 +219,20 @@ const UserReceipts = ({ userID, token, toggleView }) => {
         </Typography>
       )}
 
-      <Typography align="center">
-        <Button
-          onClick={toggleView}
-          variant="contained"
-          color="primary"
-          style={{ marginRight: "10px" }}
-        >
-          <KeyboardBackspaceRoundedIcon style={{ fontSize: "30px" }} />
-        </Button>
-      </Typography>
+      {userID && (
+        <Typography align="center">
+          <Button
+            onClick={toggleView}
+            variant="contained"
+            color="primary"
+            style={{ marginRight: "10px" }}
+          >
+            <KeyboardBackspaceRoundedIcon style={{ fontSize: "30px" }} />
+          </Button>
+        </Typography>
+      )}
     </BrowserRouter>
   );
 };
 
-export default UserReceipts;
+export default UserReceiptsInvoices;

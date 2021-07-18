@@ -11,7 +11,7 @@ const AccountInfo = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get(`http://localhost:5000/users/single_user`, {
+        .get(`http://${window.location.host}/users/single_user`, {
           headers: {
             token: token,
           },
@@ -20,6 +20,7 @@ const AccountInfo = () => {
           setUser(res.data);
         })
         .catch((err) => {
+          window.alert("some error occured please check console");
           console.log(err);
         });
     } else {

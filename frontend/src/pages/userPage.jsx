@@ -1,8 +1,7 @@
 import NavBarUser from "../components/nav-bar/nav-bar-user";
 import { BrowserRouter } from "react-router-dom";
 import { useEffect, useState } from "react";
-import UserBills from "../components/user-bills";
-import UserReceiptsUserPage from "../components/user-receipts-for-userPage";
+import UserReceiptsInvoices from "../components/user-receipts-invoices";
 
 const axios = require("axios");
 const UserPage = () => {
@@ -12,7 +11,7 @@ const UserPage = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get(`http://localhost:5000/users/single_user`, {
+        .get(`http://${window.location.host}/users/single_user`, {
           headers: {
             token: token,
           },
@@ -21,6 +20,7 @@ const UserPage = () => {
           setUser(res.data);
         })
         .catch((err) => {
+          window.alert("some error occured please check console");
           console.log(err);
         });
     } else {
@@ -31,8 +31,7 @@ const UserPage = () => {
   return (
     <BrowserRouter>
       <NavBarUser username={user.name} token={token} />
-      <UserBills token={token} />
-      <UserReceiptsUserPage token={token} />
+      <UserReceiptsInvoices token={token} />
     </BrowserRouter>
   );
 };

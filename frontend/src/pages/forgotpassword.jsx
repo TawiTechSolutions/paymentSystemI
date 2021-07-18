@@ -17,7 +17,7 @@ const ForgotPassword = () => {
 
   const findAndSendMail = () => {
     axios
-      .put(`http://localhost:5000/users/forgotPassword/${Email}`)
+      .put(`http://${window.location.host}/users/forgotPassword/${Email}`)
       .then((res) => res.data)
       .then((data) => {
         if (data.status === 400) {
@@ -28,6 +28,7 @@ const ForgotPassword = () => {
         }
       })
       .catch((err) => {
+        window.alert("some error occured please check console");
         console.log(err);
       });
   };

@@ -42,13 +42,18 @@ const UserRow = ({ user, token, getReceipts }) => {
         };
 
         axios
-          .put(`http://localhost:5000/users/updateRole/${id}`, updated_user, {
-            headers: { token: token, "Content-Type": "application/json" },
-          })
+          .put(
+            `http://${window.location.host}/users/updateRole/${id}`,
+            updated_user,
+            {
+              headers: { token: token, "Content-Type": "application/json" },
+            }
+          )
           .then((res) => {
             window.alert(res.data.message);
           })
           .catch((err) => {
+            window.alert("some error occured please check console");
             console.log(err);
           });
       }
@@ -70,16 +75,21 @@ const UserRow = ({ user, token, getReceipts }) => {
       };
 
       axios
-        .put(`http://localhost:5000/users/update/${id}`, updated_user, {
-          headers: {
-            token: token,
-            "Content-Type": "application/json",
-          },
-        })
+        .put(
+          `http://${window.location.host}/users/update/${id}`,
+          updated_user,
+          {
+            headers: {
+              token: token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
         .then((res) => {
           window.alert(res.data.message);
         })
         .catch((err) => {
+          window.alert("some error occured please check console");
           console.log(err);
         });
     }
@@ -89,7 +99,7 @@ const UserRow = ({ user, token, getReceipts }) => {
     let result = window.confirm("Want to delete?");
     if (result) {
       axios
-        .delete(`http://localhost:5000/users/${id}`, {
+        .delete(`http://${window.location.host}/users/${id}`, {
           headers: {
             token: token,
           },
@@ -99,6 +109,7 @@ const UserRow = ({ user, token, getReceipts }) => {
           window.location.reload();
         })
         .catch((err) => {
+          window.alert("some error occured please check console");
           console.log(err);
         });
     }

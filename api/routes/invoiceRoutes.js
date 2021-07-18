@@ -11,7 +11,6 @@ const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
 const JWT = require("../Utilities/JWT_Auth");
 const mailHelper = require("../Utilities/emails/emailHelper");
-const convertCurrency = require("nodejs-currency-converter");
 
 route.post("/uploadBillsData", async(req, res) => {
     if (req.body) {
@@ -27,7 +26,7 @@ route.post("/uploadBillsData", async(req, res) => {
         so_data
             .save(so_data)
             .then(async(data) => {
-                console.log("saved so_data", data);
+                console.log("saved so_data");
             })
             .catch((err) => {
                 console.log("error in saving to db", err);
@@ -56,7 +55,6 @@ route.post("/uploadBillsData", async(req, res) => {
                     await generateBill
                         .generateBillPDF(cust_data[i], frim_data)
                         .then(async(cloudinary_details) => {
-                            console.log("result of generateing bill", cloudinary_details);
                             const bill = new billDB({
                                 invoice_detials: cust_data[i],
                                 invoice_num: cust_data[i].invoice_num,
@@ -69,10 +67,7 @@ route.post("/uploadBillsData", async(req, res) => {
                                 email: cust_data[i].cust_email,
                             }, { $push: { bills: result._id } });
                             if (user_found) {
-                                console.log(
-                                    "user found and added bill to the user",
-                                    user_found
-                                );
+                                console.log("user found and added bill to the user");
                                 await billDB.findByIdAndUpdate(result._id, {
                                     user_id: user_found._id,
                                 });
@@ -124,7 +119,7 @@ route.post("/uploadReceiptsData", async(req, res) => {
         so_data
             .save(so_data)
             .then(async(data) => {
-                console.log("saved so_data", data);
+                console.log("saved so_data");
             })
             .catch((err) => {
                 res.status(500).send(err.message || "some error while sending to db");
@@ -169,7 +164,6 @@ route.post("/uploadReceiptsData", async(req, res) => {
                     await generateReceipt
                         .generateReceiptPDF(cust_data[i], frim_data)
                         .then(async(cloudinary_details) => {
-                            console.log("result of generateing recipt", cloudinary_details);
                             const foundBill = await billDB.findOne({
                                 invoice_num: cust_data[i].invoice_num,
                             });
@@ -190,10 +184,7 @@ route.post("/uploadReceiptsData", async(req, res) => {
                                 email: cust_data[i].cust_email,
                             }, { $push: { recepits: result._id } });
                             if (user_found)
-                                console.log(
-                                    "user found and added recepit to the user",
-                                    user_found
-                                );
+                                console.log("user found and added recepit to the user");
                             else {
                                 console.log(
                                     "user with email id",
@@ -270,7 +261,6 @@ route.get("/userBills/:id", async(req, res) => {
         id = req.params.id;
     }
     if (token) {
-        const id = JWT.getUserData(token)._id;
         try {
             if (id) {
                 const user = await userDB.findById(id);
@@ -307,70 +297,6 @@ route.get("/userBills/:id", async(req, res) => {
 
     res.status(400).send({ message: "Some issue with the token send" });
 });
-
-route.get("/userBillsYTD/:id/:currency", async(req, res) => {
-    const currency = req.params.currency;
-    console.log("got request from", currency);
-    const token = req.headers.token;
-    let id = JWT.getUserData(token)._id;
-    if (req.params.id !== ":id") {
-        id = req.params.id;
-    }
-    if (token) {
-        const id = JWT.getUserData(token)._id;
-        try {
-            if (id) {
-                if (currency) {
-                    const user = await userDB.findById(id);
-                    if (user.bills.length) {
-                        const billsID_array = user.bills;
-                        let total = 0;
-                        for (let i = 0; i < billsID_array.length; i++) {
-                            const bills = await billDB.findById(billsID_array[i]);
-                            if (bills) {
-                                convertCurrency(
-                                        parseFloat(bills.invoice_detials.final_bal_due),
-                                        bills.invoice_detials.invoice_currency,
-                                        currency,
-                                        new Date(bills.invoice_detials.invoice_dt).toISOString()
-                                    )
-                                    .then((response) => {
-                                        total = total + parseFloat(response);
-                                    })
-                                    .catch((err) => {
-                                        res.send({
-                                            message: "Some error during currecny conversion. YTD is not avalibale right now",
-                                        });
-                                        console.log(err);
-                                    });
-                            }
-                        }
-                        res.send({
-                            status: 200,
-                            user: user,
-                            total: Math.round(total * 100) / 100,
-                            haveBills: true,
-                        });
-                    } else {
-                        res.send({
-                            user: user,
-                            total: 0,
-                            haveBills: false,
-                        });
-                    }
-                }
-                return;
-            }
-        } catch (error) {
-            console.log(error);
-            res.status(400).send({ message: "Error with database" });
-            return;
-        }
-    }
-
-    res.status(400).send({ message: "Some issue with the request send" });
-});
-
 route.get("/userReceipts/:id", async(req, res) => {
     const token = req.headers.token;
     let id = JWT.getUserData(token)._id;
@@ -415,9 +341,7 @@ route.get("/userReceipts/:id", async(req, res) => {
     res.status(400).send({ message: "Some issue with the token send" });
 });
 
-route.get("/userReceiptsYTD/:id/:currency", async(req, res) => {
-    const currency = req.params.currency;
-    console.log("got request from", currency);
+route.get("/userBillsYTD/:id", async(req, res) => {
     const token = req.headers.token;
     let id = JWT.getUserData(token)._id;
     if (req.params.id !== ":id") {
@@ -426,66 +350,103 @@ route.get("/userReceiptsYTD/:id/:currency", async(req, res) => {
     if (token) {
         try {
             if (id) {
-                if (currency) {
-                    const user = await userDB.findById(id);
-                    if (user.recepits.length) {
-                        const receiptsID_array = user.recepits;
-                        let total = 0;
-                        for (let i = 0; i < receiptsID_array.length; i++) {
-                            const receipt = await receiptDB.findById(receiptsID_array[i]);
-
-                            if (receipt) {
-                                convertCurrency(
-                                        parseFloat(receipt.invoice_detials.final_bal_due),
-                                        receipt.invoice_detials.invoice_currency,
-                                        currency,
-                                        new Date(receipt.invoice_detials.invoice_dt).toISOString()
-                                    )
-                                    .then((response) => {
-                                        total = total + parseFloat(response);
-                                    })
-                                    .catch((err) => {
-                                        res.send({
-                                            message: "Some error during currecny conversion. YTD is not avalibale right now",
-                                        });
-                                        console.log(err);
-                                    });
-                                try {
-                                    total =
-                                        total +
-                                        Math.round(
-                                            parseFloat(receipt.invoice_detials.final_bal_due) * 100
-                                        ) /
-                                        100;
-                                } catch (error) {
-                                    console.log(error);
-                                }
+                console.log("inside id if");
+                const user = await userDB.findById(id);
+                if (user.bills.length) {
+                    const billsID_array = user.bills;
+                    let array_currency = [];
+                    let dict_total = {};
+                    for (let i = 0; i < billsID_array.length; i++) {
+                        const bills = await billDB.findById(billsID_array[i]);
+                        if (bills) {
+                            let invoice_currency = bills.invoice_detials.invoice_currency;
+                            if (!array_currency.includes(invoice_currency)) {
+                                array_currency.push(invoice_currency);
+                                dict_total[invoice_currency] = 0;
                             }
+                            dict_total[invoice_currency] =
+                                dict_total[invoice_currency] +
+                                parseFloat(bills.invoice_detials.final_bal_due);
                         }
-                        res.send({
-                            status: 200,
-                            user: user,
-                            total: Math.round(total * 100) / 100,
-                            haveReceipts: true,
-                        });
-                    } else {
-                        res.send({
-                            user: user,
-                            total: 0,
-                            haveReceipts: false,
-                        });
                     }
-                    return;
+
+                    res.send({
+                        status: 200,
+                        user,
+                        total: dict_total,
+                        currencies: array_currency,
+                        haveBills: true,
+                    });
+                } else {
+                    res.send({
+                        user: user,
+                        haveBills: false,
+                    });
                 }
+
+                return;
             }
         } catch (error) {
             console.log(error);
-            res.status(400).send({ message: "Error with database" });
+            res.send({ message: "Error with database" });
             return;
         }
     }
 
-    res.status(400).send({ message: "Some issue with the token send" });
+    res.status(400).send({ message: "Some issue with the request send" });
+});
+
+route.get("/userReceiptsYTD/:id", async(req, res) => {
+    const token = req.headers.token;
+    let id = JWT.getUserData(token)._id;
+    if (req.params.id !== ":id") {
+        id = req.params.id;
+    }
+    if (token) {
+        try {
+            if (id) {
+                const user = await userDB.findById(id);
+                if (user.recepits.length) {
+                    const receiptID_array = user.recepits;
+                    let array_currency = [];
+                    let dict_total = {};
+                    for (let i = 0; i < receiptID_array.length; i++) {
+                        const receipt = await receiptDB.findById(receiptID_array[i]);
+                        if (receipt) {
+                            let invoice_currency = receipt.invoice_detials.invoice_currency;
+                            if (!array_currency.includes(invoice_currency)) {
+                                array_currency.push(invoice_currency);
+                                dict_total[invoice_currency] = 0;
+                            }
+                            dict_total[invoice_currency] =
+                                dict_total[invoice_currency] +
+                                parseFloat(receipt.invoice_detials.final_bal_due);
+                        }
+                    }
+
+                    res.send({
+                        status: 200,
+                        user,
+                        total: dict_total,
+                        currencies: array_currency,
+                        haveReceipts: true,
+                    });
+                } else {
+                    res.send({
+                        user: user,
+                        haveReceipts: false,
+                    });
+                }
+                return;
+            }
+        } catch (error) {
+            console.log(error);
+            res.send({ message: "Error with database" });
+            return;
+        }
+    }
+
+    res.send({ message: "Some issue with the req send" });
 });
 
 const addUserIfAbsent = async(element) => {

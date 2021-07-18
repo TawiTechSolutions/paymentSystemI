@@ -25,7 +25,7 @@ const ResetPassword = ({
     } else {
       axios
         .put(
-          `http://localhost:5000/users/changePassword`,
+          `http://${window.location.host}/users/changePassword`,
           {
             password: password,
           },

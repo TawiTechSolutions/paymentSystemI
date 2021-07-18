@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -10,43 +9,8 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
-import { Typography } from "@material-ui/core";
+import PayBill from "./payBill";
 import { useEffect } from "react";
-
-function createData(invoice, invoice_date, currency, due_amount, due_date) {
-  return {
-    invoice,
-    invoice_date,
-    currency,
-    due_amount,
-    due_date,
-  };
-}
-
-//coloumn invoices
-const headCells = [
-  {
-    id: "invoice",
-    numeric: false,
-    date: false,
-    disablePadding: true,
-    label: "Invoice",
-  },
-  {
-    id: "invoice_date",
-    numeric: true,
-    disablePadding: false,
-    label: "Invoice Date",
-  },
-  { id: "currency", numeric: true, disablePadding: false, label: "Currency" },
-  {
-    id: "due_amount",
-    numeric: true,
-    disablePadding: false,
-    label: "Due Amount",
-  },
-  { id: "due_date", numeric: true, disablePadding: false, label: "Due Date" },
-];
 
 //addd commas
 const addCommas = (e) => {
@@ -111,47 +75,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function EnhancedTableHead({ classes, order, orderBy, onRequestSort }) {
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell, ind) => (
-          <TableCell
-            key={headCell.id + ind}
-            align={headCell.numeric ? "right" : "left"}
-            sortDirection={orderBy === headCell.id ? order : false}
-            style={{ paddingLeft: "10px" }}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <b> {headCell.label}</b>
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-};
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginBottom: theme.spacing(2),
@@ -171,8 +94,24 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
 }));
-
-export default function UnpaidInvoice({ rows_data, inAdmin }) {
+function createData(
+  invoice,
+  invoice_date,
+  currency,
+  due_amount,
+  due_date,
+  payBill
+) {
+  return {
+    invoice,
+    invoice_date,
+    currency,
+    due_amount,
+    due_date,
+    payBill,
+  };
+}
+export default function UnpaidInvoice({ rows_data, token, inAdmin }) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("invoice_date");
@@ -180,25 +119,132 @@ export default function UnpaidInvoice({ rows_data, inAdmin }) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
 
+  //coloumn invoices
+  const headCells = inAdmin
+    ? [
+        {
+          id: "invoice",
+          numeric: false,
+          date: false,
+          disablePadding: true,
+          label: "Invoice",
+        },
+        {
+          id: "invoice_date",
+          numeric: true,
+          disablePadding: false,
+          label: "Invoice Date",
+        },
+        {
+          id: "currency",
+          numeric: true,
+          disablePadding: false,
+          label: "Currency",
+        },
+        {
+          id: "due_amount",
+          numeric: true,
+          disablePadding: false,
+          label: "Due Amount",
+        },
+        {
+          id: "due_date",
+          numeric: true,
+          disablePadding: false,
+          label: "Due Date",
+        },
+      ]
+    : [
+        {
+          id: "invoice",
+          numeric: false,
+          date: false,
+          disablePadding: true,
+          label: "Invoice",
+        },
+        {
+          id: "invoice_date",
+          numeric: true,
+          disablePadding: false,
+          label: "Invoice Date",
+        },
+        {
+          id: "currency",
+          numeric: true,
+          disablePadding: false,
+          label: "Currency",
+        },
+        {
+          id: "due_amount",
+          numeric: true,
+          disablePadding: false,
+          label: "Due Amount",
+        },
+        {
+          id: "due_date",
+          numeric: true,
+          disablePadding: false,
+          label: "Due Date",
+        },
+        { id: "pay_bill", numeric: true, disablePadding: false, label: "Pay" },
+      ];
+
+  function EnhancedTableHead({ classes, order, orderBy, onRequestSort }) {
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCells.map((headCell, ind) => (
+            <TableCell
+              key={headCell.id + ind}
+              align={headCell.numeric ? "right" : "left"}
+              sortDirection={orderBy === headCell.id ? order : false}
+              style={{ paddingLeft: "10px" }}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                <b> {headCell.label}</b>
+                {orderBy === headCell.id ? (
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </span>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
   React.useEffect(() => {
     setRows(
-      rows_data.map((receipt) => {
+      rows_data.map((bill) => {
         return createData(
-          receipt.bill_url ? (
-            <a style={{ textDecoration: "none" }} href={receipt.bill_url}>
-              {receipt.invoice_num}
+          bill.bill_url ? (
+            <a style={{ textDecoration: "none" }} href={bill.bill_url}>
+              {bill.invoice_num}
             </a>
           ) : (
-            <p style={{ textDecoration: "none" }}>{receipt.invoice_num}</p>
+            <p style={{ textDecoration: "none" }}>{bill.invoice_num}</p>
           ),
-          receipt.invoice_detials.invoice_dt,
-          receipt.invoice_detials.invoice_currency,
-          receipt.invoice_detials.final_bal_due,
-          receipt.invoice_detials.due_date
+          bill.invoice_detials.invoice_dt,
+          bill.invoice_detials.invoice_currency,
+          bill.invoice_detials.final_bal_due,
+          bill.invoice_detials.due_date,
+          { token: token, id: bill._id, bill: bill }
         );
       })
     );
-  }, [rows_data]);
+  }, [rows_data, token]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -228,19 +274,6 @@ export default function UnpaidInvoice({ rows_data, inAdmin }) {
 
   return (
     <div style={{ margin: "10px", marginInline: "30px" }}>
-      {!inAdmin ? (
-        <Typography
-          style={{ marginTop: "5px" }}
-          variant="h6"
-          component="h6"
-          align="left"
-          gutterBottom
-        >
-          <b> Unpaid Invoices</b>
-        </Typography>
-      ) : (
-        ""
-      )}
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
@@ -274,9 +307,20 @@ export default function UnpaidInvoice({ rows_data, inAdmin }) {
                       <TableCell align="right">{row.invoice_date}</TableCell>
                       <TableCell align="right">{row.currency}</TableCell>
                       <TableCell align="right">
-                        {addCommas(row.due_amount)}
+                        {addCommas(parseFloat(row.due_amount).toFixed(2))}
                       </TableCell>
                       <TableCell align="right">{row.due_date}</TableCell>
+                      {inAdmin ? (
+                        ""
+                      ) : (
+                        <TableCell align="right">
+                          <PayBill
+                            token={row.payBill.token}
+                            id={row.payBill.id}
+                            bill={row.payBill.bill}
+                          />{" "}
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}

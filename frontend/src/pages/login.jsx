@@ -25,7 +25,7 @@ const Login = () => {
 
   const postLogin = () => {
     axios
-      .post("http://localhost:5000/users/login", {
+      .post(`http://${window.location.host}/users/login`, {
         email: email,
         password: password,
       })
@@ -53,6 +53,7 @@ const Login = () => {
         }
       })
       .catch((err) => {
+        window.alert("some error occured please check console");
         console.log(err);
       });
   };

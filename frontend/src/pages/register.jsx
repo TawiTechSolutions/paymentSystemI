@@ -29,9 +29,9 @@ const Register = () => {
     if (password.length < 6) {
       window.alert("Password length should be more than 6");
     } else {
-      if (confrimPassword === password) {
+      if (confrimPassword === password && name.length && email.length) {
         axios
-          .post("http://localhost:5000/users/register", {
+          .post(`http://${window.location.host}/users/register`, {
             name: name,
             email: email,
             password: password,
@@ -52,6 +52,7 @@ const Register = () => {
             }
           })
           .catch((err) => {
+            window.alert("some error occured please check console");
             console.log(err);
           });
       } else {

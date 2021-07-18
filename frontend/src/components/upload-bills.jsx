@@ -77,7 +77,7 @@ function UploadBillsData({ token }) {
     } else {
       axios
         .post(
-          `http://localhost:5000/invoices/uploadBillsData`,
+          `http://${window.location.host}/invoices/uploadBillsData`,
 
           data_to_be_send,
           options
@@ -90,7 +90,10 @@ function UploadBillsData({ token }) {
           console.log(res);
           window.alert(res.data.message);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          window.alert("some error occured please check console");
+        });
     }
   };
 
@@ -273,8 +276,12 @@ function UploadBillsData({ token }) {
           key === "final_bal_due"
         ) {
           if (key === "final_bal_due") {
-            one_user[key] = Math.round(value * 100) / 100;
-          } else if (key === "email_dt" || key === "invoice_dt") {
+            one_user[key] = parseFloat(value);
+          } else if (
+            key === "email_dt" ||
+            key === "invoice_dt" ||
+            key === "due_date"
+          ) {
             const date = new Date(value);
             one_user[key] = date.toDateString();
           } else {

@@ -46,7 +46,7 @@ const UserBills = ({ token }) => {
       </Typography>
       <Container>
         {haveBills ? (
-          <UnpaidInvoice rows_data={Bills} />
+          <UnpaidInvoice rows_data={Bills} inAdmin={false} token={token} />
         ) : (
           <Typography
             style={{ marginTop: "5px", marginLeft: "15px" }}

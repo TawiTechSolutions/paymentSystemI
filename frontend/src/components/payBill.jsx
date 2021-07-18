@@ -18,8 +18,6 @@ function loadScript(src) {
   });
 }
 
-const __DEV__ = document.domain === "localhost";
-
 function PayBill({ token, id, bill }) {
   const displayRazorpay = async () => {
     const res = await loadScript(
@@ -32,7 +30,7 @@ function PayBill({ token, id, bill }) {
     }
 
     axios
-      .get(`http://localhost:5000/payment/razorpay/${id}`, {
+      .get(`http://${window.location.host}/payment/razorpay/${id}`, {
         headers: {
           token: token,
         },
@@ -44,7 +42,7 @@ function PayBill({ token, id, bill }) {
 
         let options = {
           //enter key below
-          key: __DEV__ ? "rzp_test_iyc6McBDRDGLBz" : "PRODUCTION_KEY",
+          key: res.data.key,
           currency: res.data.currency,
           amount: res.data.amount.toString(),
           order_id: res.data.id,

@@ -81,7 +81,7 @@ function UploadReceiptData({ token }) {
     } else {
       axios
         .post(
-          `http://localhost:5000/invoices/uploadReceiptsData`,
+          `http://${window.location.host}/invoices/uploadReceiptsData`,
 
           data_to_be_send,
           options
@@ -94,7 +94,10 @@ function UploadReceiptData({ token }) {
           console.log(res);
           window.alert(res.data.message);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          window.alert("some error occured please check console");
+        });
     }
   };
   //confrim user data
@@ -113,7 +116,7 @@ function UploadReceiptData({ token }) {
     };
     axios
       .post(
-        `http://localhost:5000/invoices/confrimReceiptsUpload`,
+        `http://${window.location.host}/invoices/confrimReceiptsUpload`,
         data_to_be_send,
         options
       )
@@ -129,7 +132,10 @@ function UploadReceiptData({ token }) {
         }
         setconfirm_NotFound(true);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        window.alert("some error occured please check console");
+      });
   };
   // handle file upload
   const sendUploadedFile = (file) => {
@@ -317,8 +323,12 @@ function UploadReceiptData({ token }) {
           key === "final_bal_due"
         ) {
           if (key === "final_bal_due") {
-            one_user[key] = Math.round(value * 100) / 100;
-          } else if (key === "email_dt" || key === "invoice_dt") {
+            one_user[key] = parseFloat(value);
+          } else if (
+            key === "email_dt" ||
+            key === "invoice_dt" ||
+            key === "due_date"
+          ) {
             const date = new Date(value);
             one_user[key] = date.toDateString();
           } else {

@@ -8,8 +8,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
 import UserRow from "../components/user-table-row";
 import { Container, Typography } from "@material-ui/core";
-import UserReceipts from "../components/user-receipts-invoices";
 import NavBarAdmin from "../components/nav-bar/nav-bar-admin";
+import UserReceiptsInvoices from "../components/user-receipts-invoices";
 
 const axios = require("axios");
 
@@ -23,7 +23,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get(`http://localhost:5000/users/single_user`, {
+        .get(`http://${window.location.host}/users/single_user`, {
           headers: {
             token: token,
           },
@@ -37,7 +37,7 @@ const Dashboard = () => {
         });
 
       axios
-        .get(`http://localhost:5000/users/all_users`, {
+        .get(`http://${window.location.host}/users/all_users`, {
           headers: {
             token: token,
           },
@@ -46,6 +46,7 @@ const Dashboard = () => {
           setUsers(response.data);
         })
         .catch((err) => {
+          window.alert("some error occured please check console");
           console.log(err);
         });
     } else {
@@ -123,7 +124,7 @@ const Dashboard = () => {
           </Container>
         </div>
       ) : (
-        <UserReceipts
+        <UserReceiptsInvoices
           userID={fetchReciptsOf}
           token={token}
           toggleView={toggleView}

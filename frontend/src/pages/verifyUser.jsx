@@ -37,7 +37,7 @@ const VerifyUser = ({
   }, []);
   const verifyuser = () => {
     axios
-      .put(`http://localhost:5000/users/verifyUser/${token}`)
+      .put(`http://${window.location.host}/users/verifyUser/${token}`)
       .then((res) => res.data)
       .then((data) => {
         if (data.status === 400) {
@@ -48,6 +48,7 @@ const VerifyUser = ({
         }
       })
       .catch((err) => {
+        window.alert("some error occured please check console");
         console.log(err);
       });
   };

@@ -71,7 +71,7 @@ function UploadUserData({ token }) {
     } else {
       axios
         .post(
-          `http://localhost:5000/users/uploadUsers`,
+          `http://${window.location.host}/users/uploadUsers`,
           data_to_be_send,
           options
         )
@@ -83,7 +83,10 @@ function UploadUserData({ token }) {
           console.log(res);
           window.alert(res.data.message);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          window.alert("some error occured please check console");
+        });
     }
   };
 

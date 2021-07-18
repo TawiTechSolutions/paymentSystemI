@@ -8,6 +8,7 @@ const SO_dataDB = require("../model/solution_owner");
 const userDB = require("../model/user");
 const mailHelper = require("../Utilities/emails/emailHelper");
 
+//replace with dynamic key and secret using env
 const razorpay = new Razorpay({
     key_id: "rzp_test_iyc6McBDRDGLBz",
     key_secret: "s7P0pAd97rBttaL38xysLr3s",
@@ -16,8 +17,9 @@ const razorpay = new Razorpay({
 route.post("/verification", async(req, res) => {
     res.send({ status: "ok" });
     // do a validation
-    const secret = process.env.RAZORPAY_VERIFICATION_SECRET;
-
+    //const secret = process.env.RAZORPAY_VERIFICATION_SECRET;
+    //replace with .env
+    const secret = 12345678;
     console.log("data given by webhook of razorPay", req.body);
 
     const shasum = crypto.createHmac("sha256", secret);
@@ -124,6 +126,8 @@ route.get("/razorpay/:id", async(req, res) => {
                         id: response.id,
                         currency: response.currency,
                         amount: response.amount,
+                        //replace with env
+                        key: "rzp_test_iyc6McBDRDGLBz",
                     });
                 } else {
                     res.status(400).send({
@@ -141,6 +145,11 @@ route.get("/razorpay/:id", async(req, res) => {
             message: "error with database. cant find bill in db",
         });
     }
+});
+
+route.get("/getKey", async(req, res) => {
+    //replace with dynamic key
+    res.send({ key: "rzp_test_iyc6McBDRDGLBz" });
 });
 
 module.exports = route;
