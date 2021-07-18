@@ -49,8 +49,8 @@ route.post("/register", async(req, res) => {
             let transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
-                    user: "usingfornodemailer@gmail.com",
-                    pass: "nodemailer@1",
+                    user: process.env.SENDER_EMAIL,
+                    pass: process.env.SENDER_EMAIL_PASSWORD,
                 },
             });
             let mailOptions = {
