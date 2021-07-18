@@ -63,7 +63,7 @@ route.post("/register", async(req, res) => {
             };
             await transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
-                    res.status(500).send({ status: 500, message: err });
+                    res.send({ status: 500, message: err });
                 } else {
                     res.send({
                         status: 200,
@@ -73,7 +73,7 @@ route.post("/register", async(req, res) => {
             });
         })
         .catch((err) => {
-            res.status(500).send(err.message || "some error while sending to db");
+            res.send({ status: 500, message: err.message });
         });
 });
 
