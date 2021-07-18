@@ -15,10 +15,11 @@ var invoice_detials = new mongoose.Schema({
     recurring: { type: String, default: "" },
     Frequency: { type: String, default: "" },
     paid: { type: String, default: "" },
-    payment_method: { type: String, default: "" },
-    shown_in_system: { type: String, default: "" },
-    payment_date: { type: String, default: "" },
-    payment_amt: { type: String, default: "" },
+    nonSystem_payment_method: { type: String, default: "" },
+    Shown_in_System_Fag: { type: String, default: "" },
+    nonSystem_payment_date: { type: String, default: "" },
+    nonSystem_payment_currency: { type: String, default: "" },
+    nonSystem_payment_amt: { type: String, default: "" },
 });
 
 var schme = new mongoose.Schema({

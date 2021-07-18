@@ -1,14 +1,8 @@
 import { BrowserRouter } from "react-router-dom";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Box from "@material-ui/core/Box";
 import { Container, Typography } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import BillRow from "./bill-table-row";
+import UnpaidInvoice from "./unpaid-invoice";
 
 const UserBills = ({ token }) => {
   const [Bills, setBills] = useState([]);
@@ -52,33 +46,7 @@ const UserBills = ({ token }) => {
       </Typography>
       <Container>
         {haveBills ? (
-          <Box
-            style={{
-              overflow: "auto",
-              margin: "7px",
-              marginTop: 0,
-              border: "1.5px solid rgb(243, 243, 243)",
-              borderBottom: 0,
-            }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>
-                    <b>Invoice Num</b>
-                  </TableCell>
-                  <TableCell style={{ textAlign: "center" }}>
-                    <b>Actions</b>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {Bills.map((bill) => (
-                  <BillRow key={bill._id} bill={bill} />
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
+          <UnpaidInvoice rows_data={Bills} />
         ) : (
           <Typography
             style={{ marginTop: "5px", marginLeft: "15px" }}

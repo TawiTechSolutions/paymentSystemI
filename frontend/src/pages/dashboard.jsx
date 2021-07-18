@@ -8,7 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Box from "@material-ui/core/Box";
 import UserRow from "../components/user-table-row";
 import { Container, Typography } from "@material-ui/core";
-import UserReceipts from "../components/user-receipts";
+import UserReceipts from "../components/user-receipts-invoices";
 import NavBarAdmin from "../components/nav-bar/nav-bar-admin";
 
 const axios = require("axios");

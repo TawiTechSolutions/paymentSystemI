@@ -72,7 +72,6 @@ export default function NavBarUser({ username, token }) {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>My account</MenuItem>
               <MenuItem
                 onClick={() => {
                   localStorage.removeItem("token");
