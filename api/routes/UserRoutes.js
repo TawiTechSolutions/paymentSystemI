@@ -443,7 +443,7 @@ route.put("/changePassword", async(req, res) => {
 });
 
 //verify user (link send to mail(to be clicked))
-route.put("/verifyUser/:token", async(req, res) => {
+route.get("/verifyUser/:token", async(req, res) => {
     const token = req.params.token;
 
     if (token) {
