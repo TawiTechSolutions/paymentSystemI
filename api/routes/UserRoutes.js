@@ -45,7 +45,7 @@ route.post("/register", async(req, res) => {
     user
         .save(user)
         .then(async(data) => {
-            const token = jwt.sign({ _id: data._id }, process.env.TOKEN_SECRET);
+            const token = JWT.GenerateJWT({ _id: data._id });
             let transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
@@ -318,7 +318,7 @@ route.put("/forgotPassword/:email", async(req, res) => {
     if (req.params.email) {
         const User = await userDB.findOne({ email: req.params.email });
         if (User) {
-            const token = jwt.sign({ _id: User._id }, process.env.TOKEN_SECRET);
+            const token = JWT.GenerateJWT({ _id: data._id });
             let transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
