@@ -57,9 +57,7 @@ route.post("/register", async(req, res) => {
                 from: "usingfornodemailer@gmail.com", // sender address
                 to: data.email, // list of receivers
                 subject: "Verify email", // Subject line
-                text: `Click to verify- 
-                    ${process.env.HOST}/verifyUser/${token}`, // plain text body
-                html: `<a href="${process.env.HOST}/verifyUser/${token}" >Click here to verify</a>`, // html body
+                html: `<a href="http://${process.env.HOST}/verifyUser/${token}" >Click here to verify</a>`, // html body
             };
             await transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
@@ -332,7 +330,7 @@ route.put("/forgotPassword/:email", async(req, res) => {
                 from: "usingfornodemailer@gmail.com", // sender address
                 to: req.params.email, // list of receivers
                 subject: "Password reset", // Subject line
-                html: `<a href="${process.env.HOST}/resetPassword/${token}" >Click here to reset password</a>`, // html body
+                html: `<a href="http://${process.env.HOST}/resetPassword/${token}" >Click here to reset password</a>`, // html body
             };
             await transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
@@ -377,9 +375,8 @@ route.get("/mailResetPassword", async(req, res) => {
                         from: "usingfornodemailer@gmail.com", // sender address
                         to: data.email, // list of receivers
                         subject: "Password reset", // Subject line
-                        text: `Click the link below to reset password or copy this link- 
-                        ${process.env.HOST}/resetPassword/${token}`, // plain text body
-                        html: `<a href="${process.env.HOST}/resetPassword/${token}" >Click here to reset password</a>`, // html body
+
+                        html: `<a href="http://${process.env.HOST}/resetPassword/${token}" >Click here to reset password</a>`, // html body
                     };
                     await transporter.sendMail(mailOptions, (err, info) => {
                         if (err) {
