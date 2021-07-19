@@ -57,12 +57,9 @@ const GenerateJWT = function(data) {
 const getUserData = (token) => {
     console.log(
         "decoded token",
-        jwt.verify(
-            token,
-            process.env.TOKEN_SECRET,
-            ", token secret",
-            process.env.TOKEN_SECRET
-        )
+        jwt.verify(token, process.env.TOKEN_SECRET),
+        ", token secret",
+        process.env.TOKEN_SECRET
     );
     return jwt.verify(token, process.env.TOKEN_SECRET).userData;
 };
