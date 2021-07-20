@@ -287,30 +287,30 @@ route.put("/updateRole/:id", (req, res) => {
 
 //update user
 route.put("/update/:id", (req, res) => {
-    // if (!req.body) {
-    //     return res.status(400).send({ message: "Data to update can not be empty" });
-    // }
-    // const token = req.headers.token;
-    // const id = req.params.id;
-    // const requestingUser = JWT.getUserData(token);
-    // if (requestingUser.isAdmin) {
-    //     userDB
-    //         .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-    //         .then((data) => {
-    //             if (!data) {
-    //                 res.status(400).send({
-    //                     message: `cannot update with ${id}.maybe not found`,
-    //                 });
-    //             } else {
-    //                 res.send({ message: "User approved" });
-    //             }
-    //         })
-    //         .catch((err) => {
-    //             res.status(500).send({ message: "error in updating" });
-    //         });
-    // } else {
-    //     res.send({ status: 400, message: "invalid token" });
-    // }
+    if (!req.body) {
+        return res.status(400).send({ message: "Data to update can not be empty" });
+    }
+    const token = req.headers.token;
+    const id = req.params.id;
+    const requestingUser = JWT.getUserData(token);
+    if (requestingUser.isAdmin) {
+        userDB
+            .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+            .then((data) => {
+                if (!data) {
+                    res.status(400).send({
+                        message: `cannot update with ${id}.maybe not found`,
+                    });
+                } else {
+                    res.send({ message: "User approved" });
+                }
+            })
+            .catch((err) => {
+                res.status(500).send({ message: "error in updating" });
+            });
+    } else {
+        res.send({ status: 400, message: "invalid token" });
+    }
 });
 
 //forgot password mail
