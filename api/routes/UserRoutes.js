@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
 const JWT = require("../Utilities/JWT_Auth");
+const mailHelper = require("../Utilities/emails/emailHelper");
 
 //register
 route.post("/register", async(req, res) => {
@@ -46,28 +47,12 @@ route.post("/register", async(req, res) => {
         .save(user)
         .then(async(data) => {
             const token = JWT.GenerateJWT({ _id: data._id });
-            let transporter = nodemailer.createTransport({
-                service: "gmail",
-                auth: {
-                    user: process.env.SENDER_EMAIL,
-                    pass: process.env.SENDER_EMAIL_PASSWORD,
-                },
-            });
-            let mailOptions = {
-                from: "usingfornodemailer@gmail.com", // sender address
-                to: data.email, // list of receivers
-                subject: "Verify email", // Subject line
-                html: `<a href="http://${process.env.HOST}/verifyUser/${token}" >Click here to verify</a>`, // html body
-            };
-            await transporter.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                    res.send({ status: 500, message: err });
-                } else {
-                    res.send({
-                        status: 200,
-                        message: "verification link send to mail ",
-                    });
-                }
+
+            mailHelper.sendVerification({
+                name: req.body.name,
+                email: req.body.email,
+                token_url: `http://${process.env.HOST}/verifyUser/${token}`,
+                host_url: process.env.HOST,
             });
         })
         .catch((err) => {
@@ -507,27 +492,9 @@ route.post("/uploadUsers", async(req, res) => {
                 user
                     .save(user)
                     .then(async(data) => {
-                        let transporter = nodemailer.createTransport({
-                            service: "gmail",
-                            auth: {
-                                user: "usingfornodemailer@gmail.com",
-                                pass: "nodemailer@1",
-                            },
-                        });
-                        let mailOptions = {
-                            from: "usingfornodemailer@gmail.com", // sender address
-                            to: email, // list of receivers
-                            subject: "Account Created", // Subject line
-
-                            html: `<p >Your account for ${process.env.HOST} was created . Your password is ${hashPassword}. </p><p >This was automatically created when the admin uploaded your data</p><p >If there has been a misunderstanding plesae ignore this mail </p>`, // html body
-                        };
-                        await transporter.sendMail(mailOptions, (err, info) => {
-                            if (err) {
-                                console.log(err);
-
-                                return;
-                            }
-                            if (info) {}
+                        mailHelper.sendAccountMade({
+                            ...JSON.parse(JSON.stringify(data)),
+                            host_url: process.env.HOST,
                         });
                     })
                     .catch((err) => {
