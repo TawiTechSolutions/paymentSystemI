@@ -478,6 +478,7 @@ route.post("/uploadUsers", async(req, res) => {
                 let user = item;
                 const email = user.cust_email;
                 const salt = await bcrypt.genSalt(10);
+                const password = randomstring.generate(10);
                 const hashPassword = await bcrypt.hash(randomstring.generate(), salt);
                 user.password = hashPassword;
                 user.email = email;
@@ -495,6 +496,7 @@ route.post("/uploadUsers", async(req, res) => {
                         mailHelper.sendAccountMade({
                             ...JSON.parse(JSON.stringify(data)),
                             host_url: process.env.HOST,
+                            random_string: password,
                         });
                     })
                     .catch((err) => {

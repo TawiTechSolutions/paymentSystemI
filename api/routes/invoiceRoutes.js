@@ -454,6 +454,7 @@ const addUserIfAbsent = async(element) => {
         let user = element;
         const email = user.cust_email;
         const salt = await bcrypt.genSalt(10);
+        const password = randomstring.generate(10);
         const hashPassword = await bcrypt.hash(randomstring.generate(), salt);
         user.password = hashPassword;
         user.email = email;
@@ -468,30 +469,16 @@ const addUserIfAbsent = async(element) => {
         user
             .save(user)
             .then(async(data) => {
-                let transporter = nodemailer.createTransport({
-                    service: "gmail",
-                    auth: {
-                        user: "usingfornodemailer@gmail.com",
-                        pass: "nodemailer@1",
-                    },
-                });
-                let mailOptions = {
-                    from: "usingfornodemailer@gmail.com", // sender address
-                    to: email, // list of receivers
-                    subject: "Account Created", // Subject line
-
-                    html: `<p >Your account for ${process.env.HOST} was created . Your password is ${hashPassword}. </p><p >This was automatically created when the admin uploaded your data</p><p >If there has been a misunderstanding plesae ignore this mail </p>`, // html body
-                };
-                await transporter.sendMail(mailOptions, (err, info) => {
-                    if (err) {
-                        console.log(err);
-                        resolve(err);
-                        return;
-                    }
-                    if (info) {
-                        resolve(info);
-                    }
-                });
+                try {
+                    mailHelper.sendAccountMade({
+                        ...JSON.parse(JSON.stringify(data)),
+                        host_url: process.env.HOST,
+                        random_string: password,
+                    });
+                    resolve(true);
+                } catch (err) {
+                    resolve(err);
+                }
             })
             .catch((err) => {
                 console.log(err);
