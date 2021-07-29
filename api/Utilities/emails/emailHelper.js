@@ -49,7 +49,6 @@ const mail = async(to, subject, html) => {
     let mailOptions = {
         from: process.env.SENDER_EMAIL, // sender address
         to: to, // list of receivers
-        bcc: bcc,
         subject: subject, // Subject line
 
         html: html, // plain text body
