@@ -54,6 +54,10 @@ route.post("/register", async(req, res) => {
                 token_url: `http://${process.env.HOST}/verifyUser/${token}`,
                 host_url: process.env.HOST,
             });
+            res.send({
+                status: 200,
+                message: "Verification Email send. Please check your inbox and spam box.",
+            });
         })
         .catch((err) => {
             res.send({ status: 500, message: err.message });
