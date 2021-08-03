@@ -65,7 +65,7 @@ const generateReceiptPDF = (clientData, firmData) => {
 const htmlToPdf = (html) => {
     return new Promise(async(resolve, reject) => {
         const options = {
-            format: "A4",
+            //format: "A4",
             timeout: "100000",
         };
         pdf.create(html, options).toStream(function(err, stream) {
