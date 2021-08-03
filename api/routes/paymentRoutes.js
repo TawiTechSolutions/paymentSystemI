@@ -24,8 +24,9 @@ route.post("/verification", async(req, res) => {
     const shasum = crypto.createHmac("sha256", secret);
     shasum.update(JSON.stringify(req.body));
     const digest = shasum.digest("hex");
-    res.send({ status: "ok" });
+
     if (digest === req.headers["x-razorpay-signature"]) {
+        res.send({ status: "ok" });
         console.log("payment has been made and captured");
 
         //find bill
