@@ -15,17 +15,16 @@ const razorpay = new Razorpay({
 });
 
 route.post("/verification", async(req, res) => {
-    res.send({ status: "ok" });
     // do a validation
     //const secret = process.env.RAZORPAY_VERIFICATION_SECRET;
     //replace with .env
-    const secret = 12345678;
+    const secret = "12345678";
     console.log("data given by webhook of razorPay", req.body);
 
     const shasum = crypto.createHmac("sha256", secret);
     shasum.update(JSON.stringify(req.body));
     const digest = shasum.digest("hex");
-
+    res.send({ status: "ok" });
     if (digest === req.headers["x-razorpay-signature"]) {
         console.log("payment has been made and captured");
 
