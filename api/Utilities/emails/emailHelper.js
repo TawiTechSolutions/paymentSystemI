@@ -72,7 +72,7 @@ const sendReceipt = (data, receipt_url, bcc) => {
     mailWithAttachment(
         data.email,
         bcc,
-        `${data.invoice_currency}${data.invoice_amt}, invoice #: ${invoice_num}`,
+        `${data.invoice_currency}${data.invoice_amt}, invoice #: ${data.invoice_num}`,
         htmlToSend,
         "Receipt.pdf",
         receipt_url

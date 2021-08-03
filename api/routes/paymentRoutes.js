@@ -19,7 +19,7 @@ route.post("/verification", async(req, res) => {
     // do a validation
     //const secret = process.env.RAZORPAY_VERIFICATION_SECRET;
     //replace with .env
-    const secret = "12345678";
+    const secret = "topSecret";
     console.log("data given by webhook of razorPay", req.body);
 
     const shasum = crypto.createHmac("sha256", secret);

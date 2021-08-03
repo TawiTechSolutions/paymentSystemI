@@ -46,7 +46,10 @@ route.post("/uploadBillsData", async(req, res) => {
                 const Bill_exists = await billDB.findOne({
                     invoice_num: cust_data[i].invoice_num,
                 });
-                if (Bill_exists) {
+                const Receipt_exists = await receiptDB.findOne({
+                    invoice_num: cust_data[i].invoice_num,
+                });
+                if (Bill_exists || Receipt_exists) {
                     console.log(
                         "a Bill with same number is present in db",
                         cust_data[i].invoice_num
