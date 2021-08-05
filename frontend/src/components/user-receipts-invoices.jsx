@@ -7,6 +7,22 @@ import KeyboardBackspaceRoundedIcon from "@material-ui/icons/KeyboardBackspaceRo
 import InvoicesTable from "./invoices-table";
 import UnpaidInvoice from "./unpaid-invoice";
 
+const addCommas = (e) => {
+  let l,
+    t,
+    n = (e = e.toString()).indexOf(".");
+  if (
+    (n >= 0 ? ((l = e.slice(0, n)), (t = e.slice(n))) : ((l = e), (t = "")),
+    l.length > 3)
+  ) {
+    let e = l.slice(0, l.length - 3) + "," + l.slice(l.length - 3);
+    for (let l = 2; e.length - 4 - l > 0; l += 3)
+      e = e.slice(0, e.length - 4 - l) + "," + e.slice(e.length - 4 - l);
+    return e + t;
+  }
+  return e;
+};
+
 const UserReceiptsInvoices = ({ userID, token, toggleView }) => {
   const [user, setUser] = useState({});
   const [receipts, setReceipts] = useState([]);
@@ -145,7 +161,7 @@ const UserReceiptsInvoices = ({ userID, token, toggleView }) => {
                 align="left"
                 gutterBottom
               >
-                {item} : {item + " " + billYTD[item].toFixed(2)}
+                {item} : {item + " " + addCommas(billYTD[item].toFixed(2))}
               </Typography>
             ))
           : 0}
@@ -167,7 +183,7 @@ const UserReceiptsInvoices = ({ userID, token, toggleView }) => {
                 align="left"
                 gutterBottom
               >
-                {item} : {item + " " + receiptYTD[item].toFixed(2)}
+                {item} : {item + " " + addCommas(receiptYTD[item].toFixed(2))}
               </Typography>
             ))
           : 0}

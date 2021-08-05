@@ -28,6 +28,69 @@ const addCommas = (e) => {
     return e;
 };
 
+const formatTemplateData = (cust_data, so_data) => {
+    let dataOfTemplate = {...cust_data, ...so_data };
+    dataOfTemplate["cust_address"] =
+        (dataOfTemplate["cust_add_street"] ?
+            dataOfTemplate["cust_add_street"] :
+            "") +
+        (dataOfTemplate["cust_add_city"] ?
+            "," + dataOfTemplate["cust_add_city"] :
+            "") +
+        (dataOfTemplate["cust_add_state"] ?
+            "," + dataOfTemplate["cust_add_state"] :
+            "") +
+        (dataOfTemplate["cust_add_cntry"] ?
+            "," + dataOfTemplate["cust_add_cntry"] :
+            "") +
+        (dataOfTemplate["cust_add_zip"] ?
+            "," + dataOfTemplate["cust_add_zip"] :
+            "");
+    dataOfTemplate["so_address"] =
+        (dataOfTemplate["so_firm_add_street"] ?
+            dataOfTemplate["so_firm_add_street"] :
+            "") +
+        (dataOfTemplate["so_firm_add_city"] ?
+            "," + dataOfTemplate["so_firm_add_city"] :
+            "") +
+        (dataOfTemplate["so_firm_add_state"] ?
+            "," + dataOfTemplate["so_firm_add_state"] :
+            "") +
+        (dataOfTemplate["so_firm_add_cntry"] ?
+            "," + dataOfTemplate["so_firm_add_cntry"] :
+            "") +
+        (dataOfTemplate["so_firm_add_zip"] ?
+            "," + dataOfTemplate["so_firm_add_zip"] :
+            "");
+    dataOfTemplate["discount_amt"] = addCommas(
+        dataOfTemplate["invoice_amt"] * dataOfTemplate["discount"]
+    );
+    dataOfTemplate["discount_inv_amt"] = addCommas(
+        dataOfTemplate["invoice_amt"] -
+        dataOfTemplate["invoice_amt"] * dataOfTemplate["discount"]
+    );
+    dataOfTemplate["TDS_amt"] = addCommas(
+        dataOfTemplate["invoice_amt"] * dataOfTemplate["TDS"]
+    );
+    dataOfTemplate["TDS_inv_amt"] = addCommas(
+        dataOfTemplate["invoice_amt"] -
+        dataOfTemplate["invoice_amt"] * dataOfTemplate["TDS"]
+    );
+    dataOfTemplate["GST_amt"] = addCommas(
+        dataOfTemplate["invoice_amt"] * dataOfTemplate["GST"]
+    );
+    const invoiceDateObj = new Date(dataOfTemplate["invoice_dt"]);
+    dataOfTemplate["invoice_dt"] =
+        invoiceDateObj.getDate +
+        "/" +
+        invoiceDateObj.getMonth +
+        "/" +
+        invoiceDateObj.getFullYear;
+
+    console.log(dataOfTemplate);
+    return dataOfTemplate;
+};
+
 route.post("/uploadBillsData", async(req, res) => {
     if (req.body) {
         await SO_dataDB.deleteMany({}, (err) => {
@@ -180,6 +243,7 @@ route.post("/uploadReceiptsData", async(req, res) => {
                         console.log("error while removing bill", err);
                     }
                     //generate receipt and mail it
+
                     await generateReceipt
                         .generateReceiptPDF(cust_data[i], frim_data)
                         .then(async(cloudinary_details) => {
@@ -388,9 +452,6 @@ route.get("/userBillsYTD/:id", async(req, res) => {
                                 parseFloat(bills.invoice_detials.final_bal_due);
                         }
                     }
-                    for (let [key, value] of Object.entries(dict_total)) {
-                        dict_total[key] = addCommas(value);
-                    }
 
                     res.send({
                         status: 200,
@@ -446,10 +507,6 @@ route.get("/userReceiptsYTD/:id", async(req, res) => {
                         }
                     }
 
-                    for (let [key, value] of Object.entries(dict_total)) {
-                        dict_total[key] = addCommas(value);
-                    }
-
                     res.send({
                         status: 200,
                         user,
@@ -481,7 +538,7 @@ const addUserIfAbsent = async(element) => {
         const email = user.cust_email;
         const salt = await bcrypt.genSalt(10);
         const password = randomstring.generate(10);
-        const hashPassword = await bcrypt.hash(randomstring.generate(), salt);
+        const hashPassword = await bcrypt.hash(password, salt);
         user.password = hashPassword;
         user.email = email;
         user.name = user.cust_keyman;
@@ -498,7 +555,7 @@ const addUserIfAbsent = async(element) => {
                 try {
                     mailHelper.sendAccountMade({
                         ...JSON.parse(JSON.stringify(data)),
-                        host_url: process.env.HOST,
+                        host_url: process.env.HOST_URL,
                         random_string: password,
                     });
                     resolve(true);
