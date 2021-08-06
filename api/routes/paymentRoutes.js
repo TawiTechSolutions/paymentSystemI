@@ -30,7 +30,7 @@ route.post("/verification", async(req, res) => {
 
     console.log(
         Razorpay.validateWebhookSignature(
-            req.body,
+            JSON.parse(JSON.stringify(req.body)),
             req.headers["x-razorpay-signature"],
             "12345678"
         )
