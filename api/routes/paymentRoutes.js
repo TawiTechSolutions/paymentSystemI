@@ -10,8 +10,8 @@ const mailHelper = require("../Utilities/emails/emailHelper");
 
 //replace with dynamic key and secret using env
 const razorpay = new Razorpay({
-    key_id: "rzp_test_iyc6McBDRDGLBz",
-    key_secret: "s7P0pAd97rBttaL38xysLr3s",
+    key_id: "rzp_test_ReGiRmOe2lo2wA",
+    key_secret: "Tkjf7E0Tun3cbb3coQxuPhJP",
 });
 
 route.post("/verification", async(req, res) => {
@@ -129,7 +129,7 @@ route.get("/razorpay/:id", async(req, res) => {
                         currency: response.currency,
                         amount: response.amount,
                         //replace with env
-                        key: "rzp_test_iyc6McBDRDGLBz",
+                        key: "rzp_test_ReGiRmOe2lo2wA",
                     });
                 } else {
                     res.status(400).send({
@@ -151,7 +151,7 @@ route.get("/razorpay/:id", async(req, res) => {
 
 route.get("/getKey", async(req, res) => {
     //replace with dynamic key
-    res.send({ key: "rzp_test_iyc6McBDRDGLBz" });
+    res.send({ key: "rzp_test_ReGiRmOe2lo2wA" });
 });
 
 module.exports = route;
