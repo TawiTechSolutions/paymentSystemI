@@ -46,435 +46,433 @@
     <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
 </head>
 
-<body style="
-      background-color: rgb(255, 255, 255);
-      box-sizing: border-box;
-      padding: 3.140000041866667%;
-    ">
+<body style="background-color: rgb(255, 255, 255); box-sizing: border-box">
+    <header style="margin: 2% 7.466666806222225%">
+        <a href="https://ibb.co/jTYWgLp"><img style="width: 5.2333334031111125%" src="https://i.ibb.co/7XDR2G9/Koyo-logo.jpg" alt="Koyo-logo" border="0" /></a>
+    </header>
     <div style="
         background-color: rgb(255, 255, 255);
         box-sizing: border-box;
         padding: 3.140000041866667%;
         margin: 0 10.466666806222225%;
+        height: fit-content;
       ">
-        <div>
-            <div>
-                <header>
-                    <a href="https://ibb.co/jTYWgLp"><img style="width: 5.2333334031111125%" src="https://i.ibb.co/7XDR2G9/Koyo-logo.jpg" alt="Koyo-logo" border="0" /></a>
-                </header>
+        <div style="
+          margin-top: 0.5233333403111112%;
+          height: 8.896666785288891%;
+          height: fit-content;
+        ">
+            <div style="
+            font-size: 0.10466666806222225%;
+            background-color: rgb(132, 157, 200);
+            box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+              rgba(0, 0, 0, 0.23) 0px 6px 6px;
+            float: left;
+            color: white;
+            padding: 1.0466666806222225%;
+            width: 34%;
+            height: 100%;
+            font-size: 12px;
+          ">
+                <p style="font-weight: 600">M/S Koyo Software Solutions</p>
+                <p>1306, 6B, Whispering Palms, Akurli Road, Kandivali E</p>
+                <p>Mumbai, Maharashtra, India 400 101</p>
 
-                <div style="margin-top: 0.5233333403111112%; height: 8.896666785288891%">
-                    <div style="
-                font-size: 0.10466666806222225%;
-                background-color: rgb(132, 157, 200);
-                box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
-                  rgba(0, 0, 0, 0.23) 0px 6px 6px;
-                float: left;
-                color: white;
-                padding: 1.0466666806222225%;
-                width: 34%;
-                font-size: 12px;
-              ">
-                        <p style="font-weight: 600">M/S Koyo Software Solutions</p>
-                        <p>1306, 6B, Whispering Palms, Akurli Road, Kandivali E</p>
-                        <p>Mumbai, Maharashtra, India 400 101</p>
+                <p>AA.LTTRENDS@GMAIL.COM +91 98679 10690</p>
+            </div>
+            <div style="
+            font-size: 14px;
+            background-color: rgb(101, 141, 205);
+            box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+              rgba(0, 0, 0, 0.23) 0px 6px 6px;
+            float: right;
+            width: 31.4%;
+            height: 100%;
+            color: white;
+            padding: 1.0466666806222225%;
+          ">
+                <p style="
+              font-weight: 600;
+              text-align: right;
+              color: rgb(136, 212, 128);
+            ">
+                    RECEIPT
+                </p>
+                <div style="
+              margin-right: 6.280000083733334%;
+              margin-top: 0.5233333403111112%;
 
-                        <p>AA.LTTRENDS@GMAIL.COM +91 98679 10690</p>
+              width: 100%;
+              font-size: 12px;
+            ">
+                    <div style="float: left">Number :</div>
+
+                    <div style="float: right">
+                        <%="R_"+clientData.invoice_num%>
                     </div>
-                    <div style="
-                font-size: 14px;
-                background-color: rgb(101, 141, 205);
-                box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
-                  rgba(0, 0, 0, 0.23) 0px 6px 6px;
-                float: right;
-                width: 31.4%;
-                height: 140%;
-                color: white;
-                padding: 1.0466666806222225%;
-              ">
-                        <p style="
-                  font-weight: 600;
-                  text-align: right;
-                  color: rgb(136, 212, 128);
-                ">
-                            RECEIPT
-                        </p>
-                        <div style="
-                  margin-right: 6.280000083733334%;
-                  margin-top: 0.5233333403111112%;
+                    <br />
+                </div>
+                <div style="
+              margin-right: 6.280000083733334%;
 
-                  width: 100%;
-                  font-size: 12px;
-                ">
-                            <div style="float: left">Number :</div>
-
-                            <div style="float: right">
-                                <%="R_"+clientData.invoice_num%>
-                            </div>
-                            <br />
-                        </div>
-                        <div style="
-                  margin-right: 6.280000083733334%;
-
-                  font-size: 12px;
-                  width: 100%;
-                ">
-                            <div style="float: left">Date :</div>
-                            <div style="float: right">
-                                <%=clientData.invoice_dt%>
-                            </div>
-                        </div>
+              font-size: 12px;
+              width: 100%;
+            ">
+                    <div style="float: left">Date :</div>
+                    <div style="float: right">
+                        <%=clientData.invoice_dt%>
                     </div>
                 </div>
-            </div>
-            <br />
-
-            <div class="client_details" style="margin-top: 3.093333361244445%; font-size: 13px">
-                <div>
-                    <p style="
-                font-weight: 900;
-                display: inline;
-                font-family: 'Libre Baskerville', serif;
-                font-size: 13px;
-                font-weight: 900;
-              ">
-                        RECEIPT FOR
-                    </p>
-                </div>
-                <div style="margin-top: 12px">
-                    <p style="font-weight: 900; display: inline">Name:</p>
-                    <%=clientData.cust_keyman %>
-                </div>
-                <div>
-                    <p style="font-weight: 900; display: inline">ID:</p>
-                    <%=clientData.cust_id %>
-                </div>
-                <div>
-                    <p style="font-weight: 900; display: inline">FIRM:</p>
-                    <%=clientData.cust_firm %>
-                </div>
-                <div>
-                    <p style="font-weight: 900; display: inline">Address:</p>
-                    <%= clientData.cust_add_street? clientData.cust_add_street+ ",":""%>
-                        <%= clientData.cust_add_city? clientData.cust_add_city+ ",":""%>
-                            <%=
-            clientData.cust_add_state? clientData.cust_add_state+ ",":""%>
-                                <%=
-            clientData.cust_add_cntry? clientData.cust_add_cntry+ ",":""%>
-                                    <%=
-            clientData.cust_add_zip? clientData.cust_add_zip:""%>
-                </div>
-            </div>
-            <div class="tableholder" style="margin-top: 1.5700000209333336%">
-                <table style="
-              box-sizing: border-box;
-              width: 71.17%;
-              background-color: rgb(217, 226, 243);
-            ">
-                    <tr style="font-size: 13px">
-                        <th style="width: 3.6633333821777785%">#</th>
-                        <th>Description</th>
-
-                        <th style="
-                  width: 17.793333570577783%;
-                  text-align: left;
-                  padding-left: 0.5233333403111112%;
-                ">
-                            Charge Type
-                        </th>
-                        <th style="
-                  width: 10.466666806222225%;
-                  text-align: right;
-                  padding-right: 1.0466666806222225%;
-                ">
-                            Amounts
-                        </th>
-                    </tr>
-                </table>
-                <!-- below lies items  -->
-                <table style="
-              box-sizing: border-box;
-              width: 71.17%;
-              background-color: rgb(217, 226, 243);
-            ">
-                    <tr style="font-size: 13px">
-                        <td style="
-                  width: 3.6633333821777785%;
-                  border-right: 1px solid black;
-                  text-align: center;
-                ">
-                            <table style="width: 100%">
-                                <tr>
-                                    <td style="
-                        text-align: center;
-                        padding-top: 0.31400000418666674%;
-                      ">
-                                        1
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style="border-right: 1px solid black; text-align: center">
-                            <table style="width: 100%">
-                                <tr>
-                                    <td style="
-                        text-align: center;
-                        padding-top: 0.31400000418666674%;
-                      ">
-                                        <%= clientData.desc %>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-
-                        <td style="width: 29.83000039773334%; text-align: left">
-                            <table style="
-                    box-sizing: border-box;
-                    width: 100%;
-                    font-family: Arial, Helvetica, sans-serif;
-                  ">
-                                <tr class="nested_table_row">
-                                    <td class="nested_table_cell" style="
-                        width: 17.793333570577783%;
-                        font-family: Arial, Helvetica, sans-serif;
-                      ">
-                                        Amt
-                                    </td>
-                                    <td class="nested_table_cell" style="
-                        text-align: right;
-                        width: 10.466666806222225%;
-                        font-weight: 600;
-                        font-family: Arial;
-                        font-size: 12px;
-                      ">
-                                        <%= addCommas(clientData.invoice_amt)%>
-                                    </td>
-                                </tr>
-                                <tr class="nested_table_row">
-                                    <td class="nested_table_cell" style="
-                        width: 17.793333570577783%;
-                        font-family: Arial, Helvetica, sans-serif;
-                      ">
-                                        Discount 10%
-                                    </td>
-                                    <td class="nested_table_cell" style="
-                        text-align: right;
-                        width: 10.466666806222225%;
-                        font-weight: 600;
-                        font-family: Arial;
-                        font-size: 12px;
-                        color: red;
-                      ">
-                                        <%= addCommas(clientData.invoice_amt *
-                      clientData.discount) %>
-                                    </td>
-                                </tr>
-                                <tr class="nested_table_row">
-                                    <td class="nested_table_cell" style="
-                        width: 17.793333570577783%;
-                        font-family: Arial, Helvetica, sans-serif;
-                      ">
-                                        Discounted Invoice Amt
-                                    </td>
-                                    <td class="nested_table_cell" style="
-                        text-align: right;
-                        width: 10.466666806222225%;
-                        font-weight: 600;
-                        font-family: Arial;
-                        font-size: 12px;
-                      ">
-                                        <%= addCommas(clientData.invoice_amt -
-                      (clientData.invoice_amt * clientData.discount))%>
-                                    </td>
-                                </tr>
-                                <tr class="nested_table_row" style="font-family: Arial, Helvetica, sans-serif">
-                                    <td class="nested_table_cell" style="
-                        width: 17.793333570577783%;
-                        font-family: Arial, Helvetica, sans-serif;
-                      ">
-                                        TDS 20%
-                                    </td>
-                                    <td class="nested_table_cell" style="
-                        text-align: right;
-                        width: 10.466666806222225%;
-                        font-weight: 600;
-                        font-family: Arial;
-                        font-size: 12px;
-                        color: red;
-                      ">
-                                        <%= addCommas(clientData.invoice_amt * clientData.TDS)%>
-                                    </td>
-                                </tr>
-                                <tr class="nested_table_row">
-                                    <td class="nested_table_cell" style="
-                        width: 17.793333570577783%;
-                        font-family: Arial, Helvetica, sans-serif;
-                      ">
-                                        Discounted Invoice with TDS Deduction
-                                    </td>
-                                    <td class="nested_table_cell" style="
-                        text-align: right;
-                        width: 10.466666806222225%;
-                        font-weight: 600;
-                        font-family: Arial;
-                        font-size: 12px;
-                      ">
-                                        <%= addCommas(clientData.invoice_amt -
-                      (clientData.invoice_amt * clientData.TDS))%>
-                                    </td>
-                                </tr>
-                                <tr class="nested_table_row">
-                                    <td class="nested_table_cell" style="
-                        width: 17.793333570577783%;
-                        font-family: Arial, Helvetica, sans-serif;
-                      ">
-                                        GST 18%
-                                    </td>
-                                    <td class="nested_table_cell" style="
-                        text-align: right;
-                        width: 10.466666806222225%;
-                        font-family: Arial;
-                        font-size: 12px;
-                      ">
-                                        <%= addCommas(clientData.invoice_amt * clientData.GST)%>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-
-                <!-- create space btw top and final ammount -->
-                <table style="
-              box-sizing: border-box;
-              width: 71.17124094894989%;
-              background-color: rgb(217, 226, 243);
-              height: 4.18666672248889%;
-            ">
-                    <tr style="font-size: 13px">
-                        <td style="
-                  width: 3.6633333821777785%;
-                  text-align: center;
-                  vertical-align: middle;
-                  border-right: 1px solid black;
-                  font-family: Arial, Helvetica, sans-serif;
-                "></td>
-                        <td style="
-                  text-align: center;
-                  vertical-align: middle;
-                  border-right: 1px solid black;
-                  box-sizing: border-box;
-                  padding: 1.0466666806222225%;
-                  font-family: Arial, Helvetica, sans-serif;
-                "></td>
-                        <td style="
-                  width: 29.934667065795562%;
-                  text-align: left;
-                  font-weight: 600;
-                  font-family: Arial, Helvetica, sans-serif;
-                  padding-top: 0.418666672248889%;
-                  padding-left: 0.418666672248889%;
-                  box-sizing: border-box;
-                  color: rgb(21, 123, 197);
-                  font-size: 16px;
-                ">
-                            <table style="
-                    box-sizing: border-box;
-                    width: 100%;
-                    font-family: Arial, Helvetica, sans-serif;
-                  ">
-                                <tr class="nested_table_row">
-                                    <td style="
-                        width: 17.793333570577783%;
-                        font-weight: 600;
-                        font-family: Arial, Helvetica, sans-serif;
-                        box-sizing: border-box;
-                        color: rgb(21, 123, 197);
-                        font-size: 16px;
-                      "></td>
-                                    <td style="
-                        text-align: right;
-                        width: 10.466666806222225%;
-                        font-family: Arial, Helvetica, sans-serif;
-                        box-sizing: border-box;
-                        color: rgb(21, 123, 197);
-                        font-size: 16px;
-                        padding-right: 0.418666672248889%;
-                      "></td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-                <!--below is final ammount due -->
-                <table style="
-              box-sizing: border-box;
-              width: 71.17124094894989%;
-              background-color: rgb(217, 226, 243);
-            ">
-                    <tr style="font-size: 13px">
-                        <td style="
-                  width: 3.6633333821777785%;
-                  text-align: center;
-                  vertical-align: middle;
-                  border-right: 1px solid black;
-                  font-family: Arial, Helvetica, sans-serif;
-                "></td>
-                        <td style="
-                  text-align: center;
-                  vertical-align: middle;
-                  border-right: 1px solid black;
-                  box-sizing: border-box;
-                  padding: 1.0466666806222225%;
-                  font-family: Arial, Helvetica, sans-serif;
-                "></td>
-                        <td style="
-                  width: 29.934667065795562%;
-                  text-align: left;
-                  font-weight: 600;
-                  font-family: Arial, Helvetica, sans-serif;
-                  padding-top: 0.418666672248889%;
-                  padding-left: 0.418666672248889%;
-                  box-sizing: border-box;
-                  color: rgb(21, 123, 197);
-                  font-size: 16px;
-                ">
-                            <table style="
-                    box-sizing: border-box;
-                    width: 100%;
-                    font-family: Arial, Helvetica, sans-serif;
-                  ">
-                                <tr class="nested_table_row">
-                                    <td style="
-                        width: 17.793333570577783%;
-                        font-weight: 600;
-                        font-family: Arial, Helvetica, sans-serif;
-                        box-sizing: border-box;
-                        color: rgb(21, 123, 197);
-                        font-size: 16px;
-                      ">
-                                        Received with Thanks
-                                    </td>
-                                    <td style="
-                        text-align: right;
-                        width: 10.466666806222225%;
-                        font-family: Arial, Helvetica, sans-serif;
-                        box-sizing: border-box;
-                        color: rgb(21, 123, 197);
-                        font-size: 16px;
-                        padding-right: 0.418666672248889%;
-                      ">
-                                        <%= addCommas(clientData.final_bal_due)%>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
             </div>
         </div>
+
+        <br />
+
+        <div class="client_details" style="margin-top: 3.093333361244445%; font-size: 13px; float: left">
+            <div>
+                <p style="
+              font-weight: 900;
+              display: inline;
+              font-family: 'Libre Baskerville', serif;
+              font-size: 13px;
+              font-weight: 900;
+            ">
+                    RECEIPT FOR
+                </p>
+            </div>
+            <div style="margin-top: 12px">
+                <p style="font-weight: 900; display: inline">Name:</p>
+                <%=clientData.cust_keyman %>
+            </div>
+            <div>
+                <p style="font-weight: 900; display: inline">ID:</p>
+                <%=clientData.cust_id %>
+            </div>
+            <div>
+                <p style="font-weight: 900; display: inline">FIRM:</p>
+                <%=clientData.cust_firm %>
+            </div>
+            <div>
+                <p style="font-weight: 900; display: inline">Address:</p>
+                <%= clientData.cust_add_street? clientData.cust_add_street+ ",":""%>
+                    <%= clientData.cust_add_city? clientData.cust_add_city+ ",":""%>
+                        <%=
+          clientData.cust_add_state? clientData.cust_add_state+ ",":""%>
+                            <%=
+          clientData.cust_add_cntry? clientData.cust_add_cntry+ ",":""%>
+                                <%=
+          clientData.cust_add_zip? clientData.cust_add_zip:""%>
+            </div>
+        </div>
+        <div class="tableholder" style="margin-top: 1.5700000209333336%; width: 100%; float: left">
+            <table style="
+            box-sizing: border-box;
+            width: 100%;
+            background-color: rgb(217, 226, 243);
+          ">
+                <tr style="font-size: 13px">
+                    <th style="width: 3.6633333821777785%">#</th>
+                    <th>Description</th>
+
+                    <th style="
+                width: 17.793333570577783%;
+                text-align: left;
+                padding-left: 0.5233333403111112%;
+              ">
+                        Charge Type
+                    </th>
+                    <th style="
+                width: 10.466666806222225%;
+                text-align: right;
+                padding-right: 1.0466666806222225%;
+              ">
+                        Amounts
+                    </th>
+                </tr>
+            </table>
+            <!-- below lies items  -->
+            <table style="
+            box-sizing: border-box;
+            width: 100%;
+            background-color: rgb(217, 226, 243);
+          ">
+                <tr style="font-size: 13px">
+                    <td style="
+                width: 3.6633333821777785%;
+                border-right: 1px solid black;
+                text-align: center;
+              ">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="
+                      text-align: center;
+                      padding-top: 0.31400000418666674%;
+                    ">
+                                    1
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="border-right: 1px solid black; text-align: center">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="
+                      text-align: center;
+                      padding-top: 0.31400000418666674%;
+                    ">
+                                    <%= clientData.desc %>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
+                    <td style="width: 29.83000039773334%; text-align: left">
+                        <table style="
+                  box-sizing: border-box;
+                  width: 100%;
+                  font-family: Arial, Helvetica, sans-serif;
+                ">
+                            <tr class="nested_table_row">
+                                <td class="nested_table_cell" style="
+                      width: 17.793333570577783%;
+                      font-family: Arial, Helvetica, sans-serif;
+                    ">
+                                    Amt
+                                </td>
+                                <td class="nested_table_cell" style="
+                      text-align: right;
+                      width: 10.466666806222225%;
+                      font-weight: 600;
+                      font-family: Arial;
+                      font-size: 12px;
+                    ">
+                                    <%= addCommas(clientData.invoice_amt)%>
+                                </td>
+                            </tr>
+                            <tr class="nested_table_row">
+                                <td class="nested_table_cell" style="
+                      width: 17.793333570577783%;
+                      font-family: Arial, Helvetica, sans-serif;
+                    ">
+                                    Discount 10%
+                                </td>
+                                <td class="nested_table_cell" style="
+                      text-align: right;
+                      width: 10.466666806222225%;
+                      font-weight: 600;
+                      font-family: Arial;
+                      font-size: 12px;
+                      color: red;
+                    ">
+                                    <%= addCommas(clientData.invoice_amt * clientData.discount)
+                    %>
+                                </td>
+                            </tr>
+                            <tr class="nested_table_row">
+                                <td class="nested_table_cell" style="
+                      width: 17.793333570577783%;
+                      font-family: Arial, Helvetica, sans-serif;
+                    ">
+                                    Discounted Invoice Amt
+                                </td>
+                                <td class="nested_table_cell" style="
+                      text-align: right;
+                      width: 10.466666806222225%;
+                      font-weight: 600;
+                      font-family: Arial;
+                      font-size: 12px;
+                    ">
+                                    <%= addCommas(clientData.invoice_amt -
+                    (clientData.invoice_amt * clientData.discount))%>
+                                </td>
+                            </tr>
+                            <tr class="nested_table_row" style="font-family: Arial, Helvetica, sans-serif">
+                                <td class="nested_table_cell" style="
+                      width: 17.793333570577783%;
+                      font-family: Arial, Helvetica, sans-serif;
+                    ">
+                                    TDS 20%
+                                </td>
+                                <td class="nested_table_cell" style="
+                      text-align: right;
+                      width: 10.466666806222225%;
+                      font-weight: 600;
+                      font-family: Arial;
+                      font-size: 12px;
+                      color: red;
+                    ">
+                                    <%= addCommas(clientData.invoice_amt * clientData.TDS)%>
+                                </td>
+                            </tr>
+                            <tr class="nested_table_row">
+                                <td class="nested_table_cell" style="
+                      width: 17.793333570577783%;
+                      font-family: Arial, Helvetica, sans-serif;
+                    ">
+                                    Discounted Invoice with TDS Deduction
+                                </td>
+                                <td class="nested_table_cell" style="
+                      text-align: right;
+                      width: 10.466666806222225%;
+                      font-weight: 600;
+                      font-family: Arial;
+                      font-size: 12px;
+                    ">
+                                    <%= addCommas(clientData.invoice_amt -
+                    (clientData.invoice_amt * clientData.TDS))%>
+                                </td>
+                            </tr>
+                            <tr class="nested_table_row">
+                                <td class="nested_table_cell" style="
+                      width: 17.793333570577783%;
+                      font-family: Arial, Helvetica, sans-serif;
+                    ">
+                                    GST 18%
+                                </td>
+                                <td class="nested_table_cell" style="
+                      text-align: right;
+                      width: 10.466666806222225%;
+                      font-family: Arial;
+                      font-size: 12px;
+                    ">
+                                    <%= addCommas(clientData.invoice_amt * clientData.GST)%>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- create space btw top and final ammount -->
+            <table style="
+            box-sizing: border-box;
+            width: 100%;
+            background-color: rgb(217, 226, 243);
+            height: 4.18666672248889%;
+          ">
+                <tr style="font-size: 13px">
+                    <td style="
+                width: 3.6633333821777785%;
+                text-align: center;
+                vertical-align: middle;
+                border-right: 1px solid black;
+                font-family: Arial, Helvetica, sans-serif;
+              "></td>
+                    <td style="
+                text-align: center;
+                vertical-align: middle;
+                border-right: 1px solid black;
+                box-sizing: border-box;
+                padding: 1.0466666806222225%;
+                font-family: Arial, Helvetica, sans-serif;
+              "></td>
+                    <td style="
+                width: 29.934667065795562%;
+                text-align: left;
+                font-weight: 600;
+                font-family: Arial, Helvetica, sans-serif;
+                padding-top: 0.418666672248889%;
+                padding-left: 0.418666672248889%;
+                box-sizing: border-box;
+                color: rgb(21, 123, 197);
+                font-size: 16px;
+              ">
+                        <table style="
+                  box-sizing: border-box;
+                  width: 100%;
+                  font-family: Arial, Helvetica, sans-serif;
+                ">
+                            <tr class="nested_table_row">
+                                <td style="
+                      width: 17.793333570577783%;
+                      font-weight: 600;
+                      font-family: Arial, Helvetica, sans-serif;
+                      box-sizing: border-box;
+                      color: rgb(21, 123, 197);
+                      font-size: 16px;
+                    "></td>
+                                <td style="
+                      text-align: right;
+                      width: 10.466666806222225%;
+                      font-family: Arial, Helvetica, sans-serif;
+                      box-sizing: border-box;
+                      color: rgb(21, 123, 197);
+                      font-size: 16px;
+                      padding-right: 0.418666672248889%;
+                    "></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <!--below is final ammount due -->
+            <table style="
+            box-sizing: border-box;
+            width: 100%;
+            background-color: rgb(217, 226, 243);
+          ">
+                <tr style="font-size: 13px">
+                    <td style="
+                width: 3.6633333821777785%;
+                text-align: center;
+                vertical-align: middle;
+                border-right: 1px solid black;
+                font-family: Arial, Helvetica, sans-serif;
+              "></td>
+                    <td style="
+                text-align: center;
+                vertical-align: middle;
+                border-right: 1px solid black;
+                box-sizing: border-box;
+                padding: 1.0466666806222225%;
+                font-family: Arial, Helvetica, sans-serif;
+              "></td>
+                    <td style="
+                width: 29.934667065795562%;
+                text-align: left;
+                font-weight: 600;
+                font-family: Arial, Helvetica, sans-serif;
+                padding-top: 0.418666672248889%;
+                padding-left: 0.418666672248889%;
+                box-sizing: border-box;
+                color: rgb(21, 123, 197);
+                font-size: 16px;
+              ">
+                        <table style="
+                  box-sizing: border-box;
+                  width: 100%;
+                  font-family: Arial, Helvetica, sans-serif;
+                ">
+                            <tr class="nested_table_row">
+                                <td style="
+                      width: 17.793333570577783%;
+                      font-weight: 600;
+                      font-family: Arial, Helvetica, sans-serif;
+                      box-sizing: border-box;
+                      color: rgb(21, 123, 197);
+                      font-size: 16px;
+                    ">
+                                    Received with Thanks
+                                </td>
+                                <td style="
+                      text-align: right;
+                      width: 10.466666806222225%;
+                      font-family: Arial, Helvetica, sans-serif;
+                      box-sizing: border-box;
+                      color: rgb(21, 123, 197);
+                      font-size: 16px;
+                      padding-right: 0.418666672248889%;
+                    ">
+                                    <%= addCommas(clientData.final_bal_due)%>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
-    <div id="pageFooter-last">
+    <div id="pageFooter-last" style="float: left">
         <footer style="margin-left: 13.08333350777778%">
             <a href="https://imgbb.com/"><img src="https://i.ibb.co/n6z38Lg/image.png" alt="image" /></a>
             <div style="margin-top: 1.0466666806222225%">
