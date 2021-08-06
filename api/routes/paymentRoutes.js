@@ -23,14 +23,14 @@ route.post("/verification", async(req, res) => {
     console.log("data given by webhook of razorPay", req.body);
 
     const shasum = crypto.createHmac("sha256", secret);
-    shasum.update(req.body);
+    shasum.update(JSON.stringify(req.body));
     const digest = shasum.digest("hex");
     console.log(digest);
     console.log(req.headers["x-razorpay-signature"]);
 
     console.log(
         Razorpay.validateWebhookSignature(
-            JSON.stringify(req.body),
+            req.body,
             req.headers["x-razorpay-signature"],
             "12345678"
         )
