@@ -307,7 +307,7 @@ route.put("/forgotPassword/:email", async(req, res) => {
     if (req.params.email) {
         const User = await userDB.findOne({ email: req.params.email });
         if (User) {
-            const token = JWT.GenerateJWT({ _id: data._id });
+            const token = JWT.GenerateJWT({ _id: User._id });
             let transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
