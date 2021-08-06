@@ -48,9 +48,7 @@ const JWTAuthMiddleware = function(req, res, next) {
 const GenerateJWT = function(data) {
     var user = { userData: data };
     payload = user;
-    token = jwt.sign(payload, process.env.TOKEN_SECRET, {
-        expiresIn: "6h",
-    });
+    token = jwt.sign(payload, process.env.TOKEN_SECRET);
     return token;
 };
 
