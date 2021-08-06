@@ -134,25 +134,25 @@
               font-weight: 900;
               display: inline;
               font-family: 'Libre Baskerville', serif;
-              font-size: 6.5px;
+              font-size: 7px;
               font-weight: 900;
             ">
                     RECEIPT FOR
                 </p>
             </div>
-            <div style="margin-top: 1.256000016746667%">
+            <div style="font-size: 7px; margin-top: 1.256000016746667%">
                 <p style="font-weight: 900; display: inline">Name:</p>
                 <%=clientData.cust_keyman %>
             </div>
-            <div>
+            <div style="font-size: 7px">
                 <p style="font-weight: 900; display: inline">ID:</p>
                 <%=clientData.cust_id %>
             </div>
-            <div>
+            <div style="font-size: 7px">
                 <p style="font-weight: 900; display: inline">FIRM:</p>
                 <%=clientData.cust_firm %>
             </div>
-            <div>
+            <div style="font-size: 7px">
                 <p style="font-weight: 900; display: inline">Address:</p>
                 <%= clientData.cust_add_street? clientData.cust_add_street+ ",":""%>
                     <%= clientData.cust_add_city? clientData.cust_add_city+ ",":""%>
@@ -170,7 +170,7 @@
             width: 100%;
             background-color: rgb(217, 226, 243);
           ">
-                <tr style="font-size: 6.5px">
+                <tr style="font-size: 8px">
                     <th style="width: 3.6633333821777785%">#</th>
                     <th>Description</th>
 
@@ -219,6 +219,7 @@
                                 <td style="
                       text-align: center;
                       padding-top: 0.31400000418666674%;
+                      font-size: 7px;
                     ">
                                     <%= clientData.desc %>
                                 </td>
@@ -237,6 +238,7 @@
                       width: 17.793333570577783%;
                       font-family: Arial, Helvetica, sans-serif;
                       padding-left: 1px;
+                      font-size: 7px;
                     ">
                                     Amt
                                 </td>
@@ -245,7 +247,7 @@
                       width: 10.466666806222225%;
                       font-weight: 600;
                       font-family: Arial;
-                      font-size: 6px;
+                      font-size: 7px;
                       padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.invoice_amt)%>
@@ -256,6 +258,7 @@
                       width: 17.793333570577783%;
                       font-family: Arial, Helvetica, sans-serif;
                       padding-left: 1px;
+                      font-size: 7px;
                     ">
                                     Discount 10%
                                 </td>
@@ -264,7 +267,7 @@
                       width: 10.466666806222225%;
                       font-weight: 600;
                       font-family: Arial;
-                      font-size: 6px;
+                      font-size: 7px;
                       color: red;
                       padding-right: 1px;
                     ">
@@ -275,6 +278,7 @@
                             <tr class="nested_table_row">
                                 <td class="nested_table_cell" style="
                       width: 17.793333570577783%;
+                      font-size: 7px;
                       font-family: Arial, Helvetica, sans-serif;
                     ">
                                     Discounted Invoice Amt
@@ -285,7 +289,7 @@
                       padding-left: 1px;
                       font-weight: 600;
                       font-family: Arial;
-                      font-size: 6px;
+                      font-size: 7px;
                       padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.invoice_amt -
@@ -297,6 +301,7 @@
                       width: 17.793333570577783%;
                       font-family: Arial, Helvetica, sans-serif;
                       padding-left: 1px;
+                      font-size: 7px;
                     ">
                                     TDS 20%
                                 </td>
@@ -305,7 +310,7 @@
                       width: 10.466666806222225%;
                       font-weight: 600;
                       font-family: Arial;
-                      font-size: 6px;
+                      font-size: 7px;
                       color: red;
                       padding-right: 1px;
                     ">
@@ -317,6 +322,7 @@
                       width: 17.793333570577783%;
                       font-family: Arial, Helvetica, sans-serif;
                       padding-left: 1px;
+                      font-size: 7px;
                     ">
                                     Discounted Invoice with TDS Deduction
                                 </td>
@@ -325,7 +331,7 @@
                       width: 10.466666806222225%;
                       font-weight: 600;
                       font-family: Arial;
-                      font-size: 6px;
+                      font-size: 7px;
                       padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.invoice_amt -
@@ -337,6 +343,7 @@
                       width: 17.793333570577783%;
                       font-family: Arial, Helvetica, sans-serif;
                       padding-left: 1px;
+                      font-size: 7px;
                     ">
                                     GST 18%
                                 </td>
@@ -344,7 +351,7 @@
                       text-align: right;
                       width: 10.466666806222225%;
                       font-family: Arial;
-                      font-size: 6px;
+                      font-size: 7px;
                       padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.invoice_amt * clientData.GST)%>
@@ -474,6 +481,7 @@
                       color: rgb(21, 123, 197);
                       font-size: 8px;
                       padding-right: 0.418666672248889%;
+                      padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.final_bal_due)%>
                                 </td>
