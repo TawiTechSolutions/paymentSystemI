@@ -59,7 +59,7 @@
       ">
         <div style="
           margin-top: 0.5233333403111112%;
-          height: 8.896666785288891%;
+          height: 6.896666785288891%;
           height: fit-content;
         ">
             <div style="
@@ -72,7 +72,7 @@
             padding: 1.0466666806222225%;
             width: 45%;
             height: 100%;
-            font-size: 6px;
+            font-size: 8px;
           ">
                 <p style="font-weight: 600">M/S Koyo Software Solutions</p>
                 <p>1306, 6B, Whispering Palms, Akurli Road, Kandivali E</p>
@@ -81,7 +81,7 @@
                 <p>AA.LTTRENDS@GMAIL.COM +91 98679 10690</p>
             </div>
             <div style="
-            font-size: 7px;
+            font-size: 8px;
             background-color: rgb(101, 141, 205);
             box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
               rgba(0, 0, 0, 0.23) 0px 6px 6px;
@@ -103,7 +103,7 @@
               margin-top: 0.5233333403111112%;
 
               width: 100%;
-              font-size: 6px;
+              font-size: 8px;
             ">
                     <div style="float: left">Number :</div>
 
@@ -115,7 +115,7 @@
                 <div style="
               margin-right: 6.280000083733334%;
 
-              font-size: 6px;
+              font-size: 8px;
               width: 100%;
             ">
                     <div style="float: left">Date :</div>
@@ -236,6 +236,7 @@
                                 <td class="nested_table_cell" style="
                       width: 17.793333570577783%;
                       font-family: Arial, Helvetica, sans-serif;
+                      padding-left: 1px;
                     ">
                                     Amt
                                 </td>
@@ -245,6 +246,7 @@
                       font-weight: 600;
                       font-family: Arial;
                       font-size: 6px;
+                      padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.invoice_amt)%>
                                 </td>
@@ -253,6 +255,7 @@
                                 <td class="nested_table_cell" style="
                       width: 17.793333570577783%;
                       font-family: Arial, Helvetica, sans-serif;
+                      padding-left: 1px;
                     ">
                                     Discount 10%
                                 </td>
@@ -263,6 +266,7 @@
                       font-family: Arial;
                       font-size: 6px;
                       color: red;
+                      padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.invoice_amt * clientData.discount)
                     %>
@@ -278,9 +282,11 @@
                                 <td class="nested_table_cell" style="
                       text-align: right;
                       width: 10.466666806222225%;
+                      padding-left: 1px;
                       font-weight: 600;
                       font-family: Arial;
                       font-size: 6px;
+                      padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.invoice_amt -
                     (clientData.invoice_amt * clientData.discount))%>
@@ -290,6 +296,7 @@
                                 <td class="nested_table_cell" style="
                       width: 17.793333570577783%;
                       font-family: Arial, Helvetica, sans-serif;
+                      padding-left: 1px;
                     ">
                                     TDS 20%
                                 </td>
@@ -300,6 +307,7 @@
                       font-family: Arial;
                       font-size: 6px;
                       color: red;
+                      padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.invoice_amt * clientData.TDS)%>
                                 </td>
@@ -308,6 +316,7 @@
                                 <td class="nested_table_cell" style="
                       width: 17.793333570577783%;
                       font-family: Arial, Helvetica, sans-serif;
+                      padding-left: 1px;
                     ">
                                     Discounted Invoice with TDS Deduction
                                 </td>
@@ -317,6 +326,7 @@
                       font-weight: 600;
                       font-family: Arial;
                       font-size: 6px;
+                      padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.invoice_amt -
                     (clientData.invoice_amt * clientData.TDS))%>
@@ -326,6 +336,7 @@
                                 <td class="nested_table_cell" style="
                       width: 17.793333570577783%;
                       font-family: Arial, Helvetica, sans-serif;
+                      padding-left: 1px;
                     ">
                                     GST 18%
                                 </td>
@@ -334,6 +345,7 @@
                       width: 10.466666806222225%;
                       font-family: Arial;
                       font-size: 6px;
+                      padding-right: 1px;
                     ">
                                     <%= addCommas(clientData.invoice_amt * clientData.GST)%>
                                 </td>
