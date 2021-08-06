@@ -28,6 +28,14 @@ route.post("/verification", async(req, res) => {
     console.log(digest);
     console.log(req.headers["x-razorpay-signature"]);
 
+    console.log(
+        Razorpay.validateWebhookSignature(
+            req.body,
+            req.headers["x-razorpay-signature"],
+            "topSecret"
+        )
+    );
+
     if (digest === req.headers["x-razorpay-signature"]) {
         console.log("payment has been made and captured");
 
